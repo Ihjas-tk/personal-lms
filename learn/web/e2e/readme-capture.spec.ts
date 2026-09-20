@@ -57,6 +57,12 @@ test.beforeAll(() => {
 /** One light viewport shot, straight into `docs/assets/`. */
 async function shoot(page: Page, name: string): Promise<void> {
   await page.waitForTimeout(350);
+  // The first-run Desk draws its mark once over 1.6 s; never catch it half drawn.
+  await page.evaluate(async () => {
+    const el = document.querySelector(".desk-mark .mark-path");
+    if (!el) return;
+    await Promise.all(el.getAnimations().map((a) => a.finished.catch(() => {})));
+  });
   await page.screenshot({ path: path.join(SHOTS, `${name}.png`), fullPage: false });
 }
 

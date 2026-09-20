@@ -109,4 +109,26 @@ describe("the Desk", () => {
       screen.getByText("Nothing proved yet — this fills in from the checks you pass"),
     ).toBeInTheDocument();
   });
+
+  it("draws the mark on the first run and nowhere else", async () => {
+    stubApi((url) => (url.endsWith("/api/desk") ? json(fixtures.deskFirstRun) : undefined));
+    const first = mount();
+    await waitFor(() => expect(screen.getByText("Your first session")).toBeInTheDocument());
+    const mark = first.container.querySelector(".desk-mark");
+    expect(mark).toBeInTheDocument();
+    // One continuous path, not four — the spiral draws as a single stroke.
+    expect(mark?.querySelectorAll("path")).toHaveLength(1);
+    // Decorative: the lockup and the animation carry no name of their own.
+    expect(mark).toHaveAttribute("aria-hidden", "true");
+
+    first.unmount();
+    useStore.setState({ desk: null, deskError: null, session: null, vaultRevision: 0 });
+
+    stubApi();
+    const returning = mount();
+    await waitFor(() =>
+      expect(screen.getByText(/The plan you wrote on Sunday/)).toBeInTheDocument(),
+    );
+    expect(returning.container.querySelector(".desk-mark")).toBeNull();
+  });
 });

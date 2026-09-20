@@ -34,6 +34,40 @@
   color: var(--ink3);
 }
 
+/* --------------------------------------------------- first-run desk mark */
+/**
+ * The empty Desk is the one screen that animates the mark: the spiral traces
+ * itself out once, all four half-turns as one continuous stroke, and then stays.
+ * `stroke-dasharray` is in user units, so 224 — the path is 223.08 units long at
+ * the 64-unit box — covers the mark at any rendered size.
+ */
+.desk-mark {
+  display: block;
+  margin: var(--s2) auto var(--s6);
+  color: var(--vio);
+}
+
+.desk-mark .mark-path {
+  stroke-dasharray: 224;
+  stroke-dashoffset: 224;
+  animation: mark-draw 1.6s ease-out forwards;
+}
+
+@keyframes mark-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Reduced motion gets the finished mark, not a truncated one. */
+@media (prefers-reduced-motion: reduce) {
+  .desk-mark .mark-path {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+}
+
 /* ----------------------------------------------------------------- band */
 .band {
   border-radius: var(--r-band);

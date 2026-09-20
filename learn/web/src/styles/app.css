@@ -20,23 +20,30 @@
   border-right: 1px solid var(--line);
 }
 
+/**
+ * The horizontal lockup. The wordmark is Playfair Display 600 at 19px, so its cap
+ * height is 13.45px and the mark is drawn in a 28px box beside it — the size the
+ * designer's own "In the rail" sample uses at this exact wordmark size. The gap is
+ * half the mark's drawn width (0.875 × 28 = 24.5px), so 12px, and it is far wider
+ * than the 10-unit clear space (4.4px at a 28px box): nothing sets inside that.
+ *
+ * The mark is bare — no tile, no container. That is on the brand's don't list
+ * everywhere but the app icon.
+ */
 .rail-brand {
   display: flex;
   align-items: center;
-  gap: var(--s3);
+  gap: 12px;
   padding: 0 var(--s2);
 }
 
 .rail-mark {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-sm);
-  background: var(--vio);
-  display: grid;
-  place-items: center;
-  color: var(--on-vio);
-  font-family: var(--font-mono);
-  font-size: 14px;
+  flex: none;
+  display: block;
+  color: var(--vio);
+  /* Optical, not bounding-box: centring the boxes leaves the mark 0.7px high, and
+     the spiral's mass sitting low and right takes back the rest. */
+  transform: translateY(1px);
 }
 
 .rail-brand h1 {
@@ -44,7 +51,23 @@
   font-family: var(--font-display);
   font-size: 19px;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.005em;
+}
+
+/**
+ * Every `<Mark>` in the app, wherever it is. The stroke is an even 4.0 at a 64-unit
+ * box and the brand adds 0.2 on dark, so the lighter violet does not thin out
+ * against the dark ground. `stroke-width` on the element is a presentation
+ * attribute, so this wins over the component's own default.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .mark-path {
+    stroke-width: 4.2;
+  }
+}
+
+[data-theme="dark"] .mark-path {
+  stroke-width: 4.2;
 }
 
 .rail-nav {

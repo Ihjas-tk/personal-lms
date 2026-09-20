@@ -72,19 +72,20 @@
 
   /* ------------------------------------------------------------------ left */
 
+  /* The app-icon lockup: the tile is the one container the mark is allowed in.
+     Radius 23% of the 74px square (17px) and the mark at 72% of it (53.3px), stroke
+     4.4 at the mark's own 64-unit box. The gap is half the mark's drawn width
+     (0.875 × 53.3 = 46.6px), so 23px. */
   .wordmark {
-    display: flex; align-items: center; gap: 20px; margin-bottom: 26px;
+    display: flex; align-items: center; gap: 23px; margin-bottom: 26px;
   }
   .tile {
-    width: 74px; height: 74px; border-radius: 22px;
+    width: 74px; height: 74px; border-radius: 17px;
     background: linear-gradient(160deg, #7b4bff 0%, #6d3bee 55%, #5a2ed6 100%);
     box-shadow: 0 14px 30px -14px rgba(109, 59, 238, 0.7);
     display: grid; place-items: center;
   }
-  .tile span {
-    font-family: var(--font-display); font-weight: 600; font-size: 50px;
-    line-height: 1; color: var(--on-vio); margin-top: -4px;
-  }
+  .tile svg { display: block; }
   .name {
     font-family: var(--font-display); font-weight: 600; font-size: 104px;
     line-height: 0.9; letter-spacing: -0.02em; color: var(--ink);
@@ -148,7 +149,12 @@
   <div class="safe">
     <div>
       <div class="wordmark">
-        <div class="tile"><span>l</span></div>
+        <div class="tile">
+          <svg width="53.28" height="53.28" viewBox="0 0 64 64" fill="none">
+            <path d="M40 32 A9.5 9.5 0 0 1 21 32 A15 15 0 0 1 51 32 A20.5 20.5 0 0 1 10 32 A26 26 0 0 1 62 32"
+                  transform="translate(-4,2.75)" stroke="#ffffff" stroke-width="4.4" stroke-linecap="round" />
+          </svg>
+        </div>
         <div class="name">learn</div>
       </div>
       <div class="tagline">

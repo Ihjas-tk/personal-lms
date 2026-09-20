@@ -41,10 +41,24 @@ test.beforeAll(() => {
  * sheet and the two dialogs are `position: fixed`, so a full-page shot photographs
  * the page scrolling out from under them and clips the sheet at the fold.
  */
+/**
+ * The first-run Desk draws its mark once, over 1.6 s. Wait for that one animation
+ * to settle so no shot catches a half-drawn spiral; every other screen has none,
+ * and this returns immediately there.
+ */
+async function settleMark(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const el = document.querySelector(".desk-mark .mark-path");
+    if (!el) return;
+    await Promise.all(el.getAnimations().map((a) => a.finished.catch(() => {})));
+  });
+}
+
 async function shoot(page: Page, name: string, overlay = false): Promise<void> {
   for (const scheme of ["light", "dark"] as const) {
     await page.emulateMedia({ colorScheme: scheme });
     await page.waitForTimeout(350);
+    await settleMark(page);
     await page.screenshot({
       path: path.join(SHOTS, `${name}-${scheme}.png`),
       fullPage: !overlay,
@@ -68,6 +82,7 @@ async function shootFresh(
     await page.emulateMedia({ colorScheme: scheme });
     await setup(page);
     await page.waitForTimeout(400);
+    await settleMark(page);
     await page.screenshot({
       path: path.join(SHOTS, `${name}-${scheme}.png`),
       fullPage: !overlay,

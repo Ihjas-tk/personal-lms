@@ -25,6 +25,16 @@ describe("the rail", () => {
     useStore.setState({ session: null, desk: fixtures.desk as unknown as Desk, elapsed: 0 });
   });
 
+  it("heads with the bare lockup — the mark beside the wordmark, no tile", () => {
+    const { container } = mount("/");
+    const brand = container.querySelector(".rail-brand");
+    expect(brand?.querySelector("svg.rail-mark")).toBeInTheDocument();
+    expect(brand?.querySelectorAll("path")).toHaveLength(1);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("learn");
+    // The mark is never boxed outside the app icon: nothing between it and the rail.
+    expect(brand?.firstElementChild?.tagName).toBe("svg");
+  });
+
   it("offers exactly four destinations", () => {
     mount("/");
     const links = screen.getAllByRole("link").filter((a) => a.className === "rail-link");

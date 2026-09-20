@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--vio:#6D3BEE;--vio2:#8B5CF6;--vio-soft:#EFEAFE;--vio-line:#D8CCFB;--on-vio:#ffffff;
+--ink:#1A1626;--ink2:#54506A;--ink3:#8A86A0;
+--bg:#F6F5FC;--surf:#FFFFFF;--surf2:#F3F1FB;--line:#E6E3F1;
+--good:#1C7A52;
+--shadow:0 1px 2px rgba(26,22,38,.05), 0 10px 28px -16px rgba(26,22,38,.28);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:var(--vio);text-decoration:none}
+a:hover{color:var(--vio2);text-decoration:underline}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+
+<section style="padding:44px 48px 40px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);line-height:1.55">
+  <div style="max-width:1500px;margin:0 auto">
+    <header style="padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:30px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;background:var(--vio);color:var(--on-vio)">3a</span>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--ink3)">turn 3 · <a href="#2a">2a</a> refined, full set</div>
+      </div>
+      <h1 style="margin:12px 0 0;font-family:'Playfair Display',serif;font-size:34px;font-weight:600">The return</h1>
+      <p style="margin:8px 0 0;font-size:14px;color:var(--ink2);max-width:78ch">Four half-turns on one axis, each one 11 units further out than the last, drawn as a single continuous line of even weight. One stroke, one motion: the same path every time, further out each time.</p>
+    </header>
+
+    <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:stretch;margin-bottom:22px">
+      <div style="flex:2 1 520px;min-width:420px;border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);display:grid;place-items:center;padding:56px">
+        <svg width="260" height="260" viewBox="0 0 64 64" fill="none" aria-label="learn, the return">
+          <g transform="translate(-4,2.75)" stroke="#6D3BEE" stroke-linecap="round">
+            <path d="M40 32 A9.5 9.5 0 0 1 21 32 A15 15 0 0 1 51 32 A20.5 20.5 0 0 1 10 32 A26 26 0 0 1 62 32" stroke-width="4.0"></path>
+          </g>
+        </svg>
+      </div>
+
+      <div style="flex:1 1 300px;min-width:290px;border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);padding:26px 28px">
+        <h2 style="margin:0 0 16px;font-size:15px;font-weight:700">What changed from 2a</h2>
+        <div style="display:flex;flex-direction:column;gap:14px;font-size:13px;color:var(--ink2);line-height:1.55">
+          <div style="display:flex;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--vio);flex:none;width:58px;padding-top:2px">growth</span><span>The turns were unevenly spaced. They now step out by exactly 11 units each, so the white between them is constant and the form reads as one motion.</span></div>
+          <div style="display:flex;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--vio);flex:none;width:58px;padding-top:2px">weight</span><span>Even 4.0 throughout. The tapering turns read as a mistake rather than a meaning, and an even line is calmer, truer to a single motion, and identical at every size.</span></div>
+          <div style="display:flex;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--vio);flex:none;width:58px;padding-top:2px">the dot</span><span>Deleted. The heaviest round cap already is the "you are here", and the loose ball made it read as a snail.</span></div>
+          <div style="display:flex;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--vio);flex:none;width:58px;padding-top:2px">optics</span><span>Recentred on its own mass rather than its box, so it sits true in a square and beside the wordmark.</span></div>
+          <div style="display:flex;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--vio);flex:none;width:58px;padding-top:2px">small</span><span>The tight inner turn is gone — it closed up to a blob under 24px. One cut now serves every size, from 16px to a wall.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:22px">
+      <div style="flex:1 1 200px;min-width:190px;border-radius:18px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:30px;display:grid;place-items:center;height:168px">
+          <div style="width:104px;height:104px;border-radius:24px;background:#6D3BEE;display:grid;place-items:center">
+            <svg width="76" height="76" viewBox="0 0 64 64" fill="none">
+              <g transform="translate(-4,2.75)" stroke="#ffffff" stroke-linecap="round">
+                <path d="M40 32 A9.5 9.5 0 0 1 21 32 A15 15 0 0 1 51 32 A20.5 20.5 0 0 1 10 32 A26 26 0 0 1 62 32" stroke-width="4.4"></path>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div style="padding:14px 18px;border-top:1px solid var(--line);background:var(--surf2)">
+          <div style="font-size:12.5px;font-weight:600">App icon</div>
+          <div style="margin-top:2px;font-size:11.5px;color:var(--ink3)">Mark at 72%, radius 23%, weights up 0.4 to hold on the fill.</div>
+        </div>
+      </div>
+
+      <div style="flex:1 1 200px;min-width:190px;border-radius:18px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:30px;display:grid;place-items:center;height:168px;background:#121020">
+          <svg width="104" height="104" viewBox="0 0 64 64" fill="none">
+            <g transform="translate(-4,2.75)" stroke="#A78BFA" stroke-linecap="round">
+              <path d="M40 32 A9.5 9.5 0 0 1 21 32 A15 15 0 0 1 51 32 A20.5 20.5 0 0 1 10 32 A26 26 0 0 1 62 32" stroke-width="4.2"></path>
+            </g>
+          </svg>
+        </div>
+        <div style="padding:14px 18px;border-top:1px solid var(--line);background:var(--surf2)">
+          <div style="font-size:12.5px;font-weight:600">Dark</div>
+          <div style="margin-top:2px;font-size:11.5px;color:var(--ink3)">#A78BFA, weights up 0.2 against the dark ground.</div>
+        </div>
+      </div>
+
+      <div style="flex:1 1 200px;min-width:190px;border-radius:18px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:30px;display:grid;place-items:center;height:168px">
+          <svg width="104" height="104" viewBox="0 0 64 64" fill="none">
+            <g transform="translate(-4,2.75)" stroke="#1A1626" stroke-linecap="round">
+              <path d="M40 32 A9.5 9.5 0 0 1 21 32 A15 15 0 0 1 51 32 A20.5 20.5 0 0 1 10 32 A26 26 0 0 1 62 32" stroke-width="4.0"></path>
+            </g>
+          </svg>
+        </div>
+        <div style="padding:14px 18px;border-top:1px solid var(--line);background:var(--surf2)">
+          <div style="font-size:12.5px;font-weight:600">One colour</div>
+          <div style="margin-top:2px;font-size:11.5px;color:var(--ink3)">Stamp, laser, embroidery, a single-ink endpaper.</div>
+        </div>
+      </div>
+
+      <div style="flex:1 1 200px;min-width:190px;border-radius:18px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:30px;display:flex;align-items:center;justify-content:center;gap:26px;height:168px">
+          <div style="text-align:center">
+            <svg width="32" height="32" viewBox="0 0 64 64" fill="none">
+              <g transform="translate(-4,2.75)" stroke="#6D3BEE" stroke-linecap="round" stroke-width="4">
+                <path d="M40 32 A9.5 9.5 0 0 1 21 32"></path>
+                <path d="M21 32 A15 15 0 0 1 51 32"></path>
+                <path d="M51 32 A20.5 20.5 0 0 1 10 32"></path>
+                <path d="M10 32 A26 26 0 0 1 62 32"></path>
+              </g>
+            </svg>
+            <div style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink3)">32</div>
+          </div>
+          <div style="text-align:center">
+            <svg width="16" height="16" viewBox="0 0 64 64" fill="none">
+              <g transform="translate(-4,2.75)" stroke="#6D3BEE" stroke-linecap="round" stroke-width="4">
+                <path d="M40 32 A9.5 9.5 0 0 1 21 32"></path>
+                <path d="M21 32 A15 15 0 0 1 51 32"></path>
+                <path d="M51 32 A20.5 20.5 0 0 1 10 32"></path>
+                <path d="M10 32 A26 26 0 0 1 62 32"></path>
+              </g>
+            </svg>
+            <div style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink3)">16</div>
+          </div>
+        </div>
+        <div style="padding:14px 18px;border-top:1px solid var(--line);background:var(--surf2)">
+          <div style="font-size:12.5px;font-weight:600">Small sizes</div>
+          <div style="margin-top:2px;font-size:11.5px;color:var(--ink3)">The same drawing, unchanged. 16px is the floor.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:stretch;margin-bottom:22px">
+      <div style="flex:1 1 420px;min-width:380px;border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:16px 24px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700">Lockups</div>
+        <div style="padding:34px 30px;display:flex;flex-direction:column;gap:36px;align-items:flex-start">
+          <div style="display:flex;align-items:center;gap:16px">
+            <svg width="46" height="46" viewBox="0 0 64 64" fill="none">
+              <g transform="translate(-4,2.75)" stroke="#6D3BEE" stroke-linecap="round">
+                <path d="M40 32 A9.5 9.5 0 0 1 21 32 A15 15 0 0 1 51 32 A20.5 20.5 0 0 1 10 32 A26 26 0 0 1 62 32" stroke-width="4.0"></path>
+              </g>
+            </svg>
+            <span style="font-family:'Playfair Display',serif;font-size:38px;font-weight:600;letter-spacing:.005em">learn</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+              <g transform="translate(-4,2.75)" stroke="#6D3BEE" stroke-linecap="round">
+                <path d="M40 32 A9.5 9.5 0 0 1 21 32 A15 15 0 0 1 51 32 A20.5 20.5 0 0 1 10 32 A26 26 0 0 1 62 32" stroke-width="4.0"></path>
+              </g>
+            </svg>
+            <span style="font-family:'Playfair Display',serif;font-size:27px;font-weight:600">learn</span>
+          </div>
+          <div style="font-size:12px;color:var(--ink3);line-height:1.6;max-width:56ch">Horizontal is the default. The mark is 1.2× the cap height of the wordmark and their optical centres align — not their bounding boxes, because the spiral's mass sits low and right. The gap is half the mark's width.</div>
+        </div>
+      </div>
+
+      <div style="flex:1 1 420px;min-width:380px;border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:16px 24px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700">Construction and clear space</div>
+        <div style="padding:30px;display:grid;place-items:center">
+          <svg width="250" height="250" viewBox="0 0 64 64" fill="none">
+            <rect x="0.5" y="0.5" width="63" height="63" fill="none" stroke="#E6E3F1" stroke-width="0.6"></rect>
+            <rect x="10" y="10" width="44" height="44" fill="none" stroke="#D8CCFB" stroke-width="0.6" stroke-dasharray="2 2"></rect>
+            <line x1="4" y1="34.75" x2="60" y2="34.75" stroke="#E6E3F1" stroke-width="0.6"></line>
+            <g transform="translate(-4,2.75)" stroke="#6D3BEE" stroke-linecap="round">
+              <path d="M40 32 A9.5 9.5 0 0 1 21 32 A15 15 0 0 1 51 32 A20.5 20.5 0 0 1 10 32 A26 26 0 0 1 62 32" stroke-width="4.0"></path>
+            </g>
+            <g fill="#1A1626">
+              <circle cx="36" cy="34.75" r="0.9"></circle>
+              <circle cx="17" cy="34.75" r="0.9"></circle>
+              <circle cx="47" cy="34.75" r="0.9"></circle>
+              <circle cx="6" cy="34.75" r="0.9"></circle>
+              <circle cx="58" cy="34.75" r="0.9"></circle>
+            </g>
+            <g stroke="#8A86A0" stroke-width="0.5">
+              <line x1="47" y1="38" x2="58" y2="38"></line>
+              <line x1="47" y1="36.5" x2="47" y2="39.5"></line>
+              <line x1="58" y1="36.5" x2="58" y2="39.5"></line>
+            </g>
+            <text x="52.5" y="42.5" text-anchor="middle" fill="#8A86A0" font-size="3" font-family="JetBrains Mono, monospace">11</text>
+          </svg>
+        </div>
+        <div style="padding:0 30px 26px;font-size:12px;color:var(--ink3);line-height:1.6">Every turn ends on one horizontal axis, 11 units apart at a 64-unit box. Clear space is 10 units on all four sides — the dashed square — and nothing sets inside it, including the wordmark's own descenders.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:stretch">
+      <div style="flex:1 1 290px;min-width:270px;border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:16px 22px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700">In the rail</div>
+        <div style="padding:18px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--line)">
+          <svg width="28" height="28" viewBox="0 0 64 64" fill="none">
+            <g transform="translate(-4,2.75)" stroke="#6D3BEE" stroke-linecap="round" stroke-width="4">
+              <path d="M40 32 A9.5 9.5 0 0 1 21 32"></path>
+              <path d="M21 32 A15 15 0 0 1 51 32"></path>
+              <path d="M51 32 A20.5 20.5 0 0 1 10 32"></path>
+              <path d="M10 32 A26 26 0 0 1 62 32"></path>
+            </g>
+          </svg>
+          <span style="font-family:'Playfair Display',serif;font-size:19px;font-weight:600">learn</span>
+        </div>
+        <div style="padding:10px 18px 18px;display:flex;flex-direction:column;gap:2px">
+          <div style="padding:8px 10px;border-radius:9px;background:var(--vio-soft);color:var(--vio);font-size:13.5px;font-weight:650">Desk</div>
+          <div style="padding:8px 10px;font-size:13.5px;color:var(--ink2)">The track</div>
+          <div style="padding:8px 10px;font-size:13.5px;color:var(--ink2)">Review</div>
+          <div style="padding:8px 10px;font-size:13.5px;color:var(--ink2)">Shipped</div>
+        </div>
+      </div>
+
+      <div style="flex:2 1 520px;min-width:420px;border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:16px 24px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700">Spec</div>
+        <div style="display:grid;grid-template-columns:150px minmax(0,1fr)">
+          <sc-for list="{{ spec }}" as="s" hint-placeholder-count="7">
+            <div style="padding:11px 24px;border-bottom:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">{{ s.k }}</div>
+            <div style="padding:11px 24px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--ink2);line-height:1.5">{{ s.v }}</div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin:26px 0 0;font-size:13px;color:var(--ink2);max-width:78ch">One thing I deliberately did not do: make the logo itself change as you progress. The turn count is fixed. But the same five paths draw beautifully one at a time, so the spiral tracing itself out is the right thing for the splash and the empty Desk — say the word and I will animate it.</p>
+  </div>
+</section>
+
+<section style="padding:0 48px 40px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);line-height:1.55">
+  <div style="max-width:1500px;margin:0 auto">
+    <header style="padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:30px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--ink3)">turn 2 · more personal, self-improving</div>
+      <h1 style="margin:10px 0 0;font-family:'Playfair Display',serif;font-size:34px;font-weight:600">Marks about a person, not a system</h1>
+      <p style="margin:8px 0 0;font-size:14px;color:var(--ink2);max-width:78ch">Turn 1 drew the app's verification rule. These draw the person doing the work: returning to the same idea, accumulating quietly, leaving a mark by hand. Each is about change over time rather than a pass or a fail, and none of them is a rising line on a chart.</p>
+    </header>
+
+    <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:stretch">
+
+      <div id="2a" style="flex:1 1 330px;min-width:320px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;background:var(--vio);color:var(--on-vio)">2a</span>
+          <h2 style="margin:0;font-size:16px;font-weight:700">The return</h2>
+        </div>
+        <p style="margin:0;font-size:13px;color:var(--ink2);min-height:74px">Spaced repetition is a spiral, not a line: you come back to the same idea and pass it again from further out. The faint turns at the centre are the first times you met it; the solid outer turn is you now.</p>
+        <div style="border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:40px;display:grid;place-items:center">
+            <svg width="128" height="128" viewBox="0 0 64 64" fill="none" aria-label="learn mark, the return">
+              <g transform="translate(-8,2)">
+                <path d="M32 32 A5 5 0 0 1 42 32 A9 9 0 0 1 24 32" stroke="#D8CCFB" stroke-width="5" stroke-linecap="round"></path>
+                <path d="M24 32 A14 14 0 0 1 52 32 A20 20 0 0 1 12 32 A23 23 0 0 1 58 32" stroke="#6D3BEE" stroke-width="5" stroke-linecap="round"></path>
+                <circle cx="58" cy="32" r="4.5" fill="#6D3BEE"></circle>
+              </g>
+            </svg>
+          </div>
+          <div style="padding:22px 26px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px">
+            <svg width="36" height="36" viewBox="0 0 64 64" fill="none">
+              <g transform="translate(-8,2)">
+                <path d="M32 32 A5 5 0 0 1 42 32 A9 9 0 0 1 24 32" stroke="#D8CCFB" stroke-width="5" stroke-linecap="round"></path>
+                <path d="M24 32 A14 14 0 0 1 52 32 A20 20 0 0 1 12 32 A23 23 0 0 1 58 32" stroke="#6D3BEE" stroke-width="5" stroke-linecap="round"></path>
+                <circle cx="58" cy="32" r="4.5" fill="#6D3BEE"></circle>
+              </g>
+            </svg>
+            <span style="font-family:'Playfair Display',serif;font-size:29px;font-weight:600;letter-spacing:.01em">learn</span>
+          </div>
+          <div style="padding:16px 26px;border-top:1px solid var(--line);background:var(--surf2);display:flex;align-items:center;gap:18px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <svg width="17" height="17" viewBox="0 0 64 64" fill="none">
+                <g transform="translate(-8,2)">
+                  <path d="M24 32 A14 14 0 0 1 52 32 A20 20 0 0 1 12 32 A23 23 0 0 1 58 32" stroke="#6D3BEE" stroke-width="7" stroke-linecap="round"></path>
+                  <circle cx="58" cy="32" r="5" fill="#6D3BEE"></circle>
+                </g>
+              </svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">16px · fewer turns</span>
+            </div>
+            <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ink)">
+              <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
+                <g transform="translate(-8,2)">
+                  <path d="M32 32 A5 5 0 0 1 42 32 A9 9 0 0 1 24 32" stroke="#4A4470" stroke-width="5" stroke-linecap="round"></path>
+                  <path d="M24 32 A14 14 0 0 1 52 32 A20 20 0 0 1 12 32 A23 23 0 0 1 58 32" stroke="#ffffff" stroke-width="5" stroke-linecap="round"></path>
+                  <circle cx="58" cy="32" r="4.5" fill="#ffffff"></circle>
+                </g>
+              </svg>
+            </div>
+            <span style="margin-left:auto;font-size:11.5px;color:var(--ink3)">the method, drawn</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="2b" style="flex:1 1 330px;min-width:320px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;background:var(--vio);color:var(--on-vio)">2b</span>
+          <h2 style="margin:0;font-size:16px;font-weight:700">Growth rings</h2>
+        </div>
+        <p style="margin:0;font-size:13px;color:var(--ink2);min-height:74px">A cross-section of nine months. The rings are uneven because some weeks were good and some were not, and the form is open on one side because it is still being added to. Nothing here can be faked or skipped.</p>
+        <div style="border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:40px;display:grid;place-items:center">
+            <svg width="128" height="128" viewBox="0 0 64 64" fill="none" aria-label="learn mark, growth rings">
+              <g transform="translate(0,0)">
+                <path d="M35.4 36.9 A6 6 0 1 1 35.4 27.1" stroke="#6D3BEE" stroke-width="4" stroke-linecap="round"></path>
+                <path d="M38.3 41.0 A11 11 0 1 1 38.3 23.0" stroke="#6D3BEE" stroke-width="3" stroke-linecap="round"></path>
+                <path d="M41.2 45.1 A16 16 0 1 1 41.2 18.9" stroke="#6D3BEE" stroke-width="5" stroke-linecap="round" opacity="0.72"></path>
+                <path d="M44.1 49.2 A21 21 0 1 1 44.1 14.8" stroke="#D8CCFB" stroke-width="3" stroke-linecap="round"></path>
+                <path d="M47.5 54.1 A27 27 0 1 1 47.5 9.9" stroke="#D8CCFB" stroke-width="4" stroke-linecap="round"></path>
+              </g>
+            </svg>
+          </div>
+          <div style="padding:22px 26px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px">
+            <svg width="36" height="36" viewBox="0 0 64 64" fill="none">
+              <g transform="translate(0,0)">
+                <path d="M35.4 36.9 A6 6 0 1 1 35.4 27.1" stroke="#6D3BEE" stroke-width="4" stroke-linecap="round"></path>
+                <path d="M38.3 41.0 A11 11 0 1 1 38.3 23.0" stroke="#6D3BEE" stroke-width="3" stroke-linecap="round"></path>
+                <path d="M41.2 45.1 A16 16 0 1 1 41.2 18.9" stroke="#6D3BEE" stroke-width="5" stroke-linecap="round" opacity="0.72"></path>
+                <path d="M44.1 49.2 A21 21 0 1 1 44.1 14.8" stroke="#D8CCFB" stroke-width="3" stroke-linecap="round"></path>
+                <path d="M47.5 54.1 A27 27 0 1 1 47.5 9.9" stroke="#D8CCFB" stroke-width="4" stroke-linecap="round"></path>
+              </g>
+            </svg>
+            <span style="font-family:'Playfair Display',serif;font-size:29px;font-weight:600;letter-spacing:.01em">learn</span>
+          </div>
+          <div style="padding:16px 26px;border-top:1px solid var(--line);background:var(--surf2);display:flex;align-items:center;gap:18px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <svg width="17" height="17" viewBox="0 0 64 64" fill="none">
+                <g transform="translate(0,0)">
+                  <path d="M35.4 36.9 A6 6 0 1 1 35.4 27.1" stroke="#6D3BEE" stroke-width="7" stroke-linecap="round"></path>
+                  <path d="M41.2 45.1 A16 16 0 1 1 41.2 18.9" stroke="#6D3BEE" stroke-width="6" stroke-linecap="round"></path>
+                  <path d="M47.5 54.1 A27 27 0 1 1 47.5 9.9" stroke="#D8CCFB" stroke-width="6" stroke-linecap="round"></path>
+                </g>
+              </svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">16px · three rings</span>
+            </div>
+            <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ink)">
+              <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
+                <g transform="translate(0,0)">
+                  <path d="M35.4 36.9 A6 6 0 1 1 35.4 27.1" stroke="#ffffff" stroke-width="4" stroke-linecap="round"></path>
+                  <path d="M38.3 41.0 A11 11 0 1 1 38.3 23.0" stroke="#ffffff" stroke-width="3" stroke-linecap="round"></path>
+                  <path d="M41.2 45.1 A16 16 0 1 1 41.2 18.9" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.7"></path>
+                  <path d="M44.1 49.2 A21 21 0 1 1 44.1 14.8" stroke="#4A4470" stroke-width="3" stroke-linecap="round"></path>
+                  <path d="M47.5 54.1 A27 27 0 1 1 47.5 9.9" stroke="#4A4470" stroke-width="4" stroke-linecap="round"></path>
+                </g>
+              </svg>
+            </div>
+            <span style="margin-left:auto;font-size:11.5px;color:var(--ink3)">grows with the user</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="2c" style="flex:1 1 330px;min-width:320px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;background:var(--vio);color:var(--on-vio)">2c</span>
+          <h2 style="margin:0;font-size:16px;font-weight:700">Your own hand</h2>
+        </div>
+        <p style="margin:0;font-size:13px;color:var(--ink2);min-height:74px">An l written, not set: one stroke with a foot flick, and behind it the ghost of the same stroke made earlier. Nobody else's copy of this app looks like anybody else's, and the mark says so.</p>
+        <div style="border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:40px;display:grid;place-items:center">
+            <svg width="128" height="128" viewBox="0 0 64 64" fill="none" aria-label="learn mark, your own hand">
+              <g transform="translate(4,1)">
+                <path d="M27 10 C24 25, 23 38, 24.5 44 C26 51, 33 53, 40 48" stroke="#D8CCFB" stroke-width="6" stroke-linecap="round"></path>
+                <path d="M33 8 C30 24, 29 38, 30.5 45 C32 52, 39 54, 47 49" stroke="#6D3BEE" stroke-width="6.5" stroke-linecap="round"></path>
+              </g>
+            </svg>
+          </div>
+          <div style="padding:22px 26px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px">
+            <svg width="36" height="36" viewBox="0 0 64 64" fill="none">
+              <g transform="translate(4,1)">
+                <path d="M27 10 C24 25, 23 38, 24.5 44 C26 51, 33 53, 40 48" stroke="#D8CCFB" stroke-width="6" stroke-linecap="round"></path>
+                <path d="M33 8 C30 24, 29 38, 30.5 45 C32 52, 39 54, 47 49" stroke="#6D3BEE" stroke-width="6.5" stroke-linecap="round"></path>
+              </g>
+            </svg>
+            <span style="font-family:'Playfair Display',serif;font-size:29px;font-weight:600;letter-spacing:.01em">learn</span>
+          </div>
+          <div style="padding:16px 26px;border-top:1px solid var(--line);background:var(--surf2);display:flex;align-items:center;gap:18px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <svg width="17" height="17" viewBox="0 0 64 64" fill="none">
+                <g transform="translate(4,1)">
+                  <path d="M33 8 C30 24, 29 38, 30.5 45 C32 52, 39 54, 47 49" stroke="#6D3BEE" stroke-width="8" stroke-linecap="round"></path>
+                </g>
+              </svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">16px · one stroke</span>
+            </div>
+            <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ink)">
+              <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
+                <g transform="translate(4,1)">
+                  <path d="M27 10 C24 25, 23 38, 24.5 44 C26 51, 33 53, 40 48" stroke="#4A4470" stroke-width="6" stroke-linecap="round"></path>
+                  <path d="M33 8 C30 24, 29 38, 30.5 45 C32 52, 39 54, 47 49" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round"></path>
+                </g>
+              </svg>
+            </div>
+            <span style="margin-left:auto;font-size:11.5px;color:var(--ink3)">most human · least systemic</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="2d" style="flex:1 1 330px;min-width:320px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;background:var(--vio);color:var(--on-vio)">2d</span>
+          <h2 style="margin:0;font-size:16px;font-weight:700">What held</h2>
+        </div>
+        <p style="margin:0;font-size:13px;color:var(--ink2);min-height:74px">What you read and what you can still do a week later are two different circles. The solid part is the overlap — the only part that was ever really yours. It is the quietest, most adult mark of the eight.</p>
+        <div style="border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:40px;display:grid;place-items:center">
+            <svg width="128" height="128" viewBox="0 0 64 64" fill="none" aria-label="learn mark, what held">
+              <circle cx="24" cy="32" r="17" stroke="#D8CCFB" stroke-width="4"></circle>
+              <circle cx="40" cy="32" r="17" stroke="#D8CCFB" stroke-width="4"></circle>
+              <path d="M32 17 A17 17 0 0 1 32 47 A17 17 0 0 1 32 17 Z" fill="#6D3BEE"></path>
+            </svg>
+          </div>
+          <div style="padding:22px 26px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px">
+            <svg width="36" height="36" viewBox="0 0 64 64" fill="none">
+              <circle cx="24" cy="32" r="17" stroke="#D8CCFB" stroke-width="4"></circle>
+              <circle cx="40" cy="32" r="17" stroke="#D8CCFB" stroke-width="4"></circle>
+              <path d="M32 17 A17 17 0 0 1 32 47 A17 17 0 0 1 32 17 Z" fill="#6D3BEE"></path>
+            </svg>
+            <span style="font-family:'Playfair Display',serif;font-size:29px;font-weight:600;letter-spacing:.01em">learn</span>
+          </div>
+          <div style="padding:16px 26px;border-top:1px solid var(--line);background:var(--surf2);display:flex;align-items:center;gap:18px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <svg width="17" height="17" viewBox="0 0 64 64" fill="none">
+                <circle cx="24" cy="32" r="17" stroke="#D8CCFB" stroke-width="6"></circle>
+                <circle cx="40" cy="32" r="17" stroke="#D8CCFB" stroke-width="6"></circle>
+                <path d="M32 17 A17 17 0 0 1 32 47 A17 17 0 0 1 32 17 Z" fill="#6D3BEE"></path>
+              </svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">16px · heavier rule</span>
+            </div>
+            <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ink)">
+              <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
+                <circle cx="24" cy="32" r="17" stroke="#4A4470" stroke-width="4"></circle>
+                <circle cx="40" cy="32" r="17" stroke="#4A4470" stroke-width="4"></circle>
+                <path d="M32 17 A17 17 0 0 1 32 47 A17 17 0 0 1 32 17 Z" fill="#ffffff"></path>
+              </svg>
+            </div>
+            <span style="margin-left:auto;font-size:11.5px;color:var(--ink3)">quietest</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:34px;border-radius:18px;padding:26px 30px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+      <h2 style="margin:0 0 6px;font-size:15px;font-weight:700">In place</h2>
+      <p style="margin:0 0 20px;font-size:13px;color:var(--ink2)">The rail head at real size.</p>
+      <div style="display:flex;gap:18px;flex-wrap:wrap">
+        <sc-for list="{{ rail2 }}" as="r" hint-placeholder-count="4">
+          <div style="width:244px;border-radius:14px;border:1px solid var(--line);background:var(--surf);overflow:hidden">
+            <div style="padding:18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)">
+              <div style="{{ r.slotStyle }}">{{ r.glyph }}</div>
+              <span style="font-family:'Playfair Display',serif;font-size:19px;font-weight:600">learn</span>
+            </div>
+            <div style="padding:10px 18px 16px;display:flex;flex-direction:column;gap:2px">
+              <div style="padding:8px 10px;border-radius:9px;background:var(--vio-soft);color:var(--vio);font-size:13.5px;font-weight:650">Desk</div>
+              <div style="padding:8px 10px;font-size:13.5px;color:var(--ink2)">The track</div>
+              <div style="padding:8px 10px;font-size:13.5px;color:var(--ink2)">Review</div>
+            </div>
+            <div style="padding:8px 18px 14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink3)">{{ r.id }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <p style="margin:26px 0 0;font-size:13px;color:var(--ink2);max-width:78ch">My pick here is <a href="#2a">2a</a>: it is the one mark that is literally the thing the app does to you over nine months, it is personal without being cute, and the outer dot gives it the same "you are here" the whole product is built on. <a href="#2b">2b</a> is the most emotionally durable if you want something that will still feel right in month eight, and it has a real trick available — the ring count can track the weeks you have actually worked. <a href="#2c">2c</a> is the warmest but will fight the Playfair wordmark a little. Tell me which and I will draw the full set: favicon, app icon, dark variant, one-colour stamp.</p>
+  </div>
+</section>
+
+<section style="padding:0 48px 80px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);line-height:1.55">
+  <div style="max-width:1500px;margin:0 auto">
+    <header style="padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:30px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--ink3)">turn 1 · four marks</div>
+      <h1 style="margin:10px 0 0;font-family:'Playfair Display',serif;font-size:34px;font-weight:600">A mark for <span style="font-style:italic">learn</span></h1>
+      <p style="margin:8px 0 0;font-size:14px;color:var(--ink2);max-width:74ch">Each one is drawn from something the product means, not from the category. All four are one violet plus its tint, work at 16px, and survive being stamped in one colour on anything.</p>
+    </header>
+
+    <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:stretch">
+
+      <div id="1a" style="flex:1 1 330px;min-width:320px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;background:var(--vio);color:var(--on-vio)">1a</span>
+          <h2 style="margin:0;font-size:16px;font-weight:700">Two passes</h2>
+        </div>
+        <p style="margin:0;font-size:13px;color:var(--ink2);min-height:60px">A check is only yours after two clean passes a week apart. The mark is those two passes — the first one behind you, faint; the second solid. It is the app's single rule, drawn.</p>
+        <div style="border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:40px;display:grid;place-items:center;background:var(--surf)">
+            <svg width="128" height="128" viewBox="0 0 64 64" fill="none" aria-label="learn mark, two passes">
+              <path d="M8 34 L18 44 L34 20" stroke="#D8CCFB" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M28 34 L38 44 L56 18" stroke="#6D3BEE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <div style="padding:22px 26px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px">
+            <svg width="34" height="34" viewBox="0 0 64 64" fill="none">
+              <path d="M8 34 L18 44 L34 20" stroke="#D8CCFB" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M28 34 L38 44 L56 18" stroke="#6D3BEE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span style="font-family:'Playfair Display',serif;font-size:29px;font-weight:600;letter-spacing:.01em">learn</span>
+          </div>
+          <div style="padding:16px 26px;border-top:1px solid var(--line);background:var(--surf2);display:flex;align-items:center;gap:18px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <svg width="16" height="16" viewBox="0 0 64 64" fill="none">
+                <path d="M8 34 L18 44 L34 20" stroke="#D8CCFB" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M28 34 L38 44 L56 18" stroke="#6D3BEE" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">16px</span>
+            </div>
+            <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ink)">
+              <svg width="20" height="20" viewBox="0 0 64 64" fill="none">
+                <path d="M8 34 L18 44 L34 20" stroke="#827D9B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M28 34 L38 44 L56 18" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <span style="margin-left:auto;font-size:11.5px;color:var(--ink3)">warmest · reads instantly</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="1b" style="flex:1 1 330px;min-width:320px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;background:var(--vio);color:var(--on-vio)">1b</span>
+          <h2 style="margin:0;font-size:16px;font-weight:700">The stacked l</h2>
+        </div>
+        <p style="margin:0;font-size:13px;color:var(--ink2);min-height:60px">The letterform and the capability column are the same shape. A lowercase l built from stacked segments — filled from the bottom as knowledge holds. Already half-present in the app's rail.</p>
+        <div style="border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:40px;display:grid;place-items:center">
+            <svg width="128" height="128" viewBox="0 0 64 64" fill="none" aria-label="learn mark, stacked l">
+              <rect x="2" y="2" width="60" height="60" rx="17" fill="#6D3BEE"></rect>
+              <rect x="25" y="14" width="14" height="10" rx="4" fill="#ffffff" opacity="0.38"></rect>
+              <rect x="25" y="27" width="14" height="10" rx="4" fill="#ffffff" opacity="0.62"></rect>
+              <rect x="25" y="40" width="14" height="10" rx="4" fill="#ffffff"></rect>
+            </svg>
+          </div>
+          <div style="padding:22px 26px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px">
+            <svg width="34" height="34" viewBox="0 0 64 64" fill="none">
+              <rect x="2" y="2" width="60" height="60" rx="17" fill="#6D3BEE"></rect>
+              <rect x="25" y="14" width="14" height="10" rx="4" fill="#ffffff" opacity="0.38"></rect>
+              <rect x="25" y="27" width="14" height="10" rx="4" fill="#ffffff" opacity="0.62"></rect>
+              <rect x="25" y="40" width="14" height="10" rx="4" fill="#ffffff"></rect>
+            </svg>
+            <span style="font-family:'Playfair Display',serif;font-size:29px;font-weight:600;letter-spacing:.01em">learn</span>
+          </div>
+          <div style="padding:16px 26px;border-top:1px solid var(--line);background:var(--surf2);display:flex;align-items:center;gap:18px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <svg width="16" height="16" viewBox="0 0 64 64" fill="none">
+                <rect x="2" y="2" width="60" height="60" rx="17" fill="#6D3BEE"></rect>
+                <rect x="25" y="14" width="14" height="10" rx="4" fill="#ffffff" opacity="0.38"></rect>
+                <rect x="25" y="27" width="14" height="10" rx="4" fill="#ffffff" opacity="0.62"></rect>
+                <rect x="25" y="40" width="14" height="10" rx="4" fill="#ffffff"></rect>
+              </svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">16px</span>
+            </div>
+            <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ink)">
+              <svg width="20" height="20" viewBox="0 0 64 64" fill="none">
+                <rect x="25" y="14" width="14" height="10" rx="4" fill="#ffffff" opacity="0.38"></rect>
+                <rect x="25" y="27" width="14" height="10" rx="4" fill="#ffffff" opacity="0.62"></rect>
+                <rect x="25" y="40" width="14" height="10" rx="4" fill="#ffffff"></rect>
+              </svg>
+            </div>
+            <span style="margin-left:auto;font-size:11.5px;color:var(--ink3)">app-icon ready</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="1c" style="flex:1 1 330px;min-width:320px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;background:var(--vio);color:var(--on-vio)">1c</span>
+          <h2 style="margin:0;font-size:16px;font-weight:700">Proof squares</h2>
+        </div>
+        <p style="margin:0;font-size:13px;color:var(--ink2);min-height:60px">One square, one check. The mark is honest about the ratio: mostly outline, a few solid. It is the same graphic the Desk uses, and it earns the right to change as the nine months go on.</p>
+        <div style="border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:40px;display:grid;place-items:center">
+            <svg width="128" height="128" viewBox="0 0 64 64" fill="none" aria-label="learn mark, proof squares">
+              <rect x="6" y="6" width="15" height="15" rx="5" fill="#6D3BEE"></rect>
+              <rect x="24.5" y="6" width="15" height="15" rx="5" fill="#6D3BEE"></rect>
+              <rect x="44.5" y="7.5" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="7.5" y="26" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="26" y="26" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="44.5" y="26" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="7.5" y="44.5" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="26" y="44.5" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="44.5" y="44.5" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+            </svg>
+          </div>
+          <div style="padding:22px 26px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px">
+            <svg width="34" height="34" viewBox="0 0 64 64" fill="none">
+              <rect x="6" y="6" width="15" height="15" rx="5" fill="#6D3BEE"></rect>
+              <rect x="24.5" y="6" width="15" height="15" rx="5" fill="#6D3BEE"></rect>
+              <rect x="44.5" y="7.5" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="7.5" y="26" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="26" y="26" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="44.5" y="26" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="7.5" y="44.5" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="26" y="44.5" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+              <rect x="44.5" y="44.5" width="12" height="12" rx="4" stroke="#D8CCFB" stroke-width="3"></rect>
+            </svg>
+            <span style="font-family:'Playfair Display',serif;font-size:29px;font-weight:600;letter-spacing:.01em">learn</span>
+          </div>
+          <div style="padding:16px 26px;border-top:1px solid var(--line);background:var(--surf2);display:flex;align-items:center;gap:18px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <svg width="16" height="16" viewBox="0 0 64 64" fill="none">
+                <rect x="6" y="6" width="17" height="17" rx="5" fill="#6D3BEE"></rect>
+                <rect x="26" y="6" width="17" height="17" rx="5" fill="#6D3BEE"></rect>
+                <rect x="47" y="8" width="13" height="13" rx="4" fill="#D8CCFB"></rect>
+                <rect x="8" y="27" width="13" height="13" rx="4" fill="#D8CCFB"></rect>
+                <rect x="28" y="27" width="13" height="13" rx="4" fill="#D8CCFB"></rect>
+                <rect x="47" y="27" width="13" height="13" rx="4" fill="#D8CCFB"></rect>
+                <rect x="8" y="47" width="13" height="13" rx="4" fill="#D8CCFB"></rect>
+                <rect x="28" y="47" width="13" height="13" rx="4" fill="#D8CCFB"></rect>
+                <rect x="47" y="47" width="13" height="13" rx="4" fill="#D8CCFB"></rect>
+              </svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">16px · solid fill</span>
+            </div>
+            <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ink)">
+              <svg width="20" height="20" viewBox="0 0 64 64" fill="none">
+                <rect x="6" y="6" width="17" height="17" rx="5" fill="#ffffff"></rect>
+                <rect x="26" y="6" width="17" height="17" rx="5" fill="#ffffff"></rect>
+                <rect x="47" y="8" width="13" height="13" rx="4" fill="#4A4470"></rect>
+                <rect x="8" y="27" width="13" height="13" rx="4" fill="#4A4470"></rect>
+                <rect x="28" y="27" width="13" height="13" rx="4" fill="#4A4470"></rect>
+                <rect x="47" y="27" width="13" height="13" rx="4" fill="#4A4470"></rect>
+                <rect x="8" y="47" width="13" height="13" rx="4" fill="#4A4470"></rect>
+                <rect x="28" y="47" width="13" height="13" rx="4" fill="#4A4470"></rect>
+                <rect x="47" y="47" width="13" height="13" rx="4" fill="#4A4470"></rect>
+              </svg>
+            </div>
+            <span style="margin-left:auto;font-size:11.5px;color:var(--ink3)">needs a solid variant small</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="1d" style="flex:1 1 330px;min-width:320px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;background:var(--vio);color:var(--on-vio)">1d</span>
+          <h2 style="margin:0;font-size:16px;font-weight:700">The residual stream</h2>
+        </div>
+        <p style="margin:0;font-size:13px;color:var(--ink2);min-height:60px">A line that carries forward and is added to, never replaced — the idea at the centre of the subject being studied, and of the method. One stroke, one node where the addition lands.</p>
+        <div style="border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:40px;display:grid;place-items:center">
+            <svg width="128" height="128" viewBox="0 0 64 64" fill="none" aria-label="learn mark, residual stream">
+              <path d="M32 6 V58" stroke="#D8CCFB" stroke-width="6" stroke-linecap="round"></path>
+              <path d="M32 44 C32 32, 14 34, 14 22" stroke="#6D3BEE" stroke-width="6" stroke-linecap="round"></path>
+              <path d="M32 26 C32 14, 50 16, 50 6" stroke="#6D3BEE" stroke-width="6" stroke-linecap="round" opacity="0.42"></path>
+              <circle cx="32" cy="44" r="7.5" fill="#6D3BEE"></circle>
+            </svg>
+          </div>
+          <div style="padding:22px 26px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px">
+            <svg width="34" height="34" viewBox="0 0 64 64" fill="none">
+              <path d="M32 6 V58" stroke="#D8CCFB" stroke-width="6" stroke-linecap="round"></path>
+              <path d="M32 44 C32 32, 14 34, 14 22" stroke="#6D3BEE" stroke-width="6" stroke-linecap="round"></path>
+              <path d="M32 26 C32 14, 50 16, 50 6" stroke="#6D3BEE" stroke-width="6" stroke-linecap="round" opacity="0.42"></path>
+              <circle cx="32" cy="44" r="7.5" fill="#6D3BEE"></circle>
+            </svg>
+            <span style="font-family:'Playfair Display',serif;font-size:29px;font-weight:600;letter-spacing:.01em">learn</span>
+          </div>
+          <div style="padding:16px 26px;border-top:1px solid var(--line);background:var(--surf2);display:flex;align-items:center;gap:18px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <svg width="16" height="16" viewBox="0 0 64 64" fill="none">
+                <path d="M32 6 V58" stroke="#D8CCFB" stroke-width="8" stroke-linecap="round"></path>
+                <path d="M32 44 C32 32, 14 34, 14 22" stroke="#6D3BEE" stroke-width="8" stroke-linecap="round"></path>
+                <circle cx="32" cy="44" r="9" fill="#6D3BEE"></circle>
+              </svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">16px · simplified</span>
+            </div>
+            <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ink)">
+              <svg width="20" height="20" viewBox="0 0 64 64" fill="none">
+                <path d="M32 6 V58" stroke="#4A4470" stroke-width="7" stroke-linecap="round"></path>
+                <path d="M32 44 C32 32, 14 34, 14 22" stroke="#ffffff" stroke-width="7" stroke-linecap="round"></path>
+                <circle cx="32" cy="44" r="8" fill="#ffffff"></circle>
+              </svg>
+            </div>
+            <span style="margin-left:auto;font-size:11.5px;color:var(--ink3)">most specific · least literal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:34px;border-radius:18px;padding:26px 30px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+      <h2 style="margin:0 0 6px;font-size:15px;font-weight:700">In place</h2>
+      <p style="margin:0 0 20px;font-size:13px;color:var(--ink2)">The rail head at real size, so you can judge them where they will actually live. Currently <a href="#1b">1b</a>.</p>
+      <div style="display:flex;gap:18px;flex-wrap:wrap">
+        <sc-for list="{{ rail }}" as="r" hint-placeholder-count="4">
+          <div style="width:244px;border-radius:14px;border:1px solid var(--line);background:var(--surf);overflow:hidden">
+            <div style="padding:18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)">
+              <div style="{{ r.slotStyle }}">{{ r.glyph }}</div>
+              <span style="font-family:'Playfair Display',serif;font-size:19px;font-weight:600">learn</span>
+            </div>
+            <div style="padding:10px 18px 16px;display:flex;flex-direction:column;gap:2px">
+              <div style="padding:8px 10px;border-radius:9px;background:var(--vio-soft);color:var(--vio);font-size:13.5px;font-weight:650">Desk</div>
+              <div style="padding:8px 10px;font-size:13.5px;color:var(--ink2)">The track</div>
+              <div style="padding:8px 10px;font-size:13.5px;color:var(--ink2)">Review</div>
+            </div>
+            <div style="padding:8px 18px 14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink3)">{{ r.id }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <p style="margin:26px 0 0;font-size:13px;color:var(--ink2);max-width:74ch">My pick is <a href="#1b">1b</a> — it is the only one that is a letterform and the product's signature graphic at once, it needs no simplification at 16px, and it drops straight into the violet square already in the rail. <a href="#1a">1a</a> is the friendliest if you want the mark to be legible to someone who has never used it. Tell me which and I will draw the full set: favicon, app icon, dark variant, and a one-colour stamp.</p>
+  </div>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1500,&quot;height&quot;:1100}}">
+const R = React.createElement;
+
+const marks = {
+  '1a': () => R('svg', { width: 26, height: 26, viewBox: '0 0 64 64', fill: 'none' },
+    R('path', { d: 'M8 34 L18 44 L34 20', stroke: '#D8CCFB', strokeWidth: 8, strokeLinecap: 'round', strokeLinejoin: 'round' }),
+    R('path', { d: 'M28 34 L38 44 L56 18', stroke: '#6D3BEE', strokeWidth: 8, strokeLinecap: 'round', strokeLinejoin: 'round' })),
+  '1b': () => R('svg', { width: 28, height: 28, viewBox: '0 0 64 64', fill: 'none' },
+    R('rect', { x: 2, y: 2, width: 60, height: 60, rx: 17, fill: '#6D3BEE' }),
+    R('rect', { x: 25, y: 14, width: 14, height: 10, rx: 4, fill: '#fff', opacity: 0.38 }),
+    R('rect', { x: 25, y: 27, width: 14, height: 10, rx: 4, fill: '#fff', opacity: 0.62 }),
+    R('rect', { x: 25, y: 40, width: 14, height: 10, rx: 4, fill: '#fff' })),
+  '1c': () => R('svg', { width: 26, height: 26, viewBox: '0 0 64 64', fill: 'none' },
+    R('rect', { x: 6, y: 6, width: 17, height: 17, rx: 5, fill: '#6D3BEE' }),
+    R('rect', { x: 26, y: 6, width: 17, height: 17, rx: 5, fill: '#6D3BEE' }),
+    R('rect', { x: 47, y: 8, width: 13, height: 13, rx: 4, fill: '#D8CCFB' }),
+    R('rect', { x: 8, y: 27, width: 13, height: 13, rx: 4, fill: '#D8CCFB' }),
+    R('rect', { x: 28, y: 27, width: 13, height: 13, rx: 4, fill: '#D8CCFB' }),
+    R('rect', { x: 47, y: 27, width: 13, height: 13, rx: 4, fill: '#D8CCFB' }),
+    R('rect', { x: 8, y: 47, width: 13, height: 13, rx: 4, fill: '#D8CCFB' }),
+    R('rect', { x: 28, y: 47, width: 13, height: 13, rx: 4, fill: '#D8CCFB' }),
+    R('rect', { x: 47, y: 47, width: 13, height: 13, rx: 4, fill: '#D8CCFB' })),
+  '1d': () => R('svg', { width: 26, height: 26, viewBox: '0 0 64 64', fill: 'none' },
+    R('path', { d: 'M32 6 V58', stroke: '#D8CCFB', strokeWidth: 8, strokeLinecap: 'round' }),
+    R('path', { d: 'M32 44 C32 32, 14 34, 14 22', stroke: '#6D3BEE', strokeWidth: 8, strokeLinecap: 'round' }),
+    R('circle', { cx: 32, cy: 44, r: 9, fill: '#6D3BEE' })),
+  '2a': () => R('svg', { width: 28, height: 28, viewBox: '0 0 64 64', fill: 'none' },
+    R('g', { transform: 'translate(-8,2)' },
+      R('path', { d: 'M32 32 A5 5 0 0 1 42 32 A9 9 0 0 1 24 32', stroke: '#D8CCFB', strokeWidth: 5, strokeLinecap: 'round' }),
+      R('path', { d: 'M24 32 A14 14 0 0 1 52 32 A20 20 0 0 1 12 32 A23 23 0 0 1 58 32', stroke: '#6D3BEE', strokeWidth: 5, strokeLinecap: 'round' }),
+      R('circle', { cx: 58, cy: 32, r: 4.5, fill: '#6D3BEE' }))),
+  '2b': () => R('svg', { width: 28, height: 28, viewBox: '0 0 64 64', fill: 'none' },
+    R('g', { transform: 'translate(0,0)' },
+      R('path', { d: 'M35.4 36.9 A6 6 0 1 1 35.4 27.1', stroke: '#6D3BEE', strokeWidth: 4, strokeLinecap: 'round' }),
+      R('path', { d: 'M38.3 41.0 A11 11 0 1 1 38.3 23.0', stroke: '#6D3BEE', strokeWidth: 3, strokeLinecap: 'round' }),
+      R('path', { d: 'M41.2 45.1 A16 16 0 1 1 41.2 18.9', stroke: '#6D3BEE', strokeWidth: 5, strokeLinecap: 'round', opacity: 0.72 }),
+      R('path', { d: 'M44.1 49.2 A21 21 0 1 1 44.1 14.8', stroke: '#D8CCFB', strokeWidth: 3, strokeLinecap: 'round' }),
+      R('path', { d: 'M47.5 54.1 A27 27 0 1 1 47.5 9.9', stroke: '#D8CCFB', strokeWidth: 4, strokeLinecap: 'round' }))),
+  '2c': () => R('svg', { width: 28, height: 28, viewBox: '0 0 64 64', fill: 'none' },
+    R('g', { transform: 'translate(4,1)' },
+      R('path', { d: 'M27 10 C24 25, 23 38, 24.5 44 C26 51, 33 53, 40 48', stroke: '#D8CCFB', strokeWidth: 6, strokeLinecap: 'round' }),
+      R('path', { d: 'M33 8 C30 24, 29 38, 30.5 45 C32 52, 39 54, 47 49', stroke: '#6D3BEE', strokeWidth: 6.5, strokeLinecap: 'round' }))),
+  '2d': () => R('svg', { width: 28, height: 28, viewBox: '0 0 64 64', fill: 'none' },
+    R('circle', { cx: 24, cy: 32, r: 17, stroke: '#D8CCFB', strokeWidth: 4 }),
+    R('circle', { cx: 40, cy: 32, r: 17, stroke: '#D8CCFB', strokeWidth: 4 }),
+    R('path', { d: 'M32 17 A17 17 0 0 1 32 47 A17 17 0 0 1 32 17 Z', fill: '#6D3BEE' }))
+};
+
+class Component extends DCLogic {
+  renderVals() {
+    const rail = (ids) => ids.map(id => ({
+      id: id + ' in the rail',
+      glyph: marks[id](),
+      slotStyle: 'width:28px;height:28px;flex:none;display:grid;place-items:center'
+    }));
+    const spec = [
+      ['geometry', 'Five half-turns on a single horizontal axis. Endpoints at 28, 36, 17, 47, 6, 58 on a 64-unit box — an even 11 units of growth per half-turn.'],
+      ['stroke', 'Even 4.0 at a 64-unit box, round caps, one continuous path. Add 0.4 on a violet fill, 0.2 on dark.'],
+      ['colour', '#6D3BEE on light · #A78BFA on dark · #FFFFFF knocked out of #6D3BEE or #1A1626 · #1A1626 for one colour.'],
+      ['clear space', '10 units on a 64-unit box, every side. Nothing sets inside it.'],
+      ['min size', 'One cut at every size. 16px is the floor.'],
+      ['wordmark', "Playfair Display 600, lowercase, tracking +0.005em. Never set 'learn' in Jakarta or Mono."],
+      ['don’t', 'Taper the stroke, add a dot, close the outer turn into a circle, tilt it, outline it, or put it in a container other than the app icon.']
+    ].map(([k, v]) => ({ k, v }));
+    return { spec, rail: rail(['1a', '1b', '1c', '1d']), rail2: rail(['2a', '2b', '2c', '2d']) };
+  }
+}
+
+</script>
+</body>
+</html>

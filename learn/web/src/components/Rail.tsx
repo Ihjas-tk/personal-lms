@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router";
+import Mark from "./Mark";
 import SessionCard from "./SessionCard";
 import ThemeToggle from "./ThemeToggle";
 
@@ -44,10 +45,9 @@ export default function Rail({
 
   return (
     <nav className="rail" aria-label="Sections">
+      {/* The horizontal lockup, bare: the mark never sits in a tile outside the app icon. */}
       <div className="rail-brand">
-        <div className="rail-mark" aria-hidden="true">
-          l
-        </div>
+        <Mark className="rail-mark" size={28} />
         <h1>learn</h1>
       </div>
 

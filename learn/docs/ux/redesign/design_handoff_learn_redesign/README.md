@@ -333,10 +333,37 @@ reconstructed/taught → **rebuilt it / taught it**, weekly review → **Sunday 
 close session → **Wrap up**, explain-back critique → **second opinion**, capstone artefacts →
 **Things that exist**.
 
+## Brand
+
+**The mark — "the return".** Spaced repetition is a spiral, not a line: you come back to the
+same idea and pass it again from further out. Four half-turns whose endpoints all sit on one
+horizontal axis, each turn 11 units further out than the last on a 64-unit box, drawn as one
+continuous even-weight path.
+
+    <path d="M40 32 A9.5 9.5 0 0 1 21 32 A15 15 0 0 1 51 32 A20.5 20.5 0 0 1 10 32 A26 26 0 0 1 62 32"
+          transform="translate(-4,2.75)" stroke="#6D3BEE" stroke-width="4" stroke-linecap="round"/>
+
+| | |
+| --- | --- |
+| Stroke | Even 4.0 at a 64-unit box, round caps, one path. 4.4 knocked out of a violet fill, 4.2 on dark. |
+| Colour | `#6D3BEE` on light · `#A78BFA` on dark · `#FFFFFF` out of `#6D3BEE` or `#1A1626` · `#1A1626` one-colour |
+| App icon | Mark at 72%, corner radius 23% of the square |
+| Clear space | 10 units on a 64-unit box, every side — nothing sets inside it |
+| Min size | 16px. One cut serves every size; there is no simplified small variant to maintain |
+| Wordmark | Playfair Display 600, lowercase, tracking +0.005em. Never Jakarta or Mono |
+| Lockup | Mark at 1.2× the wordmark's cap height, optical centres aligned, gap = half the mark's width |
+| Don't | Taper the stroke, add a dot, close the outer turn into a circle, tilt it, outline it, or put it in any container but the app icon |
+
+The logo does **not** change with progress — the turn count is fixed. The four paths do draw
+one at a time cleanly, so the spiral tracing itself out is the intended splash and empty-Desk
+animation; it is not built yet.
+
 ## Assets
-None. No images, no icon set, no illustration — the only graphics are CSS rectangles and the
-striped placeholder where the source player mounts. Fonts load from Google Fonts; self-host
-them in the app.
+`brand/` holds the mark as SVG: `learn-mark.svg`, `learn-mark-dark.svg`,
+`learn-mark-onecolour.svg`, `learn-appicon.svg`, `learn-favicon-16.svg`. Beyond those there
+are no images, no icon set and no illustration — the only other graphics are CSS rectangles
+and the striped placeholder where the source player mounts. Fonts load from Google Fonts;
+self-host them in the app.
 
 ## Files
 - `Learn Redesign.dc.html` — the interactive prototype. All seven screens, light and dark,
@@ -346,6 +373,10 @@ them in the app.
   state vocabulary with a before/after, the naming table, the three states the prototype does
   not show (tidy merge review and its refusal, note conflict, AI unavailable), and a
   file-by-file keep / re-cut / delete verdict with a six-step order of work.
+- `Learn Logo.dc.html` — the identity exploration. Turn 3 at the top is the chosen mark, built
+  out: app icon, dark, one-colour, size samples, both lockups, construction and clear space,
+  and the spec table. Turns 2 and 1 below are the rejected routes, kept for the record.
+- `brand/` — the mark as production SVG, five files.
 - `source-package/` — the original brief, flows, inventory and `tokens.css` this pass was
   designed against, plus every screenshot of the old build.
 

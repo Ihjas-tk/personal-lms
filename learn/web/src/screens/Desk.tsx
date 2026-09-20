@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import Band from "../components/Band";
+import Mark from "../components/Mark";
 import Ridge from "../components/Ridge";
 import Stat from "../components/Stat";
 import { HoursBar } from "../components/HoursBar";
@@ -41,6 +42,10 @@ export default function Desk({ onStart }: { onStart(moduleId: string): void }) {
             : `${st.skips_banked} schedule ${plural(st.skips_banked, "skip")} banked`}
         </span>
       </div>
+
+      {/* First run only: the spiral traces itself out once, above the first card.
+          It is the one place in the app the mark animates. */}
+      {fr ? <Mark className="desk-mark" size={96} /> : null}
 
       <Band
         eyebrow={

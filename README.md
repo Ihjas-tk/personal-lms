@@ -2,6 +2,10 @@
 [![License](https://img.shields.io/github/license/Ihjas-tk/study-harness)](LICENSE)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)](https://www.python.org/)
 
+<p align="center">
+  <img src="docs/assets/mark.svg" width="72" alt="learn's mark: a four-turn spiral">
+</p>
+
 # learn: a self-hosted study tracker that measures whether you actually know it
 
 `learn` evaluates you the way you would evaluate a model. Point it at a curriculum and
