@@ -17,11 +17,11 @@ def test_health_reports_ai_unavailable(client: TestClient) -> None:
     assert body["ai_available"] is False
     assert body["vault_git"] is False
     assert "ANTHROPIC_API_KEY" in body["ai_reason"]
-    assert "ant auth login" in body["ai_reason"]
+    assert "learn/.env" in body["ai_reason"]
     # §6.3: one sentence, verbatim, backticks and all — the client only sets them in mono.
-    assert body["ai_reason"] == (
-        "No API credential found. Run `ant auth login`, or set `ANTHROPIC_API_KEY`."
-    )
+    from learn.ai import NO_CREDENTIAL
+
+    assert body["ai_reason"] == NO_CREDENTIAL
 
 
 def test_curriculum_parses_the_fixture(client: TestClient) -> None:
