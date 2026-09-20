@@ -88,20 +88,24 @@ def bundle(name: str, script: str, icon: Path | None) -> Path:
     return app
 
 
-def build_icon() -> Path | None:
-    """Render tools/icon.html with the project's Playwright, then pack an .icns."""
+def build_icon(variant: str = "") -> Path | None:
+    """Render tools/icon.html with the project's Playwright, then pack an .icns.
+
+    `variant="stop"` renders the red-bordered icon for `Stop learn.app`.
+    """
     out = PROJECT / ".cache" / "icon"
     out.mkdir(parents=True, exist_ok=True)
-    png = out / "icon-1024.png"
+    suffix = f"-{variant}" if variant else ""
+    png = out / f"icon{suffix}-1024.png"
     if not (PROJECT / "web" / "node_modules" / "playwright").exists():
         print("Playwright not found under web/node_modules; skipping the icon.")
         return None
     subprocess.run(
-        ["node", str(PROJECT / "tools" / "icon.mjs"), str(png)],
+        ["node", str(PROJECT / "tools" / "icon.mjs"), str(png), variant],
         check=True,
         cwd=PROJECT / "web",
     )
-    iconset = out / "learn.iconset"
+    iconset = out / f"learn{suffix}.iconset"
     if iconset.exists():
         shutil.rmtree(iconset)
     iconset.mkdir()
@@ -113,7 +117,7 @@ def build_icon() -> Path | None:
                 ["sips", "-z", str(px), str(px), str(png), "--out", str(iconset / name)],
                 check=True, capture_output=True,
             )
-    icns = out / "learn.icns"
+    icns = out / f"learn{suffix}.icns"
     subprocess.run(["iconutil", "-c", "icns", str(iconset), "-o", str(icns)], check=True)
     return icns
 
@@ -124,8 +128,9 @@ def main() -> int:
         return 1
     APPS.mkdir(exist_ok=True)
     icon = build_icon()
+    stop_icon = build_icon("stop")
     app = bundle("learn", LAUNCH, icon)
-    stop = bundle("Stop learn", STOP, icon)
+    stop = bundle("Stop learn", STOP, stop_icon)
     # Refresh Finder's icon cache for the new bundles.
     for a in (app, stop):
         os.utime(a, None)

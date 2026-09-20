@@ -205,7 +205,7 @@ The UI says `lasting` where the API says `durable`, `solid` for `proficient`, `s
 `overconfident_miss`. Ids on the wire never change; `web/src/labels.ts` is the one place the
 renames live.
 
-## Mac app icon
+## Mac app icon `Stop learn.app` gets the same icon with a red inner border so the two are told apart in the Dock (`tools/icon.html?variant=stop`).
 
 `python3 tools/make_mac_app.py` builds two small app bundles in `~/Applications`:
 
