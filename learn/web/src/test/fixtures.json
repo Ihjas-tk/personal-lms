@@ -2,7 +2,7 @@
   "health": {
     "ok": true,
     "ai_available": false,
-    "ai_reason": "No API credential found. Run `ant auth login`, or set `ANTHROPIC_API_KEY`.",
+    "ai_reason": "No API credential found. Put `ANTHROPIC_API_KEY=sk-ant-...` in `learn/.env`, or export ANTHROPIC_API_KEY, then restart learn.",
     "vault_git": true
   },
   "module": {

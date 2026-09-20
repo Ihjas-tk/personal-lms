@@ -6,6 +6,7 @@ import { aiBlockedReason } from "../store";
 import {
   AI_ANSWER_OPEN,
   AI_NO_CREDENTIAL,
+  AI_RESTRUCTURE_ITEM,
   AI_SECOND_OPINION_ITEM,
   AI_TIDY_ITEM,
   AI_UNREACHABLE,
@@ -14,7 +15,7 @@ import { fixtures } from "./server";
 import type { Health, Session } from "../types";
 
 describe("AI availability (§7.3)", () => {
-  it("keeps both entries, disabled, with the reason in plain words (§6.3)", async () => {
+  it("keeps all three entries, disabled, with the reason in plain words (§6.3)", async () => {
     // The server sends the sentence; the client only drops the backticks that mark
     // the two literals it sets in mono.
     const reason = aiBlockedReason(fixtures.health as Health, null);
@@ -25,6 +26,7 @@ describe("AI availability (§7.3)", () => {
         blockedReason={reason}
         items={[
           { label: AI_TIDY_ITEM, onSelect: () => {} },
+          { label: AI_RESTRUCTURE_ITEM, onSelect: () => {} },
           { label: AI_SECOND_OPINION_ITEM, onSelect: () => {} },
         ]}
       />,
@@ -33,9 +35,10 @@ describe("AI availability (§7.3)", () => {
 
     // The reason is stated once, inside the menu, not only as a tooltip.
     expect(screen.getByRole("note")).toHaveTextContent(
-      "No API credential found. Run ant auth login, or set ANTHROPIC_API_KEY.",
+      "No API credential found. Put ANTHROPIC_API_KEY=sk-ant-... in learn/.env, " +
+        "or export ANTHROPIC_API_KEY, then restart learn.",
     );
-    for (const name of [/^Tidy/, /^Second opinion/]) {
+    for (const name of [/^Tidy/, /^Restructure/, /^Second opinion/]) {
       const item = screen.getByRole("menuitem", { name });
       expect(item).toBeDisabled();
       expect(item).toHaveAttribute("title", AI_NO_CREDENTIAL);

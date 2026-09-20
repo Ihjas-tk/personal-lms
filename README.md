@@ -100,7 +100,10 @@ category: conflated_two_things
 ```
 
 `git log` is your history, and the app commits at each session close. **No telemetry, no
-account.** Two optional AI actions use your own `ANTHROPIC_API_KEY`; nothing else needs one.
+account.** Three optional AI actions use your own `ANTHROPIC_API_KEY`; nothing else needs
+one. They copy-edit a note, restructure one (layout and the source it came from, never a
+new fact) or critique an answer you have already frozen, and each one is reviewed as a diff
+before anything is written.
 **It is local-only with no authentication, so keep it off the internet.**
 
 ## Use it for any subject

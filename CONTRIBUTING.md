@@ -37,8 +37,10 @@ These are the point of the project rather than preferences:
 - **Confidence is captured before the answer** and cannot be skipped.
 - **The re-test ladder stays.** `lasting` requires two clean passes at least seven days apart.
 - **No streaks, no points, no badges, no single percent-complete bar, no "mark as complete."**
-- **AI never generates content.** Two optional actions exist: copy-edit a note as a reviewed
-  diff, and a second opinion on an already-frozen answer. Neither writes without review.
+- **AI never generates content.** Three optional actions exist: copy-edit a note as a
+  reviewed diff, restructure a note as a reviewed diff (layout and the source it came from,
+  never a new fact), and a second opinion on an already-frozen answer. None of them writes
+  without review, and a checker refuses anything that loses or alters what the note said.
 - **The vault stays git-ignored forever.** Never commit anything under `learn/vault/`.
 
 By contributing you agree your work is MIT-licensed, and to the [Code of Conduct](CODE_OF_CONDUCT.md).

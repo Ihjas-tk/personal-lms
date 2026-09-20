@@ -1,4 +1,4 @@
-"""The two AI actions (spec §7). The only module in the app that imports `anthropic`.
+"""The three AI actions (spec §7). The only module in the app that imports `anthropic`.
 
 The client is built lazily, so a missing credential never crashes startup and never
 breaks any non-AI screen. Credential resolution is the SDK's own — `ANTHROPIC_API_KEY`,
@@ -19,12 +19,25 @@ import anthropic
 from . import store
 
 MODEL = "claude-sonnet-5"
-TIDY_MAX_TOKENS = 32000
 CRITIQUE_MAX_TOKENS = 8000
-TIDY_EFFORT = "medium"
+#: Effort is the bill. A copy-edit needs almost no thinking; a restructure needs some;
+#: only the critique, which is graded against a rubric, is worth `high`.
+TIDY_EFFORT = "low"
+RESTRUCTURE_EFFORT = "medium"
 CRITIQUE_EFFORT = "high"
+#: `max_tokens` is sized to the note rather than flat, so a 200-word note cannot bill
+#: for a 32000-token ceiling it was never going to use.
+MAX_TOKENS_CAP = 32000
+TIDY_FLOOR, TIDY_PER_WORD = 1500, 3
+RESTRUCTURE_FLOOR, RESTRUCTURE_PER_WORD = 2000, 4
 BETAS = ["server-side-fallback-2026-07-01"]
 VERDICTS = ("met", "partial", "missing")
+#: Every value `append_log` may write as `mode`; the ai-log readers enumerate these.
+MODES = ("tidy", "restructure", "critique")
+
+#: List price in dollars per million tokens, `(input, output)`. An unknown model
+#: costs 0, so a model swap never invents a number; update this table with the model.
+PRICES: dict[str, tuple[float, float]] = {"claude-sonnet-5": (2.00, 10.00)}
 
 #: §6.3 — one sentence, said the same way everywhere it appears. The backticks are
 #: literal: the client sets exactly those two spans in mono and never rewords the rest.
@@ -68,6 +81,66 @@ If the note is already clean, return it unchanged.
 
 Output ONLY the resulting markdown body: no preamble, no commentary, and no
 code fence wrapped around the whole document.
+"""
+
+RESTRUCTURE_SYSTEM = """\
+You restructure a learner's own study notes into a version they will understand
+quickly months from now.
+
+The note was typed fast, usually while watching or reading the source named in the
+context block above it. You lay out what is already there. You do not teach,
+correct, extend or second-guess it.
+
+WHAT YOU PRODUCE
+
+1. A context block, first thing in the note: one blockquote, one line per source,
+   written exactly as `> From: *<title>* (<kind>)`, or as
+   `> From: [*<title>*](<url>) (<kind>)` when the context block gives a url; then one
+   last line `> Module: <module title> · Topic: <topic title>`. Use only the titles,
+   kinds and urls the context block gives you. If it names no source, write the
+   module and topic line alone.
+2. Then the learner's content, reorganised so its shape is visible:
+   - headings (`##`, `###`) that name what sits under them;
+   - bullet points for anything the note lists, one fact per bullet;
+   - a short definition line for a term the note introduces, in the note's own words;
+   - a compact markdown table when the note compares two or more things along the
+     same axes, built only from what the note already says;
+   - a line starting `Why it matters:` where the note itself says why something
+     matters. Never invent the reason.
+
+WHAT YOU MUST KEEP
+
+Every claim, fact, number, name, example, definition and code block in the note
+survives, in the learner's own words wherever those words carry the meaning. You may
+add structure, headings, labels, list markers, the source lines, and short connective
+wording ("so", "then", "in other words"). Nothing the note does not say may appear as
+a fact.
+
+Preserve byte-for-byte: every code block's contents and language tag, every inline
+code span, every LaTeX expression, every URL, every number, every checklist item and
+its checked state. A number that looks mistyped ("3o", "1O", "5O0") stays exactly as
+written: the checker compares digits and will refuse the whole result.
+
+Keep the learner's hedges — "I think", "maybe", "roughly", "not sure" — and keep
+their voice. If a claim looks wrong to you, leave it exactly as it is: do not correct
+it, do not soften it, and do not remark on it anywhere in the output. No asides to
+the learner, no "(check this)", no HTML comments.
+
+If the note has a `## Jots` section, it stays last and verbatim.
+
+WHAT YOU MUST NOT DO
+
+- add a fact, an example, a definition or a number the note does not contain;
+- correct, improve, complete or annotate a claim;
+- drop a sentence because it is rough, redundant or hard to place;
+- summarise: the result says everything the note said, at least as fully;
+- separate two things the note deliberately connects.
+
+You may fix spelling and grammar.
+
+The note body is given to you without YAML frontmatter; do not emit any.
+Output ONLY the resulting markdown body: no preamble, no commentary, and no code
+fence wrapped around the whole document.
 """
 
 CRITIQUE_SYSTEM = """\
@@ -201,6 +274,17 @@ def _usage(final: Any) -> tuple[int, int]:
     return int(getattr(usage, "input_tokens", 0) or 0), int(getattr(usage, "output_tokens", 0) or 0)
 
 
+def cost_usd(input_tokens: int, output_tokens: int, model: str = MODEL) -> float:
+    """List price of one call in dollars, or 0 for a model the table does not know."""
+    price_in, price_out = PRICES.get(model, (0.0, 0.0))
+    return round((input_tokens * price_in + output_tokens * price_out) / 1_000_000, 6)
+
+
+def budget(body: str, floor: int, per_word: int) -> int:
+    """`max_tokens` for one pass over `body`: proportional, floored, capped."""
+    return min(MAX_TOKENS_CAP, max(floor, per_word * len(body.split())))
+
+
 # ---------------------------------------------------------------- tidy
 
 
@@ -224,7 +308,7 @@ async def tidy(body: str, violation: str | None = None) -> AsyncIterator[tuple[s
     try:
         async with client.beta.messages.stream(
             model=MODEL,
-            max_tokens=TIDY_MAX_TOKENS,
+            max_tokens=budget(body, TIDY_FLOOR, TIDY_PER_WORD),
             thinking={"type": "adaptive"},
             output_config={"effort": TIDY_EFFORT},
             betas=BETAS,
@@ -254,6 +338,92 @@ async def tidy(body: str, violation: str | None = None) -> AsyncIterator[tuple[s
     _check_stop(
         final,
         "The note was too long to copy-edit in one pass. Tidy it section by section.",
+    )
+    input_tokens, output_tokens = _usage(final)
+    yield (
+        "done",
+        {
+            "text": _text_of(final),
+            "input_tokens": input_tokens,
+            "output_tokens": output_tokens,
+        },
+    )
+
+
+# ---------------------------------------------------------------- restructure
+
+
+def _source_line(source: dict[str, Any]) -> str:
+    title = str(source.get("title") or "").strip()
+    kind = str(source.get("kind") or "").strip()
+    url = str(source.get("url") or "").strip()
+    return f"- {title} ({kind})" + (f" — {url}" if url else "")
+
+
+def context_block(context: dict[str, Any]) -> str:
+    """The module, topic and sources as the model sees them. One block, sent once."""
+    lines = [
+        f"module: {context.get('module_title') or ''}",
+        f"topic: {context.get('topic_title') or ''}",
+    ]
+    sources = context.get("sources") or []
+    lines.append("sources:" if sources else "sources: none")
+    lines.extend(_source_line(s) for s in sources)
+    return "\n".join(lines)
+
+
+async def restructure(
+    body: str, context: dict[str, Any], violation: str | None = None
+) -> AsyncIterator[tuple[str, Any]]:
+    """Re-lay a note body out, keeping everything it says.
+
+    Same streaming shape as `tidy`: `("delta", text)` per chunk, then exactly one
+    `("done", {...})`. `context` is `{module_title, topic_title, sources}` — the
+    router builds it from the curriculum, and it travels once, in the user turn, so
+    the cached system block stays byte-identical between calls.
+    """
+    client = get_client()
+    ask = (
+        "Restructure this note so it reads well months from now. "
+        "Everything it says must survive."
+    )
+    if violation:
+        ask += (
+            f" A previous restructure of this note was refused because {violation}. "
+            "Redo it and keep that exactly as it is written in the note, even if it "
+            "looks like a mistake."
+        )
+    content = (
+        f"{ask}\n\n<context>\n{context_block(context)}\n</context>\n\n<note>\n{body}\n</note>"
+    )
+    try:
+        async with client.beta.messages.stream(
+            model=MODEL,
+            max_tokens=budget(body, RESTRUCTURE_FLOOR, RESTRUCTURE_PER_WORD),
+            thinking={"type": "adaptive"},
+            output_config={"effort": RESTRUCTURE_EFFORT},
+            betas=BETAS,
+            fallbacks="default",
+            system=[
+                {
+                    "type": "text",
+                    "text": RESTRUCTURE_SYSTEM,
+                    "cache_control": {"type": "ephemeral"},
+                }
+            ],
+            messages=[{"role": "user", "content": content}],
+        ) as stream:
+            async for text in stream.text_stream:
+                yield ("delta", text)
+            final = await stream.get_final_message()
+    except AIUnavailable:
+        raise
+    except Exception as exc:
+        raise _mapped(exc) from exc
+
+    _check_stop(
+        final,
+        "The note was too long to restructure in one pass. Split it and try again.",
     )
     input_tokens, output_tokens = _usage(final)
     yield (
@@ -373,7 +543,11 @@ def append_log(
     tokens_added: int = 0,
     accepted: bool = False,
 ) -> dict[str, Any]:
-    """Append one row to `vault/ai-log.jsonl` (spec §7). `store` does the writing."""
+    """Append one row to `vault/ai-log.jsonl` (spec §7). `store` does the writing.
+
+    `mode` is one of `MODES`. `estimated_cost_usd` is this call at `PRICES` list price;
+    it is an estimate because it ignores cache reads, which only ever make it cheaper.
+    """
     return store.append_ai_log(
         {
             "mode": mode,
@@ -382,5 +556,6 @@ def append_log(
             "output_tokens": int(output_tokens),
             "tokens_added": int(tokens_added),
             "accepted": bool(accepted),
+            "estimated_cost_usd": cost_usd(int(input_tokens), int(output_tokens)),
         }
     )

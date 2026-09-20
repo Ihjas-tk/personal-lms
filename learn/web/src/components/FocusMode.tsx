@@ -9,8 +9,9 @@ import NoteEditor, {
 } from "./NoteEditor";
 import SourcePane, { stampOf } from "./SourcePane";
 import ResourceStateMenu from "./ResourceStateMenu";
-import TidyDialog from "./TidyDialog";
+import TidyDialog, { type AiNoteMode } from "./TidyDialog";
 import {
+  AI_RESTRUCTURE_ITEM,
   AI_SECOND_OPINION_ITEM,
   AI_TIDY_ITEM,
   FOCUS_DONE,
@@ -68,7 +69,7 @@ export default function FocusMode({
   const [player, setPlayer] = useState({ connected: false, playing: false });
   const [jots, setJots] = useState<Jot[]>([]);
   const [status, setStatus] = useState<NoteStatus | null>(null);
-  const [tidyOpen, setTidyOpen] = useState(false);
+  const [aiMode, setAiMode] = useState<AiNoteMode | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
   const handle = useRef<NoteEditorHandle | null>(null);
@@ -125,14 +126,14 @@ export default function FocusMode({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !tidyOpen) {
+      if (e.key === "Escape" && !aiMode) {
         e.preventDefault();
         close();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [close, tidyOpen]);
+  }, [close, aiMode]);
 
   const loadJots = useCallback(() => {
     getJots({ module_id: m.id, unfiled: true })
@@ -162,11 +163,12 @@ export default function FocusMode({
       .catch((e: Error) => setNotice(e.message));
   };
 
-  /** §7.1: snapshot, then write. The tidied text never reaches disk unreviewed. */
-  const acceptTidy = async (text: string) => {
-    setTidyOpen(false);
+  /** §7.1: snapshot, then write. Neither action's text reaches disk unreviewed. */
+  const acceptAiEdit = async (text: string) => {
+    const label = aiMode === "restructure" ? "restructure" : "tidy";
+    setAiMode(null);
     try {
-      await snapshotVault(`pre-tidy snapshot: ${topic.id}`);
+      await snapshotVault(`pre-${label} snapshot: ${topic.id}`);
       const current = await getTopicNote(m.id, topic.id);
       await putTopicNote(m.id, topic.id, {
         body: text,
@@ -174,15 +176,16 @@ export default function FocusMode({
         frontmatter: current.frontmatter,
       });
       handle.current?.setBody(text, { save: false });
-      setNotice("Tidy applied and committed.");
+      setNotice(`${label[0].toUpperCase()}${label.slice(1)} applied and committed.`);
     } catch (e) {
-      setNotice(`Could not apply the tidy: ${(e as Error).message}`);
+      setNotice(`Could not apply the ${label}: ${(e as Error).message}`);
     }
   };
 
   const aiItems = useMemo(
     () => [
-      { label: AI_TIDY_ITEM, onSelect: () => setTidyOpen(true) },
+      { label: AI_TIDY_ITEM, onSelect: () => setAiMode("tidy") },
+      { label: AI_RESTRUCTURE_ITEM, onSelect: () => setAiMode("restructure") },
       {
         label: AI_SECOND_OPINION_ITEM,
         hint: "Runs on a submitted answer, from a check attempt.",
@@ -304,12 +307,14 @@ export default function FocusMode({
         </div>
       ) : null}
 
-      {tidyOpen && handle.current ? (
+      {aiMode && handle.current ? (
         <TidyDialog
           moduleId={m.id}
+          topicId={topic.id}
+          mode={aiMode}
           original={handle.current.body}
-          onAccept={acceptTidy}
-          onClose={() => setTidyOpen(false)}
+          onAccept={acceptAiEdit}
+          onClose={() => setAiMode(null)}
         />
       ) : null}
     </div>

@@ -255,6 +255,21 @@ export const TIDY_REFUSED_TAIL =
   "Your note was not touched and there is no diff to review. The refusal is logged.";
 export const KEEP_ORIGINAL = "Keep original";
 
+/** The debrief's one cost line: list price, so the real bill is this or less. */
+export const aiSpendLine = (spend: { days: number; calls: number; usd: number }) =>
+  spend.calls === 0
+    ? `No AI calls in the last ${spend.days} days.`
+    : `AI spend, last ${spend.days} days: $${spend.usd.toFixed(2)} over ${spend.calls} call` +
+      `${spend.calls === 1 ? "" : "s"}, at list price.`;
+
+/* --------------------------------------------- restructure */
+export const RESTRUCTURE_TITLE = "Restructure · review each change";
+export const RESTRUCTURE_STATS = (added: number) =>
+  `${countWord(added)} word${added === 1 ? "" : "s"} added for layout and context. ` +
+  "Everything the note said is checked to still be there before you see this.";
+export const RESTRUCTURE_REFUSED =
+  "Refused — the restructure dropped or changed something it must keep";
+
 export const CONFLICT_TITLE =
   "This note changed on disk since you opened it, so the save was refused";
 export const CONFLICT_SUB =
@@ -266,10 +281,13 @@ export const conflictStatus = (path: string) => `save refused · ${path} · mtim
 
 /** §6.3 — one plain sentence per reason, stated inside the menu, never as a tooltip alone. */
 export const AI_NO_CREDENTIAL =
-  "No API credential found. Run ant auth login, or set ANTHROPIC_API_KEY.";
+  "No API credential found. Put ANTHROPIC_API_KEY=sk-ant-... in learn/.env, " +
+  "or export ANTHROPIC_API_KEY, then restart learn.";
 /** The two literals in that sentence are set in mono wherever it is rendered. */
-export const AI_CREDENTIAL_CODE = ["ant auth login", "ANTHROPIC_API_KEY"];
+export const AI_CREDENTIAL_CODE = ["learn/.env", "ANTHROPIC_API_KEY"];
 export const AI_ANSWER_OPEN = "An answer is open. Submit or leave it before using AI.";
 export const AI_UNREACHABLE = "The server is not reachable.";
 export const AI_TIDY_ITEM = "Tidy — copy-edit, shown as a diff";
+export const AI_RESTRUCTURE_ITEM =
+  "Restructure — richer layout and source context, shown as a diff";
 export const AI_SECOND_OPINION_ITEM = `${SECOND_OPINION[0].toUpperCase()}${SECOND_OPINION.slice(1)} — grades an answer you have already submitted`;

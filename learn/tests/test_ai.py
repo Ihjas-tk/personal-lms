@@ -204,7 +204,9 @@ def test_tidy_streams_deltas_then_stats_then_done(
     assert kwargs["model"] == ai.MODEL == "claude-sonnet-5"
     assert kwargs["thinking"] == {"type": "adaptive"}
     assert "budget_tokens" not in kwargs["thinking"]
-    assert kwargs["output_config"] == {"effort": "medium"}
+    assert kwargs["output_config"] == {"effort": "low"}
+    # A short note gets the floor, not the 32000 cap: effort and max_tokens are the bill.
+    assert kwargs["max_tokens"] == ai.TIDY_FLOOR
     assert kwargs["betas"] == ["server-side-fallback-2026-07-01"]
     assert kwargs["fallbacks"] == "default"
     assert kwargs["system"][0]["cache_control"] == {"type": "ephemeral"}
@@ -223,7 +225,10 @@ def test_tidy_streams_deltas_then_stats_then_done(
         "output_tokens",
         "tokens_added",
         "accepted",
+        "estimated_cost_usd",
     }
+    # 1200 in at $2/Mtok + 340 out at $10/Mtok.
+    assert logged[0]["estimated_cost_usd"] == pytest.approx(0.0058)
 
 
 def test_tidy_rejects_an_edit_that_breaks_an_invariant(
@@ -471,6 +476,160 @@ def test_tidy_gives_up_after_the_second_refusal(
     kinds = [e for e, _ in frames(response.text)]
     assert kinds == ["delta", "retry", "delta", "stats", "rejected"]
     assert len(fake.calls) == 2
+
+
+# ---------------------------------------------------------------- restructure
+
+RS_NOTE = "mask before softmax. -1e9 in the masked slots. 8 heads\n"
+RS_RICH = (
+    "> From: [*Karpathy, Let's build GPT*](https://example.invalid/build-gpt) (video)\n"
+    "> Module: Transformers from scratch · Topic: Causal self-attention\n"
+    "\n"
+    "## Masking\n"
+    "\n"
+    "- The mask is applied before the softmax.\n"
+    "- The masked slots hold -1e9.\n"
+    "- There are 8 heads.\n"
+)
+RS_LOSSY = "## Masking\n\n- The mask is applied before the softmax.\n"
+RS_BODY = {"module_id": "a1", "topic_id": "attention", "text": RS_NOTE}
+
+
+def test_restructure_streams_deltas_then_stats_then_done(
+    client_v2: TestClient, cfg_v2: config.Config, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    messages = install(monkeypatch, text=RS_RICH, chunks=["> From: ", "the rest"])
+    response = client_v2.post("/api/ai/restructure", json=RS_BODY)
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/event-stream")
+
+    events = frames(response.text)
+    assert [e for e, _ in events] == ["delta", "delta", "stats", "done"]
+    assert events[-1][1]["text"] == RS_RICH
+
+    # Medium effort, not high, and max_tokens sized to the note rather than flat.
+    kwargs = messages.kwargs
+    assert kwargs["model"] == ai.MODEL == "claude-sonnet-5"
+    assert kwargs["thinking"] == {"type": "adaptive"}
+    assert kwargs["output_config"] == {"effort": "medium"}
+    assert kwargs["max_tokens"] == ai.RESTRUCTURE_FLOOR
+    assert kwargs["system"][0]["cache_control"] == {"type": "ephemeral"}
+
+    logged = store.read_ai_log()[-1]
+    assert logged["mode"] == "restructure"
+    assert logged["target"] == "a1/attention"
+    assert logged["accepted"] is True
+    assert logged["estimated_cost_usd"] > 0
+
+
+def test_restructure_sends_the_topics_sources_once_and_asks_for_the_from_line(
+    client_v2: TestClient, cfg_v2: config.Config, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The context is what makes the note readable later; it travels in the user turn."""
+    messages = install(monkeypatch, text=RS_RICH)
+    client_v2.post("/api/ai/restructure", json=RS_BODY)
+
+    system = messages.kwargs["system"][0]["text"]
+    assert "> From: *<title>* (<kind>)" in system
+    assert "> Module: <module title> · Topic: <topic title>" in system
+
+    sent = messages.kwargs["messages"][0]["content"]
+    assert "module: Transformers from scratch" in sent
+    assert "topic: Causal self-attention" in sent
+    assert "- Karpathy, Let's build GPT (video) — https://example.invalid/build-gpt" in sent
+    assert "- Attention Is All You Need (paper)" in sent
+    # Sent once: the system block is cached and must not repeat the sources.
+    assert system.count("Karpathy") == 0
+    assert sent.count("Karpathy") == 1
+
+
+def test_restructure_rejects_a_result_that_drops_part_of_the_note(
+    client_v2: TestClient, cfg_v2: config.Config, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    install(monkeypatch, text=RS_LOSSY)
+    events = frames(client_v2.post("/api/ai/restructure", json=RS_BODY).text)
+    assert [e for e, _ in events] == ["delta", "retry", "delta", "stats", "rejected"]
+    assert "dropped" in events[-1][1]["reason"]
+    assert [entry["accepted"] for entry in store.read_ai_log()] == [False, False]
+
+
+def test_restructure_retries_once_with_the_checkers_reason(
+    client_v2: TestClient, cfg_v2: config.Config, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    calls: list[str | None] = []
+
+    async def fake(body: str, context: dict[str, Any], violation: str | None = None):
+        calls.append(violation)
+        text = RS_LOSSY if len(calls) == 1 else RS_RICH
+        yield ("delta", text)
+        yield ("done", {"text": text, "input_tokens": 10, "output_tokens": 5})
+
+    monkeypatch.setattr(ai, "restructure", fake)
+    events = frames(client_v2.post("/api/ai/restructure", json=RS_BODY).text)
+    assert [e for e, _ in events] == ["delta", "retry", "delta", "stats", "done"]
+    assert calls[0] is None and calls[1] == events[1][1]["reason"]
+    assert events[-1][1]["text"] == RS_RICH
+
+
+def test_restructure_reports_a_missing_credential_as_one_error_frame(
+    client_v2: TestClient, cfg_v2: config.Config
+) -> None:
+    events = frames(client_v2.post("/api/ai/restructure", json=RS_BODY).text)
+    assert [e for e, _ in events] == ["error"]
+    assert "learn/.env" in events[0][1]["message"]
+    assert store.read_ai_log()[0]["mode"] == "restructure"
+
+
+def test_restructure_404s_on_an_unknown_module_or_topic(
+    client_v2: TestClient, cfg_v2: config.Config
+) -> None:
+    for body in (
+        {"module_id": "nope", "topic_id": "attention", "text": RS_NOTE},
+        {"module_id": "a1", "topic_id": "nope", "text": RS_NOTE},
+    ):
+        assert client_v2.post("/api/ai/restructure", json=body).status_code == 404
+    assert store.read_ai_log() == []
+
+
+def test_restructure_is_locked_while_an_attempt_is_open(
+    client_v2: TestClient, cfg_v2: config.Config, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    install(monkeypatch, text=RS_RICH)
+    session_id = open_session(client_v2)
+    client_v2.post(
+        "/api/checks/a1-mha-from-memory/attempts",
+        json={"session_id": session_id, "confidence_pre": 40},
+    )
+    assert client_v2.post("/api/ai/restructure", json=RS_BODY).status_code == 423
+    assert store.read_ai_log() == []
+
+
+def test_restructure_prompt_carries_the_violation(monkeypatch: pytest.MonkeyPatch) -> None:
+    messages = install(monkeypatch, text="x", chunks=["x"])
+
+    async def run() -> None:
+        async for _ in ai.restructure(
+            "x", {"module_title": "M", "topic_title": "T", "sources": []}, "a number was dropped"
+        ):
+            pass
+
+    import asyncio
+
+    asyncio.run(run())
+    content = messages.kwargs["messages"][0]["content"]
+    assert "refused because a number was dropped" in content
+    assert "sources: none" in content
+
+
+def test_the_weekly_debrief_reports_ai_spend(
+    client_v2: TestClient, cfg_v2: config.Config, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    install(monkeypatch, text=RS_RICH)
+    client_v2.post("/api/ai/restructure", json=RS_BODY)
+    spend = client_v2.get("/api/review/weekly").json()["ai_spend"]
+    assert spend["calls"] == 1
+    assert spend["days"] == 7
+    assert spend["usd"] == pytest.approx(store.read_ai_log()[0]["estimated_cost_usd"], abs=1e-4)
 
 
 def test_tidy_prompt_carries_the_violation(monkeypatch: pytest.MonkeyPatch) -> None:

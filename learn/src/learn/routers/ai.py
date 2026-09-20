@@ -1,8 +1,8 @@
-"""The two AI actions as SSE routes (spec §7).
+"""The three AI actions as SSE routes (spec §7).
 
-Neither route writes a note. Tidy streams a shadow buffer to the client and stops;
-the learner accepts the diff in the MergeView, which issues the normal snapshot +
-`PUT`. Critique only stamps `ai_critique_used` on the attempt it graded. Every call,
+No route writes a note. Tidy and Restructure stream a shadow buffer to the client and
+stop; the learner accepts the diff in the MergeView, which issues the normal snapshot
++ `PUT`. Critique only stamps `ai_critique_used` on the attempt it graded. Every call,
 including a refused or rejected one, lands in `vault/ai-log.jsonl`.
 """
 
@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 import re
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Callable
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -18,7 +18,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from .. import ai, invariants, store
-from .common import track
+from .common import ai_context, track
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -28,6 +28,12 @@ _ANSWER = re.compile(r"^##\s*Answer\s*$(.*?)(?=^##\s|\Z)", re.MULTILINE | re.DOT
 
 class TidyBody(BaseModel):
     module_id: str
+    text: str
+
+
+class RestructureBody(BaseModel):
+    module_id: str
+    topic_id: str
     text: str
 
 
@@ -57,29 +63,35 @@ def _answer_of(body: str) -> str:
     return (match.group(1) if match else body).strip()
 
 
-@router.post("/tidy")
-async def tidy(body: TidyBody) -> StreamingResponse:
-    """Copy-edit a note under the hard invariants of §7.1. The file is never touched."""
-    _reject_while_attempt_open()
+Pass = Callable[[str | None], AsyncIterator[tuple[str, Any]]]
+Checker = Callable[[str], invariants.InvariantResult]
+
+
+def _reviewed(mode: str, target: str, run: Pass, check: Checker) -> AsyncIterator[str]:
+    """The SSE body both note actions share: one pass, then one more told why.
+
+    `run(violation)` streams a pass; `check(text)` is the invariant checker for this
+    mode. Every pass is logged, accepted or not, before any frame that ends the
+    stream, so a refusal is on the record even though the note was never touched.
+    """
 
     async def generate() -> AsyncIterator[str]:
-        """One pass; if the checker refuses it, one more pass told why. Then stop."""
         violation: str | None = None
         try:
             for attempt in (1, 2):
-                async for kind, payload in ai.tidy(body.text, violation):
+                async for kind, payload in run(violation):
                     if kind == "delta":
                         yield _frame("delta", {"text": payload})
                         continue
-                    result = invariants.check(body.text, payload["text"])
+                    result = check(payload["text"])
                     stats = {
                         "tokens_added": result.tokens_added,
                         "input_tokens": payload["input_tokens"],
                         "output_tokens": payload["output_tokens"],
                     }
                     ai.append_log(
-                        mode="tidy",
-                        target=body.module_id,
+                        mode=mode,
+                        target=target,
                         input_tokens=payload["input_tokens"],
                         output_tokens=payload["output_tokens"],
                         tokens_added=result.tokens_added,
@@ -96,10 +108,50 @@ async def tidy(body: TidyBody) -> StreamingResponse:
                         yield _frame("stats", stats)
                         yield _frame("rejected", {"reason": result.reason})
         except ai.AIUnavailable as exc:
-            ai.append_log(mode="tidy", target=body.module_id, accepted=False)
+            ai.append_log(mode=mode, target=target, accepted=False)
             yield _frame("error", {"message": str(exc)})
 
-    return StreamingResponse(generate(), media_type="text/event-stream", headers=SSE_HEADERS)
+    return generate()
+
+
+@router.post("/tidy")
+async def tidy(body: TidyBody) -> StreamingResponse:
+    """Copy-edit a note under the hard invariants of §7.1. The file is never touched."""
+    _reject_while_attempt_open()
+    return StreamingResponse(
+        _reviewed(
+            "tidy",
+            body.module_id,
+            lambda violation: ai.tidy(body.text, violation),
+            lambda text: invariants.check(body.text, text),
+        ),
+        media_type="text/event-stream",
+        headers=SSE_HEADERS,
+    )
+
+
+@router.post("/restructure")
+async def restructure(body: RestructureBody) -> StreamingResponse:
+    """Re-lay a topic note out, with its module, topic and sources named at the top.
+
+    Same contract as Tidy — a shadow buffer, one retry, a diff the learner accepts by
+    hand — under `check_structure`, which allows the layout to change and nothing else.
+    """
+    _reject_while_attempt_open()
+    context = ai_context(body.module_id, body.topic_id)
+    if context is None:
+        raise HTTPException(404, f"unknown module {body.module_id} or topic {body.topic_id}")
+    block = ai.context_block(context)
+    return StreamingResponse(
+        _reviewed(
+            "restructure",
+            f"{body.module_id}/{body.topic_id}",
+            lambda violation: ai.restructure(body.text, context, violation),
+            lambda text: invariants.check_structure(body.text, text, block),
+        ),
+        media_type="text/event-stream",
+        headers=SSE_HEADERS,
+    )
 
 
 @router.post("/critique")

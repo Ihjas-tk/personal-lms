@@ -5,6 +5,9 @@ import { EditorView } from "@codemirror/view";
 import { markdown } from "@codemirror/lang-markdown";
 import {
   KEEP_ORIGINAL,
+  RESTRUCTURE_REFUSED,
+  RESTRUCTURE_STATS,
+  RESTRUCTURE_TITLE,
   TIDY_KEEP,
   TIDY_REFUSED,
   TIDY_REFUSED_TAIL,
@@ -15,27 +18,43 @@ import {
   TIDY_TAKE_ALL,
   TIDY_TITLE,
 } from "../labels";
-import { tidy } from "../api";
+import { restructure, tidy, type TidyHandlers } from "../api";
 import type { TidyStats } from "../types";
 
 type Phase = "streaming" | "review" | "rejected" | "error";
+export type AiNoteMode = "tidy" | "restructure";
+
+/** What differs between the two note actions: the call, the title, the two sentences. */
+const MODES = {
+  tidy: { title: TIDY_TITLE, stats: TIDY_STATS, refused: TIDY_REFUSED },
+  restructure: {
+    title: RESTRUCTURE_TITLE,
+    stats: RESTRUCTURE_STATS,
+    refused: RESTRUCTURE_REFUSED,
+  },
+} as const;
 
 /**
- * Tidy (§6.1). The text streams into a shadow buffer and arrives as a diff taken
- * chunk by chunk; left is yours and read-only. A refusal ends the dialog — there
- * is no diff to review and the note was never touched.
+ * Tidy and Restructure (§6.1). The text streams into a shadow buffer and arrives as
+ * a diff taken chunk by chunk; left is yours and read-only. A refusal ends the
+ * dialog — there is no diff to review and the note was never touched.
  */
 export default function TidyDialog({
   moduleId,
+  topicId,
+  mode = "tidy",
   original,
   onAccept,
   onClose,
 }: {
   moduleId: string;
+  topicId?: string;
+  mode?: AiNoteMode;
   original: string;
   onAccept(text: string): void;
   onClose(): void;
 }) {
+  const copy = MODES[mode];
   const [phase, setPhase] = useState<Phase>("streaming");
   const [shadow, setShadow] = useState("");
   const [stats, setStats] = useState<TidyStats | null>(null);
@@ -50,40 +69,43 @@ export default function TidyDialog({
     const controller = new AbortController();
     abort.current = controller;
     shadowRef.current = "";
-    void tidy(
-      { module_id: moduleId, text: original },
-      {
-        onDelta: (text) => {
-          shadowRef.current += text;
-          setShadow(shadowRef.current);
-        },
-        onStats: (s) => setStats(s),
-        onRetry: (reason) => {
-          shadowRef.current = "";
-          setShadow("");
-          setRetry(reason);
-        },
-        onRejected: (reason) => {
-          setMessage(reason);
-          setPhase("rejected");
-        },
-        onDone: (payload) => {
-          if (payload?.text) {
-            shadowRef.current = payload.text;
-            setShadow(payload.text);
-          }
-          if (payload?.stats) setStats(payload.stats);
-          setPhase("review");
-        },
-        onError: (m) => {
-          setMessage(m);
-          setPhase("error");
-        },
+    const handlers: TidyHandlers = {
+      onDelta: (text) => {
+        shadowRef.current += text;
+        setShadow(shadowRef.current);
       },
-      controller.signal,
-    );
+      onStats: (s) => setStats(s),
+      onRetry: (reason) => {
+        shadowRef.current = "";
+        setShadow("");
+        setRetry(reason);
+      },
+      onRejected: (reason) => {
+        setMessage(reason);
+        setPhase("rejected");
+      },
+      onDone: (payload) => {
+        if (payload?.text) {
+          shadowRef.current = payload.text;
+          setShadow(payload.text);
+        }
+        if (payload?.stats) setStats(payload.stats);
+        setPhase("review");
+      },
+      onError: (m) => {
+        setMessage(m);
+        setPhase("error");
+      },
+    };
+    void (mode === "restructure"
+      ? restructure(
+          { module_id: moduleId, topic_id: topicId ?? "", text: original },
+          handlers,
+          controller.signal,
+        )
+      : tidy({ module_id: moduleId, text: original }, handlers, controller.signal));
     return () => controller.abort();
-  }, [moduleId, original]);
+  }, [mode, moduleId, topicId, original]);
 
   useEffect(() => {
     if (phase !== "review" || !host.current || merge.current) return;
@@ -123,9 +145,9 @@ export default function TidyDialog({
 
   if (phase === "rejected" || phase === "error")
     return (
-      <div className="scrim" role="dialog" aria-modal="true" aria-label={TIDY_TITLE}>
+      <div className="scrim" role="dialog" aria-modal="true" aria-label={copy.title}>
         <div className="sheet refusal" role="alert" data-testid="tidy-rejected">
-          <div className="refusal-title">{TIDY_REFUSED}</div>
+          <div className="refusal-title">{copy.refused}</div>
           <p className="refusal-body">
             {message} {TIDY_REFUSED_TAIL}
           </p>
@@ -137,12 +159,12 @@ export default function TidyDialog({
     );
 
   return (
-    <div className="scrim" role="dialog" aria-modal="true" aria-label={TIDY_TITLE}>
+    <div className="scrim" role="dialog" aria-modal="true" aria-label={copy.title}>
       <div className="sheet wide tidy">
         <header className="tidy-head">
           <div>
-            <h3>{TIDY_TITLE}</h3>
-            <p>{TIDY_STATS(stats?.tokens_added ?? 0)}</p>
+            <h3>{copy.title}</h3>
+            <p>{copy.stats(stats?.tokens_added ?? 0)}</p>
           </div>
           <button type="button" className="btn" onClick={close}>
             {TIDY_KEEP}

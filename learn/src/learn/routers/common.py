@@ -289,6 +289,28 @@ def topic_rows(
     return topics, resources
 
 
+def ai_context(module_id: str, topic_id: str) -> dict[str, Any] | None:
+    """What a note is *about*, for the AI actions: its module, its topic, its sources.
+
+    `None` when either id is unknown, so the router can answer 404. Sources come out
+    in curriculum order, titles and urls exactly as the track file wrote them.
+    """
+    module = track().module(module_id)
+    if module is None:
+        return None
+    topic = module.topic(topic_id)
+    if topic is None:
+        return None
+    sources = [module.resource(rid) for rid in topic.resources]
+    return {
+        "module_title": module.title,
+        "topic_title": topic.title,
+        "sources": [
+            {"title": r.title, "kind": r.kind, "url": r.url or ""} for r in sources if r
+        ],
+    }
+
+
 def chore_rows(module: Module) -> list[dict[str, Any]]:
     saved = store.read_chores(module.id)
     return [

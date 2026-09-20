@@ -36,7 +36,14 @@ import type { SseEvent } from "./sse";
 
 export { ApiError, ConflictError };
 export type { SseEvent };
-export { critique, sseStream, subscribeEvents, tidy, type TidyHandlers } from "./api.ai";
+export {
+  critique,
+  restructure,
+  sseStream,
+  subscribeEvents,
+  tidy,
+  type TidyHandlers,
+} from "./api.ai";
 
 const BASE = "/api";
 

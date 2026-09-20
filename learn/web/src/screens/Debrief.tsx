@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Chip, CapstoneChip } from "../components/Chip";
-import { MISSED_WHILE_SURE, debriefLabel, errorCategoryLabel } from "../labels";
+import { MISSED_WHILE_SURE, aiSpendLine, debriefLabel, errorCategoryLabel } from "../labels";
 import { getWeeklyReview, resolveError } from "../api";
 import { useDebriefDay } from "../store";
 import type { CalibrationBucket, Debrief as DebriefData, LedgerError } from "../types";
@@ -30,6 +30,7 @@ export default function Debrief() {
       <p style={{ margin: "var(--s2) 0 var(--s7)", fontSize: "14px", color: "var(--ink2)" }}>
         Week {data.weeks_on_plan} on plan · {data.banked_skips} schedule skip
         {data.banked_skips === 1 ? "" : "s"} banked this quarter.
+        {data.ai_spend ? ` ${aiSpendLine(data.ai_spend)}` : ""}
       </p>
 
       <div className="debrief-grid">

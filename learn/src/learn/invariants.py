@@ -1,6 +1,10 @@
-"""The Tidy invariant checker (spec §7.1).
+"""The invariant checkers behind Tidy and Restructure (spec §7.1).
 
-A pure function. Given the note the learner wrote and the note the model returned,
+`check` is Tidy's: nothing may move. `check_structure` is Restructure's: the layout
+may change completely, but nothing the note said may be lost, altered or invented.
+Both are pure functions over the two documents.
+
+Given the note the learner wrote and the note the model returned,
 it decides whether the model stayed inside the copy-editor's remit. Everything the
 model is forbidden to touch is extracted from both documents and compared as a
 multiset: fenced code blocks (with their language tag), inline code spans, `$…$`
@@ -25,6 +29,10 @@ from markdown_it import MarkdownIt
 
 #: Share of new output word tokens above which a tidy is rejected (spec §7.1).
 NEW_TOKEN_LIMIT = 0.10
+#: Share of the note's own longer words a restructure must still contain.
+CONTENT_RETENTION = 0.90
+#: How long a word must be to count as carrying content rather than grammar.
+CONTENT_WORD_MIN = 5
 
 _md = MarkdownIt("commonmark")
 
@@ -195,6 +203,16 @@ _CHECKS: tuple[tuple[str, Callable[[str], list[str]]], ...] = (
     ("a blockquote line", _blockquotes),
 )
 
+#: What a restructure must still contain. Numbers are checked separately (they may not
+#: be added either), and blockquote lines are gone: the `> From:` line is a new one.
+_STRUCTURE_CHECKS: tuple[tuple[str, Callable[[str], list[str]]], ...] = (
+    ("a fenced code block", lambda t: _code_blocks(t)[0]),
+    ("an inline code span", _inline_code),
+    ("a math expression", _math),
+    ("a URL", _urls),
+    ("a checklist item", _checklist),
+)
+
 
 def _edit_distance(a: str, b: str, limit: int) -> int:
     """Levenshtein distance, capped: returns `limit + 1` as soon as it is exceeded."""
@@ -251,4 +269,102 @@ def check(original: str, edited: str) -> InvariantResult:
             tokens_added,
             share,
         )
+    return InvariantResult(True, None, tokens_added, share)
+
+
+# ---------------------------------------------------------------- restructure
+
+
+def _retained(label: str, before: list[str], after: list[str]) -> str | None:
+    """One sentence naming the first thing the original had and the result does not.
+
+    Unlike `_diff`, an addition on its own is fine: a restructure is allowed to add a
+    source line, a heading or a table. Only a loss or a change is a violation.
+    """
+    missing = sorted((Counter(before) - Counter(after)).elements())
+    if not missing:
+        return None
+    added = sorted((Counter(after) - Counter(before)).elements())
+    if added:
+        return f"{label} changed: {_show(missing[0])!r} became {_show(added[0])!r}"
+    return f"{label} was dropped: {_show(missing[0])!r}"
+
+
+def _numbers_reason(original: str, edited: str, context: str) -> str | None:
+    """Numbers are the one thing a restructure may neither lose, change nor invent.
+
+    The only new numbers allowed are the ones already in `context`, because the source
+    line is built out of it: "Lecture 3", "3Blue1Brown", a url with a year in it.
+    """
+    before, after = Counter(_numbers(original)), Counter(_numbers(edited))
+    missing = sorted((before - after).elements())
+    extra = sorted((after - before - Counter(_NUMBER.findall(context))).elements())
+    if missing and extra:
+        return f"a number changed: {_show(missing[0])!r} became {_show(extra[0])!r}"
+    if missing:
+        return f"a number was dropped: {_show(missing[0])!r}"
+    if extra:
+        return f"a number was added: {_show(extra[0])!r}"
+    return None
+
+
+def _content_words(text: str) -> list[str]:
+    """The words a fact lives in: five letters or longer, lower-cased, code excluded."""
+    return [w for w in _words(text) if len(w) >= CONTENT_WORD_MIN]
+
+
+def check_structure(original: str, edited: str, context: str = "") -> InvariantResult:
+    """Compare a restructured note against the original. Pure; no I/O, no network.
+
+    Kept from `check`: code blocks and their language tags, inline code, maths, URLs,
+    numbers, checklist items and their state — as *retention*, since a restructure may
+    legitimately add a heading, a table or the `> From:` source line.
+
+    Dropped from `check`: the blockquote comparison (the source line is a new
+    blockquote) and the 10% new-token limit (new connective wording is the point).
+    In their place, a content-retention floor: at least `CONTENT_RETENTION` of the
+    note's longer words must still be there, spelling fixes counted as survivals, so
+    a result that quietly summarises a paragraph away is refused.
+
+    `context` is the module, topic and source text the router handed the model.
+    Numbers that appear in it — "Lecture 3", "3Blue1Brown" — are allowed to appear in
+    the result, since the source line is built from them; every other new number is
+    still a violation, and no number of the note's own may change or vanish.
+    """
+    before_words = set(_words(original))
+    after_words = _words(edited)
+    new_tokens = [
+        w for w in after_words if w not in before_words and not _is_spelling_fix(w, before_words)
+    ]
+    tokens_added = len(new_tokens)
+    share = (tokens_added / len(after_words)) if after_words else 0.0
+
+    for label, extract in _STRUCTURE_CHECKS:
+        reason = _retained(label, extract(original), extract(edited))
+        if reason:
+            return InvariantResult(False, reason, tokens_added, share)
+
+    reason = _numbers_reason(original, edited, context)
+    if reason:
+        return InvariantResult(False, reason, tokens_added, share)
+
+    original_content = _content_words(original)
+    if original_content:
+        after_set = set(after_words)
+        lost = [
+            w
+            for w in dict.fromkeys(original_content)
+            if w not in after_set and not _is_spelling_fix(w, after_set)
+        ]
+        distinct = len(dict.fromkeys(original_content))
+        kept = (distinct - len(lost)) / distinct
+        if kept < CONTENT_RETENTION:
+            tail = f" and {len(lost) - 1} more" if len(lost) > 1 else ""
+            return InvariantResult(
+                False,
+                f"only {kept:.0%} of the note's own words survive (the floor is "
+                f"{CONTENT_RETENTION:.0%}); the restructure dropped {lost[0]!r}{tail}",
+                tokens_added,
+                share,
+            )
     return InvariantResult(True, None, tokens_added, share)

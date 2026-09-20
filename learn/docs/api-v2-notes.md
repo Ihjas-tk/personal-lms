@@ -151,3 +151,20 @@ curriculum written for any subject renders without a code change.
     `learn schema` (`src/learn/schema.py`); `learn schema --check` fails on drift and
     `tests/test_cli_schema.py` runs it. The prose version is
     `docs/curriculum-schema.md` at the repo root.
+
+38. **`POST /ai/restructure {module_id, topic_id, text}`** is the third AI action and the
+    second one over a note. It streams the same frames as `/ai/tidy` — `delta`, `retry`,
+    `stats`, `done`, `rejected`, `error` — with the same single retry, the same 423 while
+    an answer is open, and 404 when the module or the topic is unknown. It differs in what
+    it sends and what it checks: the router hands the model the topic's module title, topic
+    title and every resource it owns (title, kind, url, curriculum order), and the result
+    is judged by `invariants.check_structure` rather than `invariants.check`. That checker
+    keeps the code, inline-code, maths, URL and checklist comparisons as *retention* — the
+    result may add, never lose — drops the blockquote comparison (the `> From:` line is a
+    new blockquote) and the 10 percent new-token limit, and adds a content floor: at least
+    90 percent of the note's own words of five letters or more must still be there. Numbers
+    may not be lost, changed or invented, except for the ones already in the context block,
+    since the source line is built from it. Log rows carry `mode: "restructure"` and
+    `target: "<module_id>/<topic_id>"`, and every row now also carries
+    `estimated_cost_usd`, priced from `ai.PRICES`. `GET /review/weekly` gains
+    `ai_spend: {days, calls, usd}` over the last seven days.

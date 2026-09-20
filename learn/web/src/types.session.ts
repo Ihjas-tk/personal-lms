@@ -53,6 +53,8 @@ export interface WeeklyReview {
   hours: { week_hours: WeekHours; modules: { id: string; title: string; budget_hours: number; actual_hours: number }[] };
   burn_up: BurnUpPoint[];
   capstone: CapstoneArtefact[];
+  /** What the AI actions cost at list price over the last seven days. */
+  ai_spend?: { days: number; calls: number; usd: number };
   weeks_on_plan: number;
   banked_skips: number;
   replan: { module_id: string; title: string; weeks: [number, number] }[];

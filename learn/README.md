@@ -88,10 +88,28 @@ and the index rebuilds from the files with identical results.
 
 ## AI actions (optional)
 
-Two actions exist and only two: **Tidy** (copy-edit a note under hard invariants, reviewed
-as a diff before anything touches the file) and a **second opinion** (grades an answer you
-have already frozen against its rubric; it never rewrites and never replaces your own score).
-Both are unavailable while an answer is open — freezing the answer is what unlocks them.
+Three actions exist and only three: **Tidy** (copy-edit a note under hard invariants,
+reviewed as a diff before anything touches the file), **Restructure** (the same note laid
+out again, also reviewed as a diff) and a **second opinion** (grades an answer you have
+already frozen against its rubric; it never rewrites and never replaces your own score).
+All three are unavailable while an answer is open — freezing the answer is what unlocks
+them.
+
+**Restructure** is for a note typed fast while a video ran. It adds headings, bullets,
+short definitions and, at the top, a blockquote naming the module, the topic and the
+sources the note came from, linked where the curriculum has a url. It adds no facts. The
+checker refuses the result unless every code block, inline code span, LaTeX expression,
+URL and checklist item in your note is still there, every number is unchanged and none
+invented, and at least 90 percent of your note's own longer words survive. A refused
+result never reaches the diff, and the note is never touched until you take a hunk.
+
+Cost: both note actions run on Sonnet 5 at low or medium effort, with `max_tokens` sized
+to the note rather than to a flat ceiling. List price is $2 per million input tokens and
+$10 per million output. A measured tidy of a 270-word note was 1,018 tokens in and 432
+out, about two thirds of a cent; scaled up, a 500-word note is roughly a cent to tidy and
+roughly two cents to restructure, since a restructure thinks a little longer and writes a
+little more. Every call records its estimate in `vault/ai-log.jsonl`, and the Sunday
+debrief prints the last seven days as one line.
 
 Put the key in `learn/.env` (git-ignored; one line, no quotes needed):
 
@@ -103,7 +121,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 alike. Exporting `ANTHROPIC_API_KEY` in the shell works too and takes precedence.
 
 **Everything else works fully without a credential.** Notes, Checks, attempts, scheduling,
-sessions, review and the capstone board never call out. With no credential the two AI menu
+sessions, review and the capstone board never call out. With no credential the AI menu
 entries are disabled — not hidden — with the reason shown, and `GET /api/health` reports
 `ai_available: false`. Every AI call, including a refused or rejected one, is appended to
 `vault/ai-log.jsonl`.

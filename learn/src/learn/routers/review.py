@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, timedelta
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -15,6 +15,7 @@ from .plan import week_hours
 
 router = APIRouter(tags=["review"])
 
+AI_SPEND_DAYS = 7
 SKIPS_PER_QUARTER = 2
 WEEKS_PER_QUARTER = 13
 TRACK_WEEKS = 40
@@ -84,9 +85,21 @@ def get_weekly() -> dict[str, Any]:
         "shipped": [
             {"id": c["id"], "title": c["title"], "state": c["state"]} for c in capstone_rows()
         ],
+        "ai_spend": _ai_spend(today),
         "weeks_on_plan": weeks_elapsed,
         "banked_skips": max(0, SKIPS_PER_QUARTER * quarters - used),
         "replan": _replan(tr, plan, weeks_elapsed),
+    }
+
+
+def _ai_spend(today: date) -> dict[str, Any]:
+    """What the AI actions cost at list price over the last seven days, from the log."""
+    since = (today - timedelta(days=AI_SPEND_DAYS)).isoformat()
+    rows = [row for row in store.read_ai_log() if str(row.get("ts") or "")[:10] >= since]
+    return {
+        "days": AI_SPEND_DAYS,
+        "calls": len(rows),
+        "usd": round(sum(float(row.get("estimated_cost_usd") or 0.0) for row in rows), 4),
     }
 
 

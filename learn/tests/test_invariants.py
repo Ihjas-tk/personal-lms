@@ -191,3 +191,122 @@ def test_a_short_word_swap_is_not_a_spelling_fix() -> None:
     assert not invariants._is_spelling_fix("dog", {"cat", "sat"})
     assert invariants._is_spelling_fix("cot", {"cat", "sat"})
     assert not invariants._is_spelling_fix("30", {"3o"})
+
+
+# ------------------------------------------------------- restructure (check_structure)
+
+CONTEXT = (
+    "module: Transformers from scratch\n"
+    "topic: Causal self-attention\n"
+    "sources:\n"
+    "- Karpathy, Let's build GPT (video) — https://example.invalid/build-gpt\n"
+)
+
+RICH = """\
+> From: [*Karpathy, Let's build GPT*](https://example.invalid/build-gpt) (video)
+> Module: Transformers from scratch · Topic: Causal self-attention
+
+# Attention
+
+## The mask
+
+The mask is applied before the softmax, with -1e9 in the masked slots.
+
+```python
+def mask(scores, m):
+    return scores + m  # additive, not multiplicative
+```
+
+- Use `torch.masked_fill` when the mask is boolean.
+- Cost is $O(n^2 d)$ per layer.
+
+$$
+A = \\mathrm{softmax}(QK^\\top / \\sqrt{d_k})V
+$$
+
+See https://arxiv.org/abs/1706.03762 for the original paper.
+
+> Attention is all you need.
+> We propose a new simple network architecture.
+
+## To do
+
+- [x] re-derive the shapes from memory
+- [ ] write the backward pass
+
+## Shapes
+
+There are 8 heads and 512 model dimensions, so each head is 64 wide.
+"""
+
+
+def test_a_faithful_restructure_passes() -> None:
+    """Headings, bullets and a new source blockquote: layout only, nothing lost."""
+    result = invariants.check_structure(NOTE, RICH, CONTEXT)
+    assert result.ok, result.reason
+    assert result.reason is None
+    # The restructure legitimately adds words, so the tidy limit would have refused it.
+    assert result.tokens_added > 0
+    assert not invariants.check(NOTE, RICH).ok
+
+
+def test_a_restructure_that_drops_a_paragraph_is_rejected() -> None:
+    edited = RICH.replace(
+        "There are 8 heads and 512 model dimensions, so each head is 64 wide.\n", ""
+    )
+    result = invariants.check_structure(NOTE, edited, CONTEXT)
+    assert not result.ok
+    assert "dropped" in (result.reason or "")
+
+
+def test_a_restructure_that_drops_only_prose_is_rejected() -> None:
+    """No number in the lost sentence, so the content-retention floor is what catches it."""
+    original = (
+        "the mask is applied before the softmax\n\n"
+        "positional encodings are sinusoidal and interpolate badly beyond training length\n"
+    )
+    edited = "## Masking\n\n- The mask is applied before the softmax.\n"
+    result = invariants.check_structure(original, edited, CONTEXT)
+    assert not result.ok
+    assert "dropped" in (result.reason or "")
+    assert "survive" in (result.reason or "")
+
+
+def test_a_restructure_that_changes_a_number_is_rejected() -> None:
+    edited = RICH.replace("-1e9", "-1e4")
+    result = invariants.check_structure(NOTE, edited, CONTEXT)
+    assert not result.ok
+    assert "a number" in (result.reason or "")
+
+
+def test_a_restructure_that_invents_a_number_is_rejected() -> None:
+    edited = RICH.replace("so each head is 64 wide.", "so each head is 64 wide across 12 layers.")
+    result = invariants.check_structure(NOTE, edited, CONTEXT)
+    assert not result.ok
+    assert "a number was added" in (result.reason or "")
+
+
+def test_a_number_that_comes_from_the_source_title_is_allowed() -> None:
+    """A number inside a source title is not a claim the model made up."""
+    context = "module: M\ntopic: T\nsources:\n- Lecture 3, attention (video)\n"
+    original = "the mask is applied before the softmax\n"
+    edited = "> From: *Lecture 3, attention* (video)\n\n- The mask is applied before the softmax.\n"
+    assert invariants.check_structure(original, edited, context).ok
+    # Without that context the same number is an invention.
+    assert not invariants.check_structure(original, edited).ok
+
+
+def test_a_restructure_that_rewrites_a_code_block_is_rejected() -> None:
+    edited = RICH.replace("return scores + m", "return scores * m")
+    result = invariants.check_structure(NOTE, edited, CONTEXT)
+    assert not result.ok
+    assert "fenced code block" in (result.reason or "")
+
+
+def test_a_restructure_may_add_a_blockquote_but_not_lose_what_one_said() -> None:
+    """Blockquote lines are no longer compared — the content floor is what guards them."""
+    edited = RICH.replace("> We propose a new simple network architecture.\n", "")
+    assert invariants.check_structure(NOTE, RICH, CONTEXT).ok
+    dropped = invariants.check_structure(NOTE, edited, CONTEXT)
+    assert not dropped.ok
+    assert "dropped" in (dropped.reason or "")

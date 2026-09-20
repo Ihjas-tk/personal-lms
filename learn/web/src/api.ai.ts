@@ -1,5 +1,5 @@
 /**
- * The two AI surfaces and the file-change stream. Split out of `api.ts` so the
+ * The three AI surfaces and the file-change stream. Split out of `api.ts` so the
  * plain request wrappers stay one screenful; every caller still imports from
  * `./api`, which re-exports everything here.
  */
@@ -24,14 +24,19 @@ export interface TidyHandlers {
   onError(message: string): void;
 }
 
-/** SSE contract §7.1: `delta`, `stats`, `rejected`, `done`, `error`. */
-export async function tidy(
-  input: { module_id: string; text: string },
+/** SSE contract §7.1: `delta`, `stats`, `retry`, `rejected`, `done`, `error`.
+ *
+ * Tidy and Restructure differ only in their endpoint and their body, so the frame
+ * loop is written once here and both callers below hand it their own.
+ */
+async function noteStream(
+  path: string,
+  input: unknown,
   h: TidyHandlers,
   signal?: AbortSignal,
 ): Promise<void> {
   try {
-    for await (const frame of sseStream("/ai/tidy", {
+    for await (const frame of sseStream(path, {
       method: "POST",
       json: input,
       signal,
@@ -65,6 +70,20 @@ export async function tidy(
     h.onError(err instanceof Error ? err.message : String(err));
   }
 }
+
+/** §7.1: copy-edit a note. The result is reviewed as a diff; nothing is written. */
+export const tidy = (
+  input: { module_id: string; text: string },
+  h: TidyHandlers,
+  signal?: AbortSignal,
+): Promise<void> => noteStream("/ai/tidy", input, h, signal);
+
+/** §7.1: re-lay a topic note out, with its module, topic and sources named on top. */
+export const restructure = (
+  input: { module_id: string; topic_id: string; text: string },
+  h: TidyHandlers,
+  signal?: AbortSignal,
+): Promise<void> => noteStream("/ai/restructure", input, h, signal);
 
 /** §7.2: one `done` event carrying the parsed structured critique. */
 export async function critique(

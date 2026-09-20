@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import AiMenu from "./AiMenu";
 import { LadderChip } from "./Chip";
 import {
+  AI_RESTRUCTURE_ITEM,
   AI_SECOND_OPINION_ITEM,
   AI_TIDY_ITEM,
   MECHANISM_PROMPT,
@@ -158,6 +159,11 @@ export default function TopicCard({
                     items={[
                       {
                         label: AI_TIDY_ITEM,
+                        hint: "Opens the note in focus mode first.",
+                        onSelect: () => onFocus({ topicId: topic.id }),
+                      },
+                      {
+                        label: AI_RESTRUCTURE_ITEM,
                         hint: "Opens the note in focus mode first.",
                         onSelect: () => onFocus({ topicId: topic.id }),
                       },
