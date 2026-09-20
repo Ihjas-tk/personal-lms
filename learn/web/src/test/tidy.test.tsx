@@ -68,4 +68,24 @@ describe("Tidy merge view", () => {
     expect(screen.getByRole("button", { name: "Keep original" })).toBeInTheDocument();
     expect(onAccept).not.toHaveBeenCalled();
   });
+
+  it("starts the buffer over when the server retries, then reviews the second pass", async () => {
+    stubApi((url) =>
+      url.endsWith("/api/ai/tidy")
+        ? sseResponse([
+            { event: "delta", data: { text: "wrong pass" } },
+            { event: "retry", data: { reason: "a number changed: '3' became '30'" } },
+            { event: "delta", data: { text: TIDIED } },
+            { event: "stats", data: { tokens_added: 0 } },
+            { event: "done", data: { text: TIDIED, stats: { tokens_added: 0 } } },
+          ])
+        : undefined,
+    );
+    render(<TidyDialog moduleId="a1" original={ORIGINAL} onClose={() => {}} onAccept={() => {}} />);
+    const note = await screen.findByTestId("tidy-retry");
+    expect(note.textContent).toContain("'3' became '30'");
+    expect(await screen.findByTestId("merge-host")).toBeTruthy();
+    expect(screen.queryByTestId("tidy-rejected")).toBeNull();
+  });
+
 });

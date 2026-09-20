@@ -201,7 +201,7 @@ def test_tidy_streams_deltas_then_stats_then_done(
     # SDK facts the spec pins (§7): exact model, adaptive thinking with no budget,
     # medium effort, server-side fallback beta, cached system block, no prefill.
     kwargs = messages.kwargs
-    assert kwargs["model"] == "claude-opus-5"
+    assert kwargs["model"] == ai.MODEL == "claude-sonnet-5"
     assert kwargs["thinking"] == {"type": "adaptive"}
     assert "budget_tokens" not in kwargs["thinking"]
     assert kwargs["output_config"] == {"effort": "medium"}
@@ -233,9 +233,11 @@ def test_tidy_rejects_an_edit_that_breaks_an_invariant(
     install(monkeypatch, text=TIDIED.replace("-1e9", "-1e4"))
     response = client.post("/api/ai/tidy", json={"module_id": "a1", "text": NOTE})
     events = frames(response.text)
-    assert [e for e, _ in events] == ["delta", "stats", "rejected"]
-    assert "a number" in events[2][1]["reason"]
-    assert store.read_ai_log()[0]["accepted"] is False
+    # The fake replays the same bad edit, so the one retry is refused as well.
+    assert [e for e, _ in events] == ["delta", "retry", "delta", "stats", "rejected"]
+    assert "a number" in events[1][1]["reason"]
+    assert "a number" in events[4][1]["reason"]
+    assert [entry["accepted"] for entry in store.read_ai_log()] == [False, False]
 
 
 def test_tidy_reports_a_missing_credential_as_one_error_frame(
@@ -421,3 +423,66 @@ def test_critique_is_locked_while_another_attempt_is_open(
 def test_critique_404s_on_an_unknown_attempt(client: TestClient, cfg: config.Config) -> None:
     response = client.post("/api/ai/critique", json={"attempt_path": "modules/a1/attempts/no.md"})
     assert response.status_code == 404
+
+
+# ---------------------------------------------------------------- tidy retry
+
+
+def _scripted_tidy(passes: list[str]):
+    """A fake `ai.tidy` whose n-th call streams `passes[n]`, recording the violations."""
+    calls: list[str | None] = []
+
+    async def fake(body: str, violation: str | None = None):
+        calls.append(violation)
+        text = passes[len(calls) - 1]
+        yield ("delta", text)
+        yield ("done", {"text": text, "input_tokens": 10, "output_tokens": 5})
+
+    fake.calls = calls  # type: ignore[attr-defined]
+    return fake
+
+
+def test_tidy_retries_once_with_the_checkers_reason(
+    client: TestClient, cfg: config.Config, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original = "Out of 50, 20 were correct and 3o wrong."
+    fake = _scripted_tidy(
+        ["Out of 50, 20 were correct and 30 wrong.", "Out of 50, 20 were correct and 3o wrong."]
+    )
+    monkeypatch.setattr(ai, "tidy", fake)
+    response = client.post("/api/ai/tidy", json={"module_id": "a1", "text": original})
+    events = frames(response.text)
+    kinds = [e for e, _ in events]
+    assert kinds == ["delta", "retry", "delta", "stats", "done"]
+    assert "3" in events[1][1]["reason"] and "30" in events[1][1]["reason"]
+    assert fake.calls[0] is None and fake.calls[1] == events[1][1]["reason"]
+    assert events[-1][1]["text"] == original
+    log = [json.loads(line) for line in (cfg.vault / "ai-log.jsonl").read_text().splitlines()]
+    assert [entry["accepted"] for entry in log[-2:]] == [False, True]
+
+
+def test_tidy_gives_up_after_the_second_refusal(
+    client: TestClient, cfg: config.Config, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original = "It ran 3o times."
+    fake = _scripted_tidy(["It ran 30 times.", "It ran 30 times."])
+    monkeypatch.setattr(ai, "tidy", fake)
+    response = client.post("/api/ai/tidy", json={"module_id": "a1", "text": original})
+    kinds = [e for e, _ in frames(response.text)]
+    assert kinds == ["delta", "retry", "delta", "stats", "rejected"]
+    assert len(fake.calls) == 2
+
+
+def test_tidy_prompt_carries_the_violation(monkeypatch: pytest.MonkeyPatch) -> None:
+    messages = install(monkeypatch, text="x", chunks=["x"])
+
+    async def run() -> None:
+        async for _ in ai.tidy("x", violation="a number changed: '3' became '30'"):
+            pass
+
+    import asyncio
+
+    asyncio.run(run())
+    content = messages.kwargs["messages"][0]["content"]
+    assert "refused because a number changed: '3' became '30'" in content
+    assert "leave that exactly as it is written" in content

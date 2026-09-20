@@ -18,6 +18,8 @@ export interface TidyHandlers {
   onDelta(text: string): void;
   onStats(stats: TidyStats): void;
   onRejected(reason: string): void;
+  /** The checker refused the first pass; the server is streaming a second one from scratch. */
+  onRetry?(reason: string): void;
   onDone(payload: { text?: string; stats?: TidyStats }): void;
   onError(message: string): void;
 }
@@ -41,6 +43,9 @@ export async function tidy(
           break;
         case "stats":
           h.onStats(parsed as TidyStats);
+          break;
+        case "retry":
+          h.onRetry?.((parsed as { reason?: string })?.reason ?? frame.data);
           break;
         case "rejected":
           h.onRejected((parsed as { reason?: string })?.reason ?? frame.data);

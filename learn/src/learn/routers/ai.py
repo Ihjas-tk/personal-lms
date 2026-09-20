@@ -63,30 +63,38 @@ async def tidy(body: TidyBody) -> StreamingResponse:
     _reject_while_attempt_open()
 
     async def generate() -> AsyncIterator[str]:
+        """One pass; if the checker refuses it, one more pass told why. Then stop."""
+        violation: str | None = None
         try:
-            async for kind, payload in ai.tidy(body.text):
-                if kind == "delta":
-                    yield _frame("delta", {"text": payload})
-                    continue
-                result = invariants.check(body.text, payload["text"])
-                stats = {
-                    "tokens_added": result.tokens_added,
-                    "input_tokens": payload["input_tokens"],
-                    "output_tokens": payload["output_tokens"],
-                }
-                yield _frame("stats", stats)
-                if result.ok:
-                    yield _frame("done", {"text": payload["text"], "stats": stats})
-                else:
-                    yield _frame("rejected", {"reason": result.reason})
-                ai.append_log(
-                    mode="tidy",
-                    target=body.module_id,
-                    input_tokens=payload["input_tokens"],
-                    output_tokens=payload["output_tokens"],
-                    tokens_added=result.tokens_added,
-                    accepted=result.ok,
-                )
+            for attempt in (1, 2):
+                async for kind, payload in ai.tidy(body.text, violation):
+                    if kind == "delta":
+                        yield _frame("delta", {"text": payload})
+                        continue
+                    result = invariants.check(body.text, payload["text"])
+                    stats = {
+                        "tokens_added": result.tokens_added,
+                        "input_tokens": payload["input_tokens"],
+                        "output_tokens": payload["output_tokens"],
+                    }
+                    ai.append_log(
+                        mode="tidy",
+                        target=body.module_id,
+                        input_tokens=payload["input_tokens"],
+                        output_tokens=payload["output_tokens"],
+                        tokens_added=result.tokens_added,
+                        accepted=result.ok,
+                    )
+                    if result.ok:
+                        yield _frame("stats", stats)
+                        yield _frame("done", {"text": payload["text"], "stats": stats})
+                        return
+                    if attempt == 1:
+                        violation = result.reason
+                        yield _frame("retry", {"reason": result.reason})
+                    else:
+                        yield _frame("stats", stats)
+                        yield _frame("rejected", {"reason": result.reason})
         except ai.AIUnavailable as exc:
             ai.append_log(mode="tidy", target=body.module_id, accepted=False)
             yield _frame("error", {"message": str(exc)})

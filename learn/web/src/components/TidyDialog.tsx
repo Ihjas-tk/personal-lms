@@ -8,6 +8,7 @@ import {
   TIDY_KEEP,
   TIDY_REFUSED,
   TIDY_REFUSED_TAIL,
+  TIDY_RETRYING,
   TIDY_REVERT_ALL,
   TIDY_SNAPSHOT,
   TIDY_STATS,
@@ -39,6 +40,7 @@ export default function TidyDialog({
   const [shadow, setShadow] = useState("");
   const [stats, setStats] = useState<TidyStats | null>(null);
   const [message, setMessage] = useState("");
+  const [retry, setRetry] = useState("");
   const host = useRef<HTMLDivElement | null>(null);
   const merge = useRef<MergeView | null>(null);
   const shadowRef = useRef("");
@@ -56,6 +58,11 @@ export default function TidyDialog({
           setShadow(shadowRef.current);
         },
         onStats: (s) => setStats(s),
+        onRetry: (reason) => {
+          shadowRef.current = "";
+          setShadow("");
+          setRetry(reason);
+        },
         onRejected: (reason) => {
           setMessage(reason);
           setPhase("rejected");
@@ -142,6 +149,11 @@ export default function TidyDialog({
           </button>
         </header>
 
+        {retry ? (
+          <p className="tidy-retry" data-testid="tidy-retry" role="status">
+            {TIDY_RETRYING(retry)}
+          </p>
+        ) : null}
         {phase === "streaming" ? (
           <pre className="mono tidy-shadow" data-testid="tidy-shadow">
             {shadow}

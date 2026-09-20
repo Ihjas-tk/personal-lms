@@ -86,3 +86,13 @@
 .sheet.refusal .btn {
   border-color: var(--amber-line);
 }
+
+/* The one retry: the checker refused the first pass and the buffer starts over. */
+.tidy-retry {
+  margin: 0 0 var(--s-3, 12px);
+  padding: var(--s-2, 8px) var(--s-3, 12px);
+  border-radius: var(--r-2, 8px);
+  background: var(--warn-soft, var(--surface-2));
+  color: var(--text-2);
+  font-size: var(--fs-sm, 13px);
+}

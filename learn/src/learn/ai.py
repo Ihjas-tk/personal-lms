@@ -18,7 +18,7 @@ import anthropic
 
 from . import store
 
-MODEL = "claude-opus-5"
+MODEL = "claude-sonnet-5"
 TIDY_MAX_TOKENS = 32000
 CRITIQUE_MAX_TOKENS = 8000
 TIDY_EFFORT = "medium"
@@ -60,6 +60,8 @@ You MUST NOT:
 Preserve byte-for-byte: every code block's contents and language tag, every
 inline code span, every LaTeX expression, every URL and link target, every
 number, every checklist item and its checked state, every blockquote line.
+A number that looks mistyped ("3o", "1O", "5O0") stays exactly as written: the
+checker compares digits, and correcting it will get the whole edit refused.
 
 The note body is given to you without YAML frontmatter; do not emit any.
 If the note is already clean, return it unchanged.
@@ -202,14 +204,23 @@ def _usage(final: Any) -> tuple[int, int]:
 # ---------------------------------------------------------------- tidy
 
 
-async def tidy(body: str) -> AsyncIterator[tuple[str, Any]]:
+async def tidy(body: str, violation: str | None = None) -> AsyncIterator[tuple[str, Any]]:
     """Copy-edit a note body.
 
     Yields `("delta", text)` for each streamed chunk, then exactly one
     `("done", {"text", "input_tokens", "output_tokens"})`. The invariant check and
     the SSE framing are the router's job; this function only talks to the API.
+    `violation` is the checker's reason from a refused first pass; the router
+    retries once with it so the model knows exactly what it must leave alone.
     """
     client = get_client()
+    ask = "Copy-edit this note. Its meaning must be identical afterwards."
+    if violation:
+        ask += (
+            f" A previous copy-edit of this note was refused because {violation}. "
+            "Redo it and leave that exactly as it is written in the note, even if it "
+            "looks like a typo."
+        )
     try:
         async with client.beta.messages.stream(
             model=MODEL,
@@ -228,10 +239,7 @@ async def tidy(body: str) -> AsyncIterator[tuple[str, Any]]:
             messages=[
                 {
                     "role": "user",
-                    "content": (
-                        "Copy-edit this note. Its meaning must be identical "
-                        "afterwards.\n\n<note>\n" + body + "\n</note>"
-                    ),
+                    "content": ask + "\n\n<note>\n" + body + "\n</note>",
                 }
             ],
         ) as stream:

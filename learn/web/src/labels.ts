@@ -248,6 +248,8 @@ export const TIDY_KEEP = "Keep original · Esc";
 export const TIDY_TAKE_ALL = "Take all";
 export const TIDY_REVERT_ALL = "Revert all";
 export const TIDY_SNAPSHOT = "A snapshot is committed before anything is written.";
+export const TIDY_RETRYING = (reason: string) =>
+  `The first pass was refused (${reason}), so this is a second pass with that pinned.`;
 export const TIDY_REFUSED = "Refused — the tidy changed something it is not allowed to change";
 export const TIDY_REFUSED_TAIL =
   "Your note was not touched and there is no diff to review. The refusal is logged.";
