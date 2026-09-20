@@ -45,7 +45,8 @@ class InvariantResult:
     """The verdict on one tidy.
 
     `tokens_added` counts output word tokens that do not occur anywhere in the
-    input; `new_token_share` is that count over the total number of output word
+    input and are not a spelling fix of one that does (`_is_spelling_fix`);
+    `new_token_share` is that count over the total number of output word
     tokens. Both are reported whether or not the tidy passed, because the UI
     shows them in the `stats` frame either way.
     """
@@ -195,11 +196,45 @@ _CHECKS: tuple[tuple[str, Callable[[str], list[str]]], ...] = (
 )
 
 
+def _edit_distance(a: str, b: str, limit: int) -> int:
+    """Levenshtein distance, capped: returns `limit + 1` as soon as it is exceeded."""
+    if abs(len(a) - len(b)) > limit:
+        return limit + 1
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        if min(cur) > limit:
+            return limit + 1
+        prev = cur
+    return prev[-1]
+
+
+def _is_spelling_fix(word: str, before_words: set[str]) -> bool:
+    """A word absent from the note but within one or two edits of one that is there.
+
+    Spelling is the first thing Tidy is allowed to fix, so a corrected word must not
+    count towards the rewrite limit: "tokaenization" → "tokenization" is a fix, "cat" →
+    "dog" is not. Short words get one edit, longer ones two. Digits never qualify —
+    numbers are checked separately and never change.
+    """
+    if any(ch.isdigit() for ch in word):
+        return False
+    limit = 1 if len(word) <= 4 else 2
+    return any(
+        abs(len(word) - len(prior)) <= limit and _edit_distance(word, prior, limit) <= limit
+        for prior in before_words
+    )
+
+
 def check(original: str, edited: str) -> InvariantResult:
     """Compare a tidied note against the original. Pure; no I/O, no network."""
     before_words = set(_words(original))
     after_words = _words(edited)
-    new_tokens = [w for w in after_words if w not in before_words]
+    new_tokens = [
+        w for w in after_words if w not in before_words and not _is_spelling_fix(w, before_words)
+    ]
     tokens_added = len(new_tokens)
     share = (tokens_added / len(after_words)) if after_words else 0.0
 

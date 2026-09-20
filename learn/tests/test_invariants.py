@@ -8,6 +8,7 @@ rejecting everything.
 
 from __future__ import annotations
 
+from learn import invariants
 from learn.invariants import check
 
 NOTE = """\
@@ -156,3 +157,37 @@ def test_stats_are_reported_even_when_the_tidy_passes() -> None:
     assert result.ok, result.reason
     assert result.tokens_added == 0
     assert result.new_token_share == 0.0
+
+
+# ------------------------------------------------------- spelling fixes vs rewrites
+
+
+def test_spelling_fixes_do_not_count_towards_the_rewrite_limit() -> None:
+    """A typo-heavy note corrected word for word is a copy-edit, not a rewrite."""
+    original = (
+        "# Tokaenization\n\nthere is muplte ways a model can snwer the question, "
+        "aqnd the computaion is essentailly the same. Our of the 50 aybe 20 where coret."
+    )
+    edited = (
+        "# Tokenization\n\nThere is multiple ways a model can answer the question, "
+        "and the computation is essentially the same. Out of the 50 maybe 20 were correct."
+    )
+    result = invariants.check(original, edited)
+    assert result.ok, result.reason
+    # "muplte" → "multiple" is three edits away, so that one still counts as new.
+    assert result.tokens_added == 1
+
+
+def test_a_genuine_rewrite_is_still_refused() -> None:
+    original = "the cat sat on the mat and looked at the dog for a while"
+    edited = "a feline rested upon the rug while observing the hound briefly"
+    result = invariants.check(original, edited)
+    assert not result.ok
+    assert "rewrite" in (result.reason or "")
+
+
+def test_a_short_word_swap_is_not_a_spelling_fix() -> None:
+    """cat → dog is one edit away from nothing in the note; cat → cot would be a fix."""
+    assert not invariants._is_spelling_fix("dog", {"cat", "sat"})
+    assert invariants._is_spelling_fix("cot", {"cat", "sat"})
+    assert not invariants._is_spelling_fix("30", {"3o"})
