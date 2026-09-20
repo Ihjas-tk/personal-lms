@@ -94,6 +94,7 @@ def _serve_flags(parser: argparse.ArgumentParser) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    config.load_dotenv()
     args = build_parser().parse_args(argv)
     if args.command == "init":
         return cmd_init(args)

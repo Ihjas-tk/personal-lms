@@ -151,7 +151,7 @@ def test_health_names_both_credential_paths(client: TestClient) -> None:
     body = client.get("/api/health").json()
     assert body["ai_available"] is False
     assert "ANTHROPIC_API_KEY" in body["ai_reason"]
-    assert "ant auth login" in body["ai_reason"]
+    assert "learn/.env" in body["ai_reason"]
 
 
 def test_status_trusts_an_env_credential_without_a_network_call(
@@ -162,9 +162,21 @@ def test_status_trusts_an_env_credential_without_a_network_call(
 
 
 def test_status_trusts_a_resolved_profile(monkeypatch: pytest.MonkeyPatch) -> None:
-    """No env var, but `ant auth login` left a profile the SDK could resolve."""
-    monkeypatch.setattr(ai, "get_client", lambda: SimpleNamespace())
+    """No env var, but the SDK resolved a token from a stored profile."""
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setattr(ai, "get_client", lambda: SimpleNamespace(api_key=None, auth_token="tok"))
     assert ai.status() == (True, "ready")
+
+
+def test_status_does_not_trust_a_client_with_no_credential(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SDK 1.x constructs a client with nothing in it; that must not read as ready."""
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setattr(ai, "get_client", lambda: SimpleNamespace(api_key=None, auth_token=None))
+    ok, reason = ai.status()
+    assert ok is False
+    assert "learn/.env" in reason
 
 
 # ---------------------------------------------------------------- tidy
@@ -235,7 +247,7 @@ def test_tidy_reports_a_missing_credential_as_one_error_frame(
     events = frames(response.text)
     assert [e for e, _ in events] == ["error"]
     assert "ANTHROPIC_API_KEY" in events[0][1]["message"]
-    assert "ant auth login" in events[0][1]["message"]
+    assert "learn/.env" in events[0][1]["message"]
     assert store.read_ai_log()[0]["accepted"] is False
 
 

@@ -93,10 +93,14 @@ as a diff before anything touches the file) and a **second opinion** (grades an 
 have already frozen against its rubric; it never rewrites and never replaces your own score).
 Both are unavailable while an answer is open — freezing the answer is what unlocks them.
 
-```bash
-export ANTHROPIC_API_KEY=sk-ant-...   # or:
-ant auth login                        # check with: ant auth status
+Put the key in `learn/.env` (git-ignored; one line, no quotes needed):
+
 ```
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+`learn` reads that file at start-up, so it works for `uv run learn` and for the Mac app
+alike. Exporting `ANTHROPIC_API_KEY` in the shell works too and takes precedence.
 
 **Everything else works fully without a credential.** Notes, Checks, attempts, scheduling,
 sessions, review and the capstone board never call out. With no credential the two AI menu

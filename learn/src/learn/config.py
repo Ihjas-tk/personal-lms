@@ -153,6 +153,30 @@ def resolve_curriculum(vault: Path | None = None) -> Path:
     )
 
 
+def load_dotenv(path: Path | None = None) -> list[str]:
+    """Read `KEY=VALUE` lines from `learn/.env` into the environment, never overriding.
+
+    This is where a learner puts `ANTHROPIC_API_KEY` so both `uv run learn` and the Mac
+    launcher (which does not read shell rc files) find it. Blank lines and `#` comments
+    are skipped; surrounding quotes are stripped. Returns the names that were set.
+    """
+    path = path or PROJECT_ROOT / ".env"
+    if not path.is_file():
+        return []
+    added: list[str] = []
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip().removeprefix("export ").strip()
+        value = value.strip().strip("'\"")
+        if key and key not in os.environ:
+            os.environ[key] = value
+            added.append(key)
+    return added
+
+
 def resolve_host() -> str:
     """`--host` → `LEARN_HOST` → 127.0.0.1. Only a container should bind wider."""
     if _overrides.host:

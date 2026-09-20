@@ -2,9 +2,9 @@
 
 The client is built lazily, so a missing credential never crashes startup and never
 breaks any non-AI screen. Credential resolution is the SDK's own — `ANTHROPIC_API_KEY`,
-then `ANTHROPIC_AUTH_TOKEN`, then the profile written by `ant auth login` — which is
-why an unset environment variable is not, on its own, proof that there is no
-credential, and why every "unavailable" message names both paths.
+then `ANTHROPIC_AUTH_TOKEN`, then any stored profile the SDK knows how to read.
+`learn` also loads `learn/.env` at start-up (see `config.load_dotenv`), which is where a
+learner is told to put the key; every "unavailable" message names that file.
 """
 
 from __future__ import annotations
@@ -28,7 +28,10 @@ VERDICTS = ("met", "partial", "missing")
 
 #: §6.3 — one sentence, said the same way everywhere it appears. The backticks are
 #: literal: the client sets exactly those two spans in mono and never rewords the rest.
-NO_CREDENTIAL = "No API credential found. Run `ant auth login`, or set `ANTHROPIC_API_KEY`."
+NO_CREDENTIAL = (
+    "No API credential found. Put `ANTHROPIC_API_KEY=sk-ant-...` in `learn/.env`, "
+    "or export ANTHROPIC_API_KEY, then restart learn."
+)
 
 TIDY_SYSTEM = """\
 You are a careful copy-editor for a learner's personal study notes.
@@ -145,10 +148,14 @@ def status() -> tuple[bool, str]:
     if os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN"):
         return True, "ready"
     try:
-        get_client()
+        client = get_client()
     except AIUnavailable as exc:
         return False, str(exc)
-    return True, "ready"  # an `ant auth login` profile resolved
+    # SDK 1.x builds a client without any credential and only fails on the first
+    # request, so "constructed" is not "usable": check what it actually resolved.
+    if getattr(client, "api_key", None) or getattr(client, "auth_token", None):
+        return True, "ready"
+    return False, NO_CREDENTIAL
 
 
 # ---------------------------------------------------------------- error mapping
@@ -158,8 +165,8 @@ def _mapped(exc: Exception) -> AIUnavailable:
     """One human sentence per SDK failure. Most specific subclass first."""
     if isinstance(exc, anthropic.AuthenticationError):  # 401
         return AIUnavailable(
-            "Anthropic rejected the credential (401). Check `ant auth status`, or "
-            "re-export ANTHROPIC_API_KEY."
+            "Anthropic rejected the credential (401). Check the key in `learn/.env` "
+            "or re-export ANTHROPIC_API_KEY."
         )
     if isinstance(exc, anthropic.NotFoundError):  # 404, usually a bad model id
         return AIUnavailable(f"Model {MODEL!r} is not available to this account (404).")

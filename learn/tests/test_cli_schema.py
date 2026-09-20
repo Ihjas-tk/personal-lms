@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -193,3 +194,26 @@ def test_host_resolution_order(monkeypatch: pytest.MonkeyPatch) -> None:
     config.set_overrides(host="10.0.0.5")
     assert config.resolve_host() == "10.0.0.5"
     config.set_overrides()
+
+
+# --------------------------------------------------------------------- .env
+
+
+def test_dotenv_sets_only_missing_keys(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    env = tmp_path / ".env"
+    env.write_text(
+        "# comment\nLEARN_TEST_A='quoted'\nexport LEARN_TEST_B=plain\nLEARN_TEST_C=keep\n\nbroken\n"
+    )
+    monkeypatch.delenv("LEARN_TEST_A", raising=False)
+    monkeypatch.delenv("LEARN_TEST_B", raising=False)
+    monkeypatch.setenv("LEARN_TEST_C", "already")
+    assert config.load_dotenv(env) == ["LEARN_TEST_A", "LEARN_TEST_B"]
+    assert os.environ["LEARN_TEST_A"] == "quoted"
+    assert os.environ["LEARN_TEST_B"] == "plain"
+    assert os.environ["LEARN_TEST_C"] == "already"
+    for k in ("LEARN_TEST_A", "LEARN_TEST_B"):
+        monkeypatch.delenv(k)
+
+
+def test_dotenv_missing_file_is_noop(tmp_path: Path) -> None:
+    assert config.load_dotenv(tmp_path / "nope") == []
