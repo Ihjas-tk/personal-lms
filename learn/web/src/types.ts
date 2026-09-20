@@ -93,7 +93,8 @@ export interface Today {
 export interface ModuleSummary {
   id: string;
   phase: string;
-  track: "llm" | "evals" | "shared";
+  /** A free label the curriculum author chose; printed, never switched on. */
+  track: string;
   title: string;
   weeks: [number, number];
   budget_hours: number;
@@ -165,7 +166,8 @@ export interface CapstoneArtefact {
 export interface ModuleDetail {
   id: string;
   phase: string;
-  track: "llm" | "evals" | "shared";
+  /** A free label the curriculum author chose; printed, never switched on. */
+  track: string;
   title: string;
   weeks: [number, number];
   budget_hours: number;

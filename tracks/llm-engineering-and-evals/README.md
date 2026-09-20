@@ -1,6 +1,19 @@
 # LLM Engineering & Evals Track (Oil & Gas)
 
-Compiled 2026-09-18 for: MSc Data Science (2022), working in oil and gas, 10–15 hrs/week. This replaces stages 0–4 of the general map in [README.md](README.md). Source reports with every citation: [`research/sources/05–08`](research/sources/).
+> **This is the flagship example track, not the product.** It exists to show what a
+> serious `track.yaml` looks like when someone actually writes one for themselves —
+> 40 weeks, a project spine, and a `done when you can…` line behind every Check.
+> It was written for one learner's context: an MSc in Data Science (2022), working in
+> oil and gas, with 10–15 hours a week. Read it as a worked example, not a syllabus you
+> should follow. The curriculum the app runs is [`track.yaml`](track.yaml); this file is
+> its prose, [`syllabus.html`](syllabus.html) is the same thing as a page, and
+> [`skills-map.md`](skills-map.md) is the wider 2026–2030 map it was cut from.
+> [`research/`](research/) is the provenance: eleven cited reports the whole track was
+> derived from. To write your own instead, start at
+> [`../starter/track.yaml`](../starter/track.yaml) and
+> [`../../docs/curriculum-schema.md`](../../docs/curriculum-schema.md).
+
+Compiled 2026-09-18 for: MSc Data Science (2022), working in oil and gas, 10–15 hrs/week. This replaces stages 0–4 of the general map in [skills-map.md](skills-map.md). Source reports with every citation: [`research/05–08`](research/).
 
 ## The shape of the plan
 
@@ -133,4 +146,4 @@ Anti-patterns that sink it: a Ragas wrapper with default metrics and no calibrat
 
 ## Method and caveats
 
-Four Opus research agents ran in parallel on 2026-09-18 (LLM curriculum, evals curriculum, oil and gas datasets and employers, 2022→2026 gap), each 44–90 tool calls, all claims URL-and-date stamped in `research/sources/05–08`. Verified by direct fetch: Sodir PDFs and tables, Zenodo FORCE 2020, Equinor's Databricks user guide, BSEE, Texas RRC, EIA, Anthropic and OpenAI model pages, PyPI stats, the MCP changelog. Blocked to bots and re-check in a browser: PHMSA, OSDU GitLab, CO2DataShare. Unverified: any Chevron or ExxonMobil deal with OpenAI; specific 2026 benchmark scores; the exact enactment status of the EU AI Act omnibus deferral (direction corroborated, regulation number not).
+Four Opus research agents ran in parallel on 2026-09-18 (LLM curriculum, evals curriculum, oil and gas datasets and employers, 2022→2026 gap), each 44–90 tool calls, all claims URL-and-date stamped in `research/05–08`. Verified by direct fetch: Sodir PDFs and tables, Zenodo FORCE 2020, Equinor's Databricks user guide, BSEE, Texas RRC, EIA, Anthropic and OpenAI model pages, PyPI stats, the MCP changelog. Blocked to bots and re-check in a browser: PHMSA, OSDU GitLab, CO2DataShare. Unverified: any Chevron or ExxonMobil deal with OpenAI; specific 2026 benchmark scores; the exact enactment status of the EU AI Act omnibus deferral (direction corroborated, regulation number not).

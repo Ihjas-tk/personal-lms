@@ -1,4 +1,4 @@
-"""Load and validate `curriculum/track.yaml` (spec §5.3, redesign plan §1).
+"""Load and validate the track file — `<vault>/track.yaml` (spec §5.3, redesign plan §1).
 
 Schema v2 adds `areas` (the Desk ridge columns), per-module `topics` (the module
 workspace syllabus), resource `length`/`unit` and phase `order_note`. A v1 file still
@@ -22,7 +22,9 @@ from .config import get_config
 ResourceKind = Literal["paper", "video", "course", "repo", "doc", "book"]
 ResourceUnit = Literal["min", "pages", "items"]
 CheckType = Literal["explain", "code", "derive", "judge", "numeric"]
-TrackName = Literal["llm", "evals", "shared"]
+#: A free label an author may hang on a module ("llm", "algebra", "theory", …).
+#: It is never switched on — the UI prints it and nothing else.
+TrackName = str
 TopicKind = Literal["idea", "chore", "habit"]
 
 OTHER_TOPIC_ID = "other"
@@ -89,7 +91,7 @@ class Module(BaseModel):
     id: str
     phase: str
     area: str = ""
-    track: TrackName = "shared"
+    track: TrackName = ""
     title: str
     weeks: list[int]
     budget_hours: float = 0
@@ -223,9 +225,18 @@ class CapstoneItem(BaseModel):
 
 
 class Track(BaseModel):
+    """A whole curriculum: the root of `track.yaml`.
+
+    Any subject fits. Nothing here is specific to a topic — `total_weeks` comes
+    from the phases, `debrief_day` names the day the weekly review belongs to,
+    and a module's `track` is a free label the app only ever prints.
+    """
+
     version: int = 1
     start_date: date
     weekly_budget_hours: float = 12
+    #: The day the weekly debrief is written on. Drives every "<day> debrief" label.
+    debrief_day: str = "Sunday"
     areas: list[Area] = Field(default_factory=list)
     phases: list[Phase] = Field(default_factory=list)
     modules: list[Module] = Field(default_factory=list)
@@ -276,6 +287,16 @@ class Track(BaseModel):
     @property
     def checks(self) -> list[Check]:
         return [c for m in self.modules for c in m.checks]
+
+    @property
+    def total_weeks(self) -> int:
+        """How long the track runs: the last week any phase (or module) reaches.
+
+        Nothing in the app may assume forty — a two-week starter track and a
+        three-year one both have to render.
+        """
+        ends = [p.weeks[1] for p in self.phases] + [m.weeks[1] for m in self.modules]
+        return max(ends) if ends else 1
 
     def module(self, module_id: str) -> Module | None:
         return next((m for m in self.modules if m.id == module_id), None)

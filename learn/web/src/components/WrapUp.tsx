@@ -15,9 +15,10 @@ import {
   WRAP_UP_TITLE,
   errorCategoryLabel,
   fileJotsLabel,
+  ifCuePlaceholder,
 } from "../labels";
 import { fileJots, getJots } from "../api";
-import { useStore } from "../store";
+import { useDebriefDay, useStore } from "../store";
 import type { ErrorCategory, Jot, SessionClose } from "../types";
 
 const MIN_WORDS = 40;
@@ -33,14 +34,15 @@ const summary = (seconds: number, checks: number, errors: number) => {
 };
 
 /**
- * Wrap up (§6). Same three required answers as before — forty words, both plan
- * fields, a diagnosis per logged error — plus the jots the session left unfiled.
+ * Wrap up (§6). Same three required answers as before — MIN_WORDS of reflection,
+ * both plan fields, a diagnosis per logged error — plus the jots left unfiled.
  */
 export default function WrapUp({ onDone }: { onDone(): void }) {
   const closeSession = useStore((s) => s.closeSession);
   const loadSession = useStore((s) => s.loadSession);
   const session = useStore((s) => s.session);
   const elapsed = useStore((s) => s.elapsed);
+  const debriefDay = useDebriefDay();
 
   const [reflection, setReflection] = useState("");
   const [ifCue, setIfCue] = useState("");
@@ -155,7 +157,7 @@ export default function WrapUp({ onDone }: { onDone(): void }) {
               <input
                 id="if-cue"
                 type="text"
-                placeholder="it is Sunday after breakfast"
+                placeholder={ifCuePlaceholder(debriefDay)}
                 value={ifCue}
                 onChange={(e) => setIfCue(e.target.value)}
               />

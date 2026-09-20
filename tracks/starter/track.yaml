@@ -1,0 +1,177 @@
+# ============================================================================
+# starter — the smallest curriculum that still exercises every part of the app.
+#
+# Copy this folder, rename it, and rewrite the content for your own subject:
+#
+#     cp -r tracks/starter tracks/my-subject
+#     $EDITOR tracks/my-subject/track.yaml
+#     learn check tracks/my-subject/track.yaml
+#     learn init --track tracks/my-subject/track.yaml
+#     learn
+#
+# Every optional field appears exactly once below, with its default written in
+# the comment beside it. Required fields are marked REQUIRED. Ids are yours to
+# choose: any string, unique within its kind. Renaming a check's id starts its
+# attempt history over, because attempts are filed by id — rename deliberately.
+#
+# The full field reference is docs/curriculum-schema.md.
+# ============================================================================
+
+version: 2            # optional, default 1. Use 2 for `areas` and `topics`.
+start_date: 2026-10-05  # REQUIRED. Week 1 is the week containing this date.
+weekly_budget_hours: 6  # optional, default 12. Hours you intend to spend a week.
+debrief_day: Sunday     # optional, default "Sunday". Names the weekly review.
+
+# ---------------------------------------------------------------- areas
+# The columns of the Desk's ridge: the capabilities this track builds. Counts
+# on the ridge are per-area, so there is never one number for the whole track.
+# Optional: leave `areas` out and the app makes one area per phase instead —
+# but then modules must not set `area` either.
+areas:
+  - id: foundations
+    title: Foundations            # REQUIRED
+    scope: m1                     # optional, default "". Free text under the title.
+  - id: practice
+    title: Putting it to work
+    scope: m2
+
+# ---------------------------------------------------------------- phases
+# Chapters of the calendar. `weeks` is [first, last], 1-based and inclusive;
+# the longest `weeks[1]` across all phases is how long the app thinks the
+# track runs. Phases must not have gaps you care about — weeks outside every
+# phase simply render as unassigned cells on the week strip.
+phases:
+  - id: p1
+    title: The only phase         # REQUIRED
+    weeks: [1, 4]                 # REQUIRED
+    modules: [m1, m2]             # optional, default []. Do-order for this phase.
+    order_note: Do m1 before m2; m2 assumes you can already do m1's check.
+    # ^ optional, default null. Shown as the phase blurb on the track screen.
+
+# ---------------------------------------------------------------- modules
+# A module is one workspace page: a syllabus of topics, its own sources, its
+# own checks, its own hours budget.
+modules:
+  - id: m1
+    phase: p1                     # REQUIRED. Must be a phase id above.
+    area: foundations             # REQUIRED when `areas` is declared, else omit.
+    track: theory                 # optional, default "". A free label, printed as-is.
+    title: The first idea         # REQUIRED
+    weeks: [1, 2]                 # REQUIRED. [first, last], inclusive.
+    budget_hours: 6               # optional, default 0. Hours you expect to need.
+    prerequisites: []             # optional, default []. Other module ids.
+    must_cover: []                # optional, default []. v1 only — see the note
+    # ^ at the bottom of this file. With `topics` present, leave it empty.
+
+    # --- topics: the lines of the module syllabus -----------------------
+    # kind: idea  — something to understand and then prove. Needs at least one
+    #               resource or one check, or `learn check` refuses the file.
+    # kind: chore — a one-off set-up task. Ticked off in the sidebar.
+    # kind: habit — a sentence you keep doing. Never ticked, never scored.
+    topics:
+      - id: the-idea
+        title: What the first idea actually says   # REQUIRED
+        summary: The one-sentence version, in your own words.  # optional, default ""
+        kind: idea                # optional, default "idea"
+        resources: [r-primer]     # optional, default []. Resource ids in THIS module.
+        checks: [c-explain]       # optional, default []. Check ids in THIS module.
+      - id: set-up
+        title: Install the tool and run it once
+        kind: chore
+      - id: the-habit
+        title: Ten minutes of recall before opening any source.
+        kind: habit
+
+    # --- resources: what you read, watch or work through ----------------
+    # kind is one of: paper video course repo doc book
+    resources:
+      - id: r-primer
+        title: A short primer on the first idea    # REQUIRED
+        kind: doc                 # REQUIRED
+        url: https://example.org/primer            # optional, default null
+        est_minutes: 45           # optional, default 0. Used when `length` is absent.
+        length: 45                # optional, default null. How long, in `unit`.
+        unit: min                 # optional, default "min". One of: min pages items
+
+    # --- checks: the only thing that moves the ridge ---------------------
+    # type is one of:
+    #   explain — say it back from memory, in prose
+    #   code    — write working code from memory (paste is disabled)
+    #   derive  — work it out on paper, step by step
+    #   numeric — produce a number and show the arithmetic
+    #   judge   — mark someone else's work against a standard
+    checks:
+      - id: c-explain
+        module: m1                # REQUIRED. Must equal the module's own id.
+        type: explain             # REQUIRED
+        prompt: >-                # REQUIRED. What you must do, from memory.
+          Without looking anything up, explain the first idea to someone who has
+          never met it, and say what it is NOT.
+        rubric:                   # optional, default []. One line per thing to mark.
+          - States the idea in one sentence without jargon
+          - Names at least one thing it is commonly confused with
+          - Gives an example that is not the one in the primer
+        reference: >-             # optional, default "". Hidden until you freeze.
+          The first idea says X. It is not Y, which people confuse it with because
+          both mention Z. An example the primer does not use is W.
+        must_cover: true          # optional, default true. false = enrichment, not counted.
+        known_prior: false        # optional, default false. true = you already knew this.
+        est_minutes: 10           # optional, default 0
+        draft: false              # optional, default false. true = reference is unverified.
+
+  - id: m2
+    phase: p1
+    area: practice
+    track: practice
+    title: The second idea, used
+    weeks: [3, 4]
+    budget_hours: 6
+    prerequisites: [m1]
+    topics:
+      - id: apply-it
+        title: Using the first idea on a real problem
+        summary: Where it holds, where it breaks.
+        resources: [r-worked]
+        checks: [c-derive]
+    resources:
+      - id: r-worked
+        title: A worked example, start to finish
+        kind: video
+        url: https://example.org/worked-example
+        length: 30
+        unit: min
+    checks:
+      - id: c-derive
+        module: m2
+        type: derive
+        prompt: >-
+          On paper, work the standard example through from the starting
+          assumptions to the answer, without consulting the worked example.
+        rubric:
+          - Writes down the starting assumptions before anything else
+          - Each step follows from the one above it
+          - Sanity-checks the answer against a case you already know
+        reference: >-
+          Start from the assumptions. Apply the first idea. Simplify. Check the
+          result against the degenerate case, where the answer must be zero.
+        est_minutes: 20
+
+# ---------------------------------------------------------------- capstone
+# Artefacts that either exist or do not. No percentage, no partial credit.
+capstone:
+  - id: cap-writeup
+    title: A short write-up of what you can now do   # REQUIRED
+    modules: [m1, m2]             # optional, default []. Which modules feed it.
+    description: >-               # optional, default ""
+      One page, written from memory, that a reader who does not know the subject
+      could follow. If you cannot write it, you have not finished the track.
+
+# ---------------------------------------------------------------------------
+# v1 compatibility
+# ---------------------------------------------------------------------------
+# A file with no `areas` and no `topics` still loads. Then:
+#   * one area is synthesised per phase, so the ridge still draws;
+#   * each `must_cover:` line on a module becomes an idea topic of its own;
+#   * every resource and check lands in an implicit topic called `other`
+#     ("Also in this module"), so nothing is unreachable.
+# Prefer v2: write `topics` and let them own their resources and checks.

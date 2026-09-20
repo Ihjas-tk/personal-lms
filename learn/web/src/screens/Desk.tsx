@@ -4,7 +4,7 @@ import Band from "../components/Band";
 import Ridge from "../components/Ridge";
 import Stat from "../components/Stat";
 import { HoursBar } from "../components/HoursBar";
-import { DEBRIEF, ladderLabel } from "../labels";
+import { debriefLabel, ladderLabel } from "../labels";
 import { useStore } from "../store";
 import type { Desk as DeskData } from "../types";
 
@@ -43,7 +43,11 @@ export default function Desk({ onStart }: { onStart(moduleId: string): void }) {
       </div>
 
       <Band
-        eyebrow={fr ? "Your first session" : "The plan you wrote on Sunday"}
+        eyebrow={
+          fr
+            ? "Your first session"
+            : `The plan you wrote on ${desk.plan?.written_on ?? desk.debrief_day}`
+        }
         cue={
           desk.plan?.text ??
           desk.first_action?.label ??
@@ -127,7 +131,7 @@ export default function Desk({ onStart }: { onStart(moduleId: string): void }) {
           </p>
         </div>
         <Link className="btn btn-soft" to="/review/weekly">
-          {DEBRIEF}
+          {debriefLabel(desk.debrief_day)}
         </Link>
       </div>
     </div>
@@ -177,7 +181,10 @@ function Gains({ desk }: { desk: DeskData }) {
   const rows: [string, string][] = desk.first_run
     ? [
         ["0", "checks proved so far — the first one is about ten minutes away"],
-        ["0", "artefacts started of the eight the capstone needs"],
+        [
+          "0",
+          `artefacts started of the ${desk.standing.artefacts_total} the capstone needs`,
+        ],
         [String(desk.weeks_total), "weeks of plan ahead of you"],
       ]
     : [

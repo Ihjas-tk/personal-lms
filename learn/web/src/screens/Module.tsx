@@ -89,7 +89,8 @@ export default function Module() {
         <div>
           <h1>{detail.title}</h1>
           <div className="mono mod-sub">
-            weeks {detail.weeks[0]}–{detail.weeks[1]} · {detail.track}
+            weeks {detail.weeks[0]}–{detail.weeks[1]}
+            {detail.track ? ` · ${detail.track}` : ""}
             {detail.soft_date ? ` · soft date ${detail.soft_date}` : ""} ·{" "}
             {detail.actual_hours.toFixed(1)} of {detail.budget_hours} h
           </div>

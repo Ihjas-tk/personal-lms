@@ -1,0 +1,75 @@
+name: Bug report
+description: Something in the app or the CLI does not do what it says it does.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please do not paste anything from your vault that you would
+        not want public — notes, answers and attempts are yours.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+      placeholder: |
+        1. Ran `uv run learn init --track tracks/starter/track.yaml`
+        2. Opened a check and set confidence
+        3. Expected the reference to stay hidden; it rendered before I froze the answer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Terminal output or browser console
+      description: Paste the error. This is rendered as code, no backticks needed.
+      render: shell
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: A release tag, or `git rev-parse --short HEAD`.
+      placeholder: v0.1.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: how-run
+    attributes:
+      label: How are you running it?
+      options:
+        - uv run learn
+        - Docker Compose
+        - Dev mode (uvicorn + vite)
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS, Python and Node versions
+      placeholder: macOS 15.6, Python 3.12.6, Node 22.8
+    validations:
+      required: true
+
+  - type: textarea
+    id: curriculum
+    attributes:
+      label: Curriculum
+      description: >
+        If it is curriculum-related, the output of `uv run learn check <your track.yaml>` and
+        the smallest track.yaml fragment that reproduces it.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues.
+          required: true
+        - label: I have not included private notes, answers or credentials.
+          required: true

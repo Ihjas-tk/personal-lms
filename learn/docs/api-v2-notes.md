@@ -101,3 +101,53 @@ POST /attempts/submit  {attempt_path, rubric, score, category?, diagnosis?}
     printing them raw — "0.0667% have been attempted" — and now multiplies.
 30. A resource's `meta` line rounds the stored position (`video · 95 of 116 min`): minutes
     accrue a second at a time in focus mode, so the stored value is usually fractional.
+
+---
+
+## Package A additions (open-sourcing, 2026-09-20)
+
+The app no longer knows what subject it is running. Everything below exists so a
+curriculum written for any subject renders without a code change.
+
+31. **Curriculum resolution order**, highest first: `learn --curriculum PATH` →
+    `LEARN_CURRICULUM` → `<vault>/track.yaml` → `learn/curriculum/track.yaml` (the
+    legacy in-repo copy, if it is still there) → `config.CurriculumNotFound`, whose
+    message lists every path tried and names `learn init`. The vault resolves the
+    same way, one step shorter: `--vault` → `LEARN_VAULT` → `<project>/vault`. The
+    port too: `--port` → `LEARN_PORT` → 8765. CLI flags are recorded with
+    `config.set_overrides(...)`, which clears the `lru_cache` behind `get_config()`,
+    so tests that set `LEARN_VAULT` / `LEARN_CURRICULUM` and call `config.reset()`
+    behave exactly as before.
+
+32. **`track` is a free string.** `Module.track` was `Literal["llm","evals","shared"]`
+    and is now `str`, defaulting to `""` (it was `"shared"`). The UI prints it and
+    never switches on it; `ModuleSummary.track` and `ModuleDetail.track` in `types.ts`
+    are `string`. A module with no label renders without a dangling separator.
+
+33. **`weeks_total` is derived, not a constant.** `Track.total_weeks` is the largest
+    `weeks[1]` across phases and modules. `GET /desk` and `GET /track` both report it,
+    `standing.weeks_left` and the `/track` week strip are computed against it, and
+    `end_date` is `start_date + total_weeks + offset`. `derive.WEEKS_TOTAL` survives
+    only as the default argument for callers with no curriculum in hand — no route
+    uses it any more.
+
+34. **New curriculum field `debrief_day: str = "Sunday"`.** Exposed on both overview
+    payloads as `debrief_day`, and used for `plan.written_on` (which was the module
+    constant `PLAN_WRITTEN_ON`). The client reads it through `useDebriefDay()` and
+    renders `debriefLabel(day)` → `"<day> debrief"`; the Wrap-up IF-cue placeholder
+    uses `ifCuePlaceholder(day)`. `labels.DEBRIEF` remains, as the label on the
+    default day, for anything rendered before the Desk payload lands.
+
+35. **Payload additions are additive.** `GET /desk` gains `debrief_day`; `GET /track`
+    gains `debrief_day`. No field was removed or renamed.
+
+36. **The flagship track moved** to `tracks/llm-engineering-and-evals/track.yaml`, and
+    is copied into `learn/vault/track.yaml` for the existing install (step 3 of the
+    resolution order). `learn/curriculum/` now holds only the generated
+    `schema.json`. Both Playwright configs name the moved file in `LEARN_CURRICULUM`,
+    because they run against an empty throwaway vault that has no track of its own.
+
+37. **`curriculum/schema.json`** is generated from the `Track` root model by
+    `learn schema` (`src/learn/schema.py`); `learn schema --check` fails on drift and
+    `tests/test_cli_schema.py` runs it. The prose version is
+    `docs/curriculum-schema.md` at the repo root.

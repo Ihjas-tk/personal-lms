@@ -16,7 +16,7 @@ from starlette.responses import Response
 from starlette.types import Scope
 
 from . import git, index
-from .config import HOST, PORT, get_config
+from .config import get_config, resolve_host, resolve_port
 from .routers import ALL
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -73,28 +73,41 @@ def create_app() -> FastAPI:
 app = create_app()
 
 
-def run() -> None:
-    """Console-script entry point: serve on 127.0.0.1:8765 and open a browser.
+def serve() -> int:
+    """Start uvicorn and (unless suppressed) open a browser. Returns a process code.
 
-    `BROWSER=none` suppresses the browser, which is how the Playwright suite and any
-    headless run start the same binary the learner starts.
+    `BROWSER=none` — and its flag, `learn --no-browser` — suppresses the browser,
+    which is how the Playwright suite and any headless run start the same binary
+    the learner starts.
     """
     import socket
     import sys
 
     import uvicorn
 
+    port = resolve_port()
+    host = resolve_host()
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
-        if probe.connect_ex((HOST, PORT)) == 0:
+        if probe.connect_ex((host, port)) == 0:
             print(
-                f"learn: something is already listening on http://{HOST}:{PORT}/ "
+                f"learn: something is already listening on http://{host}:{port}/ "
                 "(probably another `learn` instance). Stop it, or open that address.",
                 file=sys.stderr,
             )
-            sys.exit(1)
+            return 1
 
     if os.environ.get("BROWSER") != "none":
         threading.Timer(
-            BROWSER_DELAY_SECONDS, lambda: webbrowser.open(f"http://{HOST}:{PORT}/")
+            BROWSER_DELAY_SECONDS, lambda: webbrowser.open(f"http://{host}:{port}/")
         ).start()
-    uvicorn.run(app, host=HOST, port=PORT, log_level="info")
+    uvicorn.run(app, host=host, port=port, log_level="info")
+    return 0
+
+
+def run() -> None:
+    """Console-script entry point (`learn`). Parses the CLI, then serves or exits."""
+    import sys
+
+    from .cli import main as cli_main
+
+    sys.exit(cli_main())

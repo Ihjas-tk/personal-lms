@@ -12,6 +12,8 @@ from typing import Literal
 
 from .ladder import STATE_ORDER, Attempt, CheckState, Score, brier_score, schedule
 
+#: Fallback track length, used only when a caller has no curriculum to ask.
+#: Every route passes `Track.total_weeks` instead — no screen may assume forty.
 WEEKS_TOTAL = 40
 SESSIONS_PER_WEEK = 5
 FOUR_WEEKS_DAYS = 28
@@ -62,14 +64,14 @@ def week_now(today: date, start: date, weeks_total: int = WEEKS_TOTAL) -> int:
 
 
 def weeks_left(now: int, weeks_total: int = WEEKS_TOTAL) -> int:
-    """Weeks remaining including the current one, so week 1 of 40 reads `40`."""
+    """Weeks remaining including the current one, so week 1 of a 40-week track reads 40."""
     return max(0, weeks_total - now + 1)
 
 
 def week_cells(
     now: int, phases: list[tuple[str, int, int]], weeks_total: int = WEEKS_TOTAL
 ) -> list[dict]:
-    """The 40-cell week strip: one cell per week, tagged past / phase / current / future."""
+    """The week strip: one cell per track week, tagged past / phase / current / future."""
     phase_of: dict[int, str] = {}
     for phase_id, first, last in phases:
         for week in range(first, last + 1):

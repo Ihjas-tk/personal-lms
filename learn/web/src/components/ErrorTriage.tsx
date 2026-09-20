@@ -64,7 +64,7 @@ export default function ErrorTriage({ errors }: { errors: LedgerError[] }) {
               </Link>
             ) : (
               <span className="muted" style={{ fontSize: "0.82rem" }}>
-                To convert this into a Check, add it to <code>curriculum/track.yaml</code>.
+                To convert this into a Check, add it to your <code>track.yaml</code>.
               </span>
             )}
           </div>

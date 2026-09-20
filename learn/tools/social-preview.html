@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!--
+  GitHub's social preview card: 1280 × 640, rendered by `tools/social-preview.mjs`.
+
+  GitHub's 2:1 is not the OG standard — Slack, Discord and LinkedIn crop to 1.91:1
+  and X crops toward 16:9 — so nothing that has to survive lives outside the centre
+  66%: a 1080 × 540 inset, drawn as `.safe` below. The bands above and below it carry
+  colour only.
+
+  The UI detail on the right is real markup in the app's light tokens
+  (`web/src/styles/tokens.css`), not a screenshot: a screenshot of a whole screen is
+  mush at thumbnail size, and a crop of one taken from a real run would go stale.
+-->
+<style>
+  @font-face {
+    font-family: "Playfair Display";
+    src: url("../web/node_modules/@fontsource/playfair-display/files/playfair-display-latin-600-normal.woff2") format("woff2");
+    font-weight: 600;
+  }
+  @font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../web/node_modules/@fontsource/plus-jakarta-sans/files/plus-jakarta-sans-latin-400-normal.woff2") format("woff2");
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../web/node_modules/@fontsource/plus-jakarta-sans/files/plus-jakarta-sans-latin-600-normal.woff2") format("woff2");
+    font-weight: 600;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("../web/node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2") format("woff2");
+    font-weight: 500;
+  }
+
+  /* The light palette, copied from `web/src/styles/tokens.css` :root. */
+  :root {
+    --vio: #6d3bee;
+    --vio2: #8b5cf6;
+    --vio-soft: #efeafe;
+    --vio-line: #d8ccfb;
+    --on-vio: #ffffff;
+    --ink: #1a1626;
+    --ink2: #54506a;
+    --ink3: #8a86a0;
+    --bg: #f6f5fc;
+    --surf: #ffffff;
+    --line: #e6e3f1;
+    --font-ui: "Plus Jakarta Sans", system-ui, sans-serif;
+    --font-display: "Playfair Display", Georgia, serif;
+    --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+
+  html, body { margin: 0; width: 1280px; height: 640px; }
+  body {
+    background:
+      radial-gradient(900px 520px at 88% 18%, #ece5ff 0%, rgba(236, 229, 255, 0) 70%),
+      var(--bg);
+    font-family: var(--font-ui);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* The centre 66%: 1080 × 540, inset 100px / 50px. Everything readable is inside. */
+  .safe {
+    position: absolute; left: 100px; top: 50px; width: 1080px; height: 540px;
+    display: grid; grid-template-columns: 520px 1fr; gap: 40px; align-items: center;
+  }
+
+  /* ------------------------------------------------------------------ left */
+
+  .wordmark {
+    display: flex; align-items: center; gap: 20px; margin-bottom: 26px;
+  }
+  .tile {
+    width: 74px; height: 74px; border-radius: 22px;
+    background: linear-gradient(160deg, #7b4bff 0%, #6d3bee 55%, #5a2ed6 100%);
+    box-shadow: 0 14px 30px -14px rgba(109, 59, 238, 0.7);
+    display: grid; place-items: center;
+  }
+  .tile span {
+    font-family: var(--font-display); font-weight: 600; font-size: 50px;
+    line-height: 1; color: var(--on-vio); margin-top: -4px;
+  }
+  .name {
+    font-family: var(--font-display); font-weight: 600; font-size: 104px;
+    line-height: 0.9; letter-spacing: -0.02em; color: var(--ink);
+  }
+  .tagline {
+    font-size: 27px; line-height: 1.34; color: var(--ink2); font-weight: 400;
+    max-width: 500px;
+  }
+  .tagline b { color: var(--ink); font-weight: 600; }
+  .meta {
+    margin-top: 30px; display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .meta span {
+    font-size: 16px; font-weight: 600; color: var(--vio);
+    background: var(--vio-soft); border: 1px solid var(--vio-line);
+    border-radius: 999px; padding: 7px 15px;
+  }
+
+  /* ------------------------------------------------- right: the UI detail */
+
+  .detail {
+    background: var(--surf); border: 1px solid var(--line); border-radius: 22px;
+    padding: 36px 38px 32px;
+    box-shadow: 0 1px 2px rgba(26, 22, 38, 0.05), 0 34px 70px -30px rgba(26, 22, 38, 0.45);
+  }
+  .detail h2 {
+    margin: 0 0 8px; font-size: 30px; font-weight: 600; letter-spacing: -0.01em;
+  }
+  .detail p.sub { margin: 0 0 30px; font-size: 17px; color: var(--ink3); }
+
+  .sure { display: flex; align-items: center; gap: 22px; }
+  .track {
+    position: relative; flex: 1; height: 10px; border-radius: 999px;
+    background: var(--vio-soft); border: 1px solid var(--vio-line);
+  }
+  .fill {
+    position: absolute; inset: 0 30% 0 0; border-radius: 999px;
+    background: linear-gradient(90deg, var(--vio2), var(--vio));
+  }
+  .knob {
+    position: absolute; left: 70%; top: 50%; width: 30px; height: 30px;
+    margin: -15px 0 0 -15px; border-radius: 50%;
+    background: var(--surf); border: 3px solid var(--vio);
+    box-shadow: 0 6px 14px -4px rgba(109, 59, 238, 0.6);
+  }
+  .read {
+    font-family: var(--font-mono); font-weight: 500; font-size: 38px;
+    color: var(--vio); min-width: 66px; text-align: right;
+  }
+  .ends {
+    display: flex; justify-content: space-between; margin-top: 12px;
+    font-size: 15px; color: var(--ink3); padding-right: 88px;
+  }
+  .foot {
+    margin: 28px 0 0; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 16px; color: var(--ink2);
+  }
+</style>
+</head>
+<body>
+  <div class="safe">
+    <div>
+      <div class="wordmark">
+        <div class="tile"><span>l</span></div>
+        <div class="name">learn</div>
+      </div>
+      <div class="tagline">
+        a <b>self-hosted study tracker</b> that measures whether you actually know it
+      </div>
+      <div class="meta">
+        <span>local-first</span>
+        <span>Markdown + git</span>
+        <span>no streaks</span>
+      </div>
+    </div>
+
+    <div class="detail">
+      <h2>How sure are you?</h2>
+      <p class="sub">Answer from memory. The reference stays hidden until you freeze.</p>
+      <div class="sure">
+        <div class="track">
+          <div class="fill"></div>
+          <div class="knob"></div>
+        </div>
+        <div class="read">70</div>
+      </div>
+      <div class="ends"><span>no idea</span><span>certain</span></div>
+      <p class="foot">Confidence before the answer, every time.</p>
+    </div>
+  </div>
+</body>
+</html>

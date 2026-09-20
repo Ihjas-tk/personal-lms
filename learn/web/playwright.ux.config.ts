@@ -3,8 +3,8 @@ import { defineConfig, devices } from "@playwright/test";
 /**
  * Config for the screenshot capture run (`e2e/ux-capture.spec.ts`).
  *
- * Same isolation as `playwright.config.ts` — its own throwaway vault, on port
- * 8799, never 8765 and never the learner's `vault/` — but on a separate vault so
+ * Same isolation as `playwright.config.ts` — its own throwaway vault and the same explicit
+ * `LEARN_CURRICULUM`, on port 8799, never 8765 and never the learner's `vault/` — but on a separate vault so
  * a capture run and a flow run cannot see each other's seeded history:
  *
  *   npx playwright test -c playwright.ux.config.ts
@@ -13,6 +13,8 @@ import { defineConfig, devices } from "@playwright/test";
  * spread in the project would otherwise win and force 1280×720.
  */
 export const UX_VAULT = "/tmp/learn-ux-vault";
+/** The flagship track, relative to `cwd: ".."` (the `learn/` folder). */
+export const TRACK = "../tracks/llm-engineering-and-evals/track.yaml";
 export const UX_PORT = 8799;
 
 export default defineConfig({
@@ -37,6 +39,7 @@ export default defineConfig({
   webServer: {
     command:
       `rm -rf ${UX_VAULT} && BROWSER=none LEARN_VAULT=${UX_VAULT} ` +
+      `LEARN_CURRICULUM=${TRACK} ` +
       `uv run uvicorn learn.main:app --host 127.0.0.1 --port ${UX_PORT}`,
     cwd: "..",
     url: `http://127.0.0.1:${UX_PORT}/api/health`,

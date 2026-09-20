@@ -120,7 +120,10 @@ export default function Track() {
           title="After this"
           count={`${data.later.length} module${data.later.length === 1 ? "" : "s"}`}
           tone="plain"
-          blurb="Not your problem yet. Listed so the shape of the nine months stays visible."
+          blurb={
+            "Not your problem yet. Listed so the shape of the whole " +
+            `${data.weeks_total} weeks stays visible.`
+          }
           rows={data.later}
           quiet
         />

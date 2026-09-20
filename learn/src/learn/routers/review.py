@@ -212,7 +212,7 @@ def patch_error(body: ErrorPatch) -> dict[str, Any]:
 
 @router.get("/capstone")
 def get_capstone() -> list[dict[str, Any]]:
-    """The eight artefacts with their stored state. Not counted in coverage."""
+    """The curriculum's capstone artefacts with their stored state. Not counted in coverage."""
     return capstone_rows()
 
 

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import Row, { shortDate } from "../components/Row";
-import { DEBRIEF, MISSED_WHILE_SURE, ladderLabel } from "../labels";
+import { MISSED_WHILE_SURE, debriefLabel, ladderLabel } from "../labels";
 import { getDue } from "../api";
-import { useStore } from "../store";
+import { useDebriefDay, useStore } from "../store";
 import type { DueItem } from "../types";
 
 const FIRST_BATCH = 4;
@@ -13,6 +13,7 @@ export default function Review() {
   const [error, setError] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
   const revision = useStore((s) => s.vaultRevision);
+  const debriefDay = useDebriefDay();
 
   useEffect(() => {
     getDue()
@@ -36,7 +37,7 @@ export default function Review() {
           </p>
         </div>
         <Link className="btn" to="/review/weekly">
-          {DEBRIEF}
+          {debriefLabel(debriefDay)}
         </Link>
       </div>
 

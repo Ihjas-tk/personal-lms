@@ -1,0 +1,44 @@
+name: Feature request
+description: Suggest something the app should do.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please read the **design constraints** in
+        [CONTRIBUTING.md](https://github.com/Ihjas-tk/personal-lms/blob/main/CONTRIBUTING.md)
+        first. Streaks, points, badges, a single percent-complete bar, "mark as complete", and
+        AI that generates curriculum content are deliberate omissions, not gaps.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What were you trying to do when you wanted this? Describe the situation, not the solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like it to do
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you tried instead
+      description: Editing `track.yaml`, editing the note files directly, a different track — and why it was not enough.
+
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Design constraints
+      options:
+        - label: This does not require the app to generate curriculum content with AI.
+          required: true
+        - label: This does not add streaks, points, badges, or a single progress bar.
+          required: true
+        - label: This keeps the vault's Markdown and YAML files as the source of truth.
+          required: true

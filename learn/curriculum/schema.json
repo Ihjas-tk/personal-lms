@@ -1,0 +1,432 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ihjas-tk/personal-lms/blob/main/learn/curriculum/schema.json",
+  "title": "learn curriculum (track.yaml)",
+  "description": "A track: areas, phases, modules, topics, resources, checks and capstone artefacts. Written by hand in YAML; validated with `learn check <track.yaml>`. See docs/curriculum-schema.md for the prose version.",
+  "properties": {
+    "version": {
+      "default": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "start_date": {
+      "format": "date",
+      "title": "Start Date",
+      "type": "string"
+    },
+    "weekly_budget_hours": {
+      "default": 12,
+      "title": "Weekly Budget Hours",
+      "type": "number"
+    },
+    "debrief_day": {
+      "default": "Sunday",
+      "title": "Debrief Day",
+      "type": "string"
+    },
+    "areas": {
+      "items": {
+        "$ref": "#/$defs/Area"
+      },
+      "title": "Areas",
+      "type": "array"
+    },
+    "phases": {
+      "items": {
+        "$ref": "#/$defs/Phase"
+      },
+      "title": "Phases",
+      "type": "array"
+    },
+    "modules": {
+      "items": {
+        "$ref": "#/$defs/Module"
+      },
+      "title": "Modules",
+      "type": "array"
+    },
+    "capstone": {
+      "items": {
+        "$ref": "#/$defs/CapstoneItem"
+      },
+      "title": "Capstone",
+      "type": "array"
+    }
+  },
+  "required": [
+    "start_date"
+  ],
+  "type": "object",
+  "$defs": {
+    "Area": {
+      "description": "One Desk ridge column: a capability the track builds.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "scope": {
+          "default": "",
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "title": "Area",
+      "type": "object"
+    },
+    "CapstoneItem": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "modules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Modules",
+          "type": "array"
+        },
+        "description": {
+          "default": "",
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "title": "CapstoneItem",
+      "type": "object"
+    },
+    "Check": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "module": {
+          "title": "Module",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "explain",
+            "code",
+            "derive",
+            "judge",
+            "numeric"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "must_cover": {
+          "default": true,
+          "title": "Must Cover",
+          "type": "boolean"
+        },
+        "prompt": {
+          "title": "Prompt",
+          "type": "string"
+        },
+        "rubric": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Rubric",
+          "type": "array"
+        },
+        "reference": {
+          "default": "",
+          "title": "Reference",
+          "type": "string"
+        },
+        "known_prior": {
+          "default": false,
+          "title": "Known Prior",
+          "type": "boolean"
+        },
+        "est_minutes": {
+          "default": 0,
+          "title": "Est Minutes",
+          "type": "integer"
+        },
+        "draft": {
+          "default": false,
+          "title": "Draft",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "module",
+        "type",
+        "prompt"
+      ],
+      "title": "Check",
+      "type": "object"
+    },
+    "Module": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "phase": {
+          "title": "Phase",
+          "type": "string"
+        },
+        "area": {
+          "default": "",
+          "title": "Area",
+          "type": "string"
+        },
+        "track": {
+          "default": "",
+          "title": "Track",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "weeks": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Weeks",
+          "type": "array"
+        },
+        "budget_hours": {
+          "default": 0,
+          "title": "Budget Hours",
+          "type": "number"
+        },
+        "prerequisites": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Prerequisites",
+          "type": "array"
+        },
+        "must_cover": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Must Cover",
+          "type": "array"
+        },
+        "topics": {
+          "items": {
+            "$ref": "#/$defs/Topic"
+          },
+          "title": "Topics",
+          "type": "array"
+        },
+        "resources": {
+          "items": {
+            "$ref": "#/$defs/Resource"
+          },
+          "title": "Resources",
+          "type": "array"
+        },
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/Check"
+          },
+          "title": "Checks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "phase",
+        "title",
+        "weeks"
+      ],
+      "title": "Module",
+      "type": "object"
+    },
+    "Phase": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "weeks": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Weeks",
+          "type": "array"
+        },
+        "modules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Modules",
+          "type": "array"
+        },
+        "order_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Order Note"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "weeks"
+      ],
+      "title": "Phase",
+      "type": "object"
+    },
+    "Resource": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "paper",
+            "video",
+            "course",
+            "repo",
+            "doc",
+            "book"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "est_minutes": {
+          "default": 0,
+          "title": "Est Minutes",
+          "type": "integer"
+        },
+        "length": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Length"
+        },
+        "unit": {
+          "default": "min",
+          "enum": [
+            "min",
+            "pages",
+            "items"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind"
+      ],
+      "title": "Resource",
+      "type": "object"
+    },
+    "Topic": {
+      "description": "One line of the module syllabus: an idea to prove, a chore to tick, a habit to keep.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        },
+        "kind": {
+          "default": "idea",
+          "enum": [
+            "idea",
+            "chore",
+            "habit"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "resources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Resources",
+          "type": "array"
+        },
+        "checks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "derived": {
+          "default": false,
+          "title": "Derived",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "title": "Topic",
+      "type": "object"
+    }
+  }
+}

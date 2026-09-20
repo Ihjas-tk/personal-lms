@@ -39,7 +39,7 @@
         "length": 116,
         "unit": "min",
         "pct": 0.819,
-        "meta": "video \u00b7 95 of 116 min",
+        "meta": "video · 95 of 116 min",
         "action": "Resume",
         "counts": false
       }
@@ -103,7 +103,7 @@
     ],
     "area_id": "transformers",
     "overdue_retests": 1,
-    "step_summary": "1 proved \u00b7 1 in progress \u00b7 0 untouched",
+    "step_summary": "1 proved · 1 in progress · 0 untouched",
     "topics": [
       {
         "id": "tokenization",
@@ -165,7 +165,7 @@
             "length": 116,
             "unit": "min",
             "pct": 0.819,
-            "meta": "video \u00b7 95 of 116 min",
+            "meta": "video · 95 of 116 min",
             "action": "Resume",
             "counts": false
           }
@@ -205,7 +205,7 @@
     "chores": [
       {
         "topic_id": "pick-lane",
-        "title": "Pick one lane: Raschka ch 2\u20135 or CS336 Assignment 1, not both",
+        "title": "Pick one lane: Raschka ch 2–5 or CS336 Assignment 1, not both",
         "done": true,
         "done_at": "2026-09-10T18:00:00+00:00"
       },
@@ -282,18 +282,19 @@
     "first_run": false,
     "week_now": 10,
     "weeks_total": 40,
+    "debrief_day": "Sunday",
     "plan": {
       "text": "IF it is Tuesday and the laptop is already open THEN I will work the sample-size arithmetic for the held-out judge slice.",
       "written_on": "Sunday"
     },
-    "start_label": "Start \u00b7 about 2 hours",
+    "start_label": "Start · about 2 hours",
     "first_action": null,
     "warmup": [
       {
         "check_id": "a1-mha-from-memory",
         "module_id": "a1",
         "prompt": "Write multi-head causal self-attention from memory on a blank page, with a correct mask and correct shapes.",
-        "reason": "14 days overdue \u00b7 you were sure and wrong last time",
+        "reason": "14 days overdue · you were sure and wrong last time",
         "chip": "due"
       },
       {
@@ -318,7 +319,7 @@
       {
         "area_id": "transformers",
         "title": "Transformers and training",
-        "scope": "weeks 3\u20138 \u00b7 1 module",
+        "scope": "weeks 3–8 · 1 module",
         "counts": {
           "lasting": 1,
           "solid": 1,
@@ -331,7 +332,7 @@
       {
         "area_id": "evals-found",
         "title": "Error analysis and taxonomies",
-        "scope": "weeks 9\u201314 \u00b7 1 module",
+        "scope": "weeks 9–14 · 1 module",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -344,7 +345,7 @@
       {
         "area_id": "datasets",
         "title": "Datasets and judges",
-        "scope": "weeks 9\u201314 \u00b7 2 modules",
+        "scope": "weeks 9–14 · 2 modules",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -357,7 +358,7 @@
       {
         "area_id": "context",
         "title": "Prompting and context",
-        "scope": "weeks 9\u201314 \u00b7 1 module",
+        "scope": "weeks 9–14 · 1 module",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -370,7 +371,7 @@
       {
         "area_id": "rag",
         "title": "Retrieval and RAG evals",
-        "scope": "weeks 9\u201318 \u00b7 3 modules",
+        "scope": "weeks 9–18 · 3 modules",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -383,7 +384,7 @@
       {
         "area_id": "agents",
         "title": "Agents, production, safety",
-        "scope": "weeks 19\u201330 \u00b7 6 modules",
+        "scope": "weeks 19–30 · 6 modules",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -439,6 +440,7 @@
     "first_run": true,
     "week_now": 1,
     "weeks_total": 40,
+    "debrief_day": "Sunday",
     "plan": null,
     "start_label": "Start the first session",
     "first_action": {
@@ -451,7 +453,7 @@
         "check_id": "a0-stages",
         "module_id": "a0",
         "prompt": "Explain to a colleague the difference between pretraining, SFT, RLHF and inference-time scaling.",
-        "reason": "first thing in the track \u2014 nothing attempted yet",
+        "reason": "first thing in the track — nothing attempted yet",
         "chip": "new"
       }
     ],
@@ -469,7 +471,7 @@
       {
         "area_id": "transformers",
         "title": "Transformers and training",
-        "scope": "weeks 3\u20138 \u00b7 1 module",
+        "scope": "weeks 3–8 · 1 module",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -482,7 +484,7 @@
       {
         "area_id": "evals-found",
         "title": "Error analysis and taxonomies",
-        "scope": "weeks 9\u201314 \u00b7 1 module",
+        "scope": "weeks 9–14 · 1 module",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -495,7 +497,7 @@
       {
         "area_id": "datasets",
         "title": "Datasets and judges",
-        "scope": "weeks 9\u201314 \u00b7 2 modules",
+        "scope": "weeks 9–14 · 2 modules",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -508,7 +510,7 @@
       {
         "area_id": "context",
         "title": "Prompting and context",
-        "scope": "weeks 9\u201314 \u00b7 1 module",
+        "scope": "weeks 9–14 · 1 module",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -521,7 +523,7 @@
       {
         "area_id": "rag",
         "title": "Retrieval and RAG evals",
-        "scope": "weeks 9\u201318 \u00b7 3 modules",
+        "scope": "weeks 9–18 · 3 modules",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -534,7 +536,7 @@
       {
         "area_id": "agents",
         "title": "Agents, production, safety",
-        "scope": "weeks 19\u201330 \u00b7 6 modules",
+        "scope": "weeks 19–30 · 6 modules",
         "counts": {
           "lasting": 0,
           "solid": 0,
@@ -566,6 +568,7 @@
     "end_date": "2027-04-12",
     "week_now": 10,
     "weeks_total": 40,
+    "debrief_day": "Sunday",
     "headline": {
       "lasting_pct": 2,
       "attempted_pct": 7,
@@ -885,7 +888,7 @@
     "later": [
       {
         "module_id": "c0",
-        "title": "RAG evaluation \u00b7 Offline, online, CI and A/B",
+        "title": "RAG evaluation · Offline, online, CI and A/B",
         "track": "llm",
         "weeks": [
           15,
@@ -926,7 +929,7 @@
       "topic_id": "attention",
       "resource_id": "a1-karpathy-gpt",
       "stamp": "41:02",
-      "text": "He reshapes before the transpose \u2014 check whether the order matters.",
+      "text": "He reshapes before the transpose — check whether the order matters.",
       "filed": false
     },
     {

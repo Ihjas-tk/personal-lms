@@ -35,7 +35,10 @@ export interface RidgeColumn {
 export interface Desk {
   first_run: boolean;
   week_now: number;
+  /** Derived from the curriculum's phases — never a constant. */
   weeks_total: number;
+  /** Curriculum `debrief_day`, default "Sunday". Drives every "<day> debrief" label. */
+  debrief_day: string;
   plan: { text: string; written_on: string } | null;
   start_label: string;
   first_action: { label: string; module_id: string; check_id: string } | null;
@@ -97,7 +100,10 @@ export interface Track {
   start_date: string;
   end_date: string;
   week_now: number;
+  /** Derived from the curriculum's phases — never a constant. */
   weeks_total: number;
+  /** Curriculum `debrief_day`, default "Sunday". */
+  debrief_day: string;
   headline: {
     lasting_pct: number;
     attempted_pct: number;

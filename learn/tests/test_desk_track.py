@@ -13,6 +13,7 @@ DESK_KEYS = {
     "first_run",
     "week_now",
     "weeks_total",
+    "debrief_day",
     "plan",
     "start_label",
     "first_action",
@@ -37,7 +38,8 @@ def test_desk_first_run_offers_one_thing_to_do(either_client: TestClient) -> Non
     assert body["first_action"]["module_id"]
     assert body["start_label"] == "Start · about 2 hours"
     assert body["standing"]["checks_lasting"] == 0
-    assert body["standing"]["weeks_left"] == 40
+    # Derived from the fixture curriculum (phases run to week 10), not a constant.
+    assert body["standing"]["weeks_left"] == 10
     assert body["gains"] == {
         "lasting_delta_4w": 0,
         "solid_delta_4w": 0,
@@ -56,7 +58,7 @@ def test_desk_after_a_closed_session_reads_the_plan(either_client: TestClient) -
     body = either_client.get("/api/desk").json()
     assert body["first_run"] is False
     assert body["first_action"] is None
-    assert body["plan"]["written_on"] == "Sunday"
+    assert body["plan"]["written_on"] == "Sunday"  # curriculum `debrief_day`
     assert body["plan"]["text"].startswith("IF it is Sunday after breakfast THEN I will")
     assert body["gains"]["checks_attempted_4w"] == 1
     assert body["newly_proved"][0]["check_id"] == "a1-mha-from-memory"
@@ -109,9 +111,10 @@ def test_desk_standing_names_the_draft_artefact(client_v2: TestClient) -> None:
     assert standing["artefact_note"] == "the golden dataset is in draft"
 
 
-def test_track_bands_split_the_forty_weeks(client_v2: TestClient) -> None:
+def test_track_bands_split_the_whole_track(client_v2: TestClient) -> None:
+    """`weeks_total` is derived from the curriculum's phases, not a constant."""
     body = client_v2.get("/api/track").json()
-    assert body["weeks_total"] == 40 and len(body["weeks"]) == 40
+    assert body["weeks_total"] == 10 and len(body["weeks"]) == 10
     assert body["weeks"][body["week_now"] - 1]["state"] == "current"
     assert {c["state"] for c in body["weeks"]} <= {"past", "phase", "current", "future"}
     assert body["headline"] == {

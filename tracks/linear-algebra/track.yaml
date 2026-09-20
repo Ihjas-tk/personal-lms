@@ -1,0 +1,578 @@
+# Linear algebra, from pictures to proofs to arithmetic.
+#
+# A twelve-week track for someone who has met matrices but cannot yet say what
+# a matrix *is*. Built from 3Blue1Brown's "Essence of linear algebra" for the
+# geometric picture, Strang's "Introduction to Linear Algebra" and MIT 18.06 for
+# the structure, and hand arithmetic for the parts you only learn by doing.
+#
+#   learn check tracks/linear-algebra/track.yaml
+#   learn init --track tracks/linear-algebra/track.yaml --vault ~/linear-algebra/vault
+#
+# Every reference below is written from the standard treatment; verify each one
+# against the source before you trust it, then delete its `draft: true` line.
+version: 2
+start_date: 2026-10-05
+weekly_budget_hours: 6
+debrief_day: Saturday
+
+areas:
+  - id: geometry
+    title: The geometric picture
+    scope: la1 · la2
+  - id: structure
+    title: Subspaces, rank and solving
+    scope: la3
+  - id: spectral
+    title: Eigenvalues and the SVD
+    scope: la4
+
+phases:
+  - id: ph1
+    title: Vectors, maps and matrices
+    weeks: [1, 5]
+    modules: [la1, la2]
+    order_note: >-
+      Watch before you compute. la1 is the picture; la2 is the same picture
+      written down as arithmetic, and it will not stick in the other order.
+  - id: ph2
+    title: Structure and spectra
+    weeks: [6, 12]
+    modules: [la3, la4]
+    order_note: >-
+      la3 (rank, column space, null space) has to be solid before la4:
+      eigenvectors are a statement about a null space, and nothing else.
+
+modules:
+  # ------------------------------------------------------------------ la1
+  - id: la1
+    phase: ph1
+    area: geometry
+    track: geometry
+    title: Vectors, span and linear transformations
+    weeks: [1, 3]
+    budget_hours: 14
+    topics:
+      - id: span-and-basis
+        title: Span, basis and linear independence
+        summary: >-
+          Why "linearly dependent" means one vector adds no new directions, and
+          why a basis is the smallest set that still reaches everything.
+        resources: [3b1b-vectors, 3b1b-span]
+        checks: [la1-span-explain]
+      - id: maps-are-matrices
+        title: A matrix is where the basis vectors land
+        summary: >-
+          A linear transformation is fixed by what it does to î and ĵ. The
+          columns of the matrix are exactly those two images, and nothing more.
+        resources: [3b1b-transformations, 3b1b-composition, strang-book]
+        checks: [la1-columns-derive, la1-compose-numeric]
+      - id: set-up-paper
+        title: Get a squared notebook and a pencil; every derivation goes on paper.
+        kind: chore
+      - id: draw-first
+        title: Draw the picture before writing a single symbol.
+        kind: habit
+    resources:
+      - id: 3b1b-vectors
+        title: '3Blue1Brown — Essence of linear algebra, ch. 1: Vectors'
+        kind: video
+        url: https://www.youtube.com/watch?v=fNk_zzaMoSs
+        length: 10
+        unit: min
+      - id: 3b1b-span
+        title: '3Blue1Brown — ch. 2: Linear combinations, span and basis vectors'
+        kind: video
+        url: https://www.youtube.com/watch?v=k7RM-ot2NWY
+        length: 10
+        unit: min
+      - id: 3b1b-transformations
+        title: '3Blue1Brown — ch. 3: Linear transformations and matrices'
+        kind: video
+        url: https://www.youtube.com/watch?v=kYB8IZa5AuE
+        length: 11
+        unit: min
+      - id: 3b1b-composition
+        title: '3Blue1Brown — ch. 4: Matrix multiplication as composition'
+        kind: video
+        url: https://www.youtube.com/watch?v=XkY2DOUCWMU
+        length: 10
+        unit: min
+      - id: strang-book
+        title: 'Strang, Introduction to Linear Algebra — ch. 1–2 (vectors, solving Ax = b)'
+        kind: book
+        url: https://math.mit.edu/~gs/linearalgebra/
+        length: 90
+        unit: pages
+    checks:
+      - id: la1-span-explain
+        module: la1
+        type: explain
+        prompt: >-
+          From memory: define the span of a set of vectors, and explain what
+          changes about the span when you add a vector that is a linear
+          combination of the ones already there. Say what "linearly independent"
+          means in that same language.
+        rubric:
+          - Defines span as the set of all linear combinations, not as "the space they make"
+          - Says adding a dependent vector leaves the span unchanged, and why
+          - Defines independence as "no vector is in the span of the others"
+          - Gives a concrete example in R^3 of three vectors that span only a plane
+        reference: >-
+          The span of v1…vk is the set of every vector of the form c1·v1 + … +
+          ck·vk for real scalars ci. Adding a vector that is already such a
+          combination adds nothing: every combination involving it can be
+          rewritten without it, so the span is unchanged. A set is linearly
+          independent when no member lies in the span of the others —
+          equivalently, when c1·v1 + … + ck·vk = 0 forces every ci = 0. Example:
+          (1,0,0), (0,1,0) and (2,3,0) span only the xy-plane in R^3, because the
+          third is 2·(1,0,0) + 3·(0,1,0).
+        est_minutes: 12
+        draft: true
+      - id: la1-columns-derive
+        module: la1
+        type: derive
+        prompt: >-
+          On paper, starting only from the definition of linearity
+          (T(u+v) = T(u)+T(v) and T(cv) = c·T(v)), derive that a linear map on
+          R^2 is completely determined by T(î) and T(ĵ), and that the matrix of
+          T has those two images as its columns.
+        rubric:
+          - Writes an arbitrary v as x·î + y·ĵ before applying T
+          - Uses additivity and homogeneity explicitly, one at a time
+          - Concludes T(v) = x·T(î) + y·T(ĵ)
+          - Identifies that expression as the matrix-vector product [T(î) T(ĵ)]·(x, y)
+        reference: >-
+          Write v = x·î + y·ĵ. By additivity T(v) = T(x·î) + T(y·ĵ); by
+          homogeneity that is x·T(î) + y·T(ĵ). So T(v) is fixed once T(î) and
+          T(ĵ) are known. Writing T(î) = (a, c) and T(ĵ) = (b, d), we get
+          T(v) = (ax + by, cx + dy), which is exactly [[a, b], [c, d]] times
+          (x, y). The columns of the matrix are the images of the basis vectors.
+        est_minutes: 20
+        draft: true
+      - id: la1-compose-numeric
+        module: la1
+        type: numeric
+        prompt: >-
+          Without a calculator: let A be the 90° anticlockwise rotation of the
+          plane and B the shear [[1, 1], [0, 1]]. Write both matrices, compute
+          AB and BA by hand, and give the image of the vector (1, 1) under each
+          of the two composite maps.
+        rubric:
+          - A = [[0, -1], [1, 0]] and B = [[1, 1], [0, 1]], both written out
+          - AB = [[0, -1], [1, 1]] with the multiplication shown
+          - BA = [[1, -1], [1, 0]], with the multiplication shown
+          - AB·(1,1) and BA·(1,1) both evaluated, and the two answers compared
+          - States in one sentence why the two differ
+        reference: >-
+          A = [[0, -1], [1, 0]], B = [[1, 1], [0, 1]].
+          AB = [[0·1 + (-1)·0, 0·1 + (-1)·1], [1·1 + 0·0, 1·1 + 0·1]]
+             = [[0, -1], [1, 1]].
+          BA = [[1·0 + 1·1, 1·(-1) + 1·0], [0·0 + 1·1, 0·(-1) + 1·0]]
+             = [[1, -1], [1, 0]].
+          AB·(1,1) = (-1, 2). BA·(1,1) = (0, 1). They differ because composition
+          of maps is order-dependent: AB shears first and then rotates, BA
+          rotates first and then shears.
+        est_minutes: 25
+        draft: true
+
+  # ------------------------------------------------------------------ la2
+  - id: la2
+    phase: ph1
+    area: geometry
+    track: geometry
+    title: Determinants, inverses and change of basis
+    weeks: [4, 5]
+    budget_hours: 10
+    prerequisites: [la1]
+    topics:
+      - id: determinant
+        title: The determinant as a signed area factor
+        summary: >-
+          det A is how much the map scales area, and the sign says whether it
+          flipped orientation. det A = 0 means the map collapsed a dimension.
+        resources: [3b1b-determinant, ocw-1806]
+        checks: [la2-det-explain, la2-det-numeric]
+      - id: change-of-basis
+        title: The same map, written in someone else's coordinates
+        summary: >-
+          Why the change-of-basis formula is P⁻¹AP and not PAP⁻¹ — read it
+          right to left as "translate in, act, translate back".
+        resources: [3b1b-inverse, 3b1b-change-basis]
+        checks: [la2-basis-derive]
+    resources:
+      - id: 3b1b-determinant
+        title: '3Blue1Brown — ch. 6: The determinant'
+        kind: video
+        url: https://www.youtube.com/watch?v=Ip3X9LOh2dk
+        length: 10
+        unit: min
+      - id: 3b1b-inverse
+        title: '3Blue1Brown — ch. 7: Inverse matrices, column space and null space'
+        kind: video
+        url: https://www.youtube.com/watch?v=uQhTuRlWMxw
+        length: 12
+        unit: min
+      - id: 3b1b-change-basis
+        title: '3Blue1Brown — ch. 13: Change of basis'
+        kind: video
+        url: https://www.youtube.com/watch?v=P2LTAUO1TdA
+        length: 13
+        unit: min
+      - id: ocw-1806
+        title: 'MIT OCW 18.06 Linear Algebra (Spring 2010) — lectures 1–11'
+        kind: course
+        url: https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/
+        length: 550
+        unit: min
+    checks:
+      - id: la2-det-explain
+        module: la2
+        type: explain
+        prompt: >-
+          Explain, without formulas, what det A measures and what det A = 0
+          tells you about the map, the columns of A, and the solvability of
+          Ax = b. Then say why det(AB) = det(A)·det(B) is obvious once you have
+          the geometric reading.
+        rubric:
+          - Describes det as the signed factor by which areas (volumes) scale
+          - Reads the sign as an orientation flip
+          - Connects det A = 0 to a collapse onto a lower-dimensional subspace
+          - Says the columns are then dependent and Ax = b is solvable only for b in that subspace
+          - Explains multiplicativity as "scale twice, so multiply the factors"
+        reference: >-
+          det A is the factor by which A scales area in R^2 (volume in R^3),
+          carrying a sign: negative means the map reversed orientation. det A = 0
+          means the unit square was squashed flat — the image is a line (or a
+          point), so the columns of A are linearly dependent, A is not
+          invertible, and Ax = b has a solution only when b lies in that
+          collapsed column space, in which case it has infinitely many.
+          Multiplicativity: applying B then A scales area by det B and then by
+          det A, so the composite scales by the product.
+        est_minutes: 15
+        draft: true
+      - id: la2-det-numeric
+        module: la2
+        type: numeric
+        prompt: >-
+          By hand, compute the determinant of [[2, 1, 0], [1, 3, 1], [0, 1, 2]]
+          two ways — cofactor expansion along the first row, and row reduction to
+          upper triangular — and confirm the two answers agree. State whether
+          the matrix is invertible.
+        rubric:
+          - Cofactor expansion written out term by term with correct signs
+          - Row reduction shown, with every row operation named
+          - Notes that adding a multiple of one row to another leaves det unchanged
+          - Both methods give 8
+          - Concludes invertible, because the determinant is non-zero
+        reference: >-
+          Cofactor along row 1: 2·det[[3,1],[1,2]] − 1·det[[1,1],[0,2]] +
+          0 = 2·(6 − 1) − 1·(2 − 0) = 10 − 2 = 8.
+          Row reduction: R2 ← R2 − ½R1 gives [[2,1,0],[0,2.5,1],[0,1,2]];
+          R3 ← R3 − 0.4·R2 gives [[2,1,0],[0,2.5,1],[0,0,1.6]]. Neither operation
+          changes the determinant, so det = 2 · 2.5 · 1.6 = 8. Non-zero, so the
+          matrix is invertible.
+        est_minutes: 20
+        draft: true
+      - id: la2-basis-derive
+        module: la2
+        type: derive
+        prompt: >-
+          Derive the change-of-basis formula. Given a map with matrix A in the
+          standard basis, and a matrix P whose columns are a second basis written
+          in standard coordinates, show that the same map has matrix P⁻¹AP in the
+          second basis — and say aloud what each of the three factors does.
+        rubric:
+          - States that P takes coordinates in the new basis to standard coordinates
+          - Applies the three factors in the right order, right to left
+          - Justifies P⁻¹ as the return trip to the new coordinates
+          - Notes the formula needs P invertible, i.e. the new basis really is a basis
+        reference: >-
+          Let w be a vector written in the new basis. P·w is that same vector in
+          standard coordinates. A·P·w applies the map, still in standard
+          coordinates. P⁻¹·A·P·w translates the result back into the new basis.
+          So the matrix of the map in the new basis is P⁻¹AP. Read right to
+          left: translate in, act, translate back. P is invertible precisely
+          because its columns are a basis.
+        est_minutes: 20
+        draft: true
+
+  # ------------------------------------------------------------------ la3
+  - id: la3
+    phase: ph2
+    area: structure
+    track: structure
+    title: Rank, the four subspaces and least squares
+    weeks: [6, 8]
+    budget_hours: 14
+    prerequisites: [la2]
+    topics:
+      - id: four-subspaces
+        title: Column space, null space, and the two on the other side
+        summary: >-
+          Strang's central picture: rank r fixes the dimensions of all four
+          subspaces, and the rank–nullity theorem is just bookkeeping on columns.
+        resources: [strang-subspaces]
+        checks: [la3-rank-derive, la3-rank-explain]
+      - id: least-squares
+        title: Projection and the normal equations
+        summary: >-
+          When Ax = b has no solution, the best you can do is project b onto the
+          column space; AᵀAx̂ = Aᵀb is that projection, written out.
+        resources: [ocw-1806-projections]
+        checks: [la3-lsq-numeric, la3-lsq-judge]
+    resources:
+      - id: strang-subspaces
+        title: 'Strang, Introduction to Linear Algebra — ch. 3–4 (subspaces, orthogonality)'
+        kind: book
+        url: https://math.mit.edu/~gs/linearalgebra/
+        length: 120
+        unit: pages
+      - id: ocw-1806-projections
+        title: 'MIT OCW 18.06 — lectures 15–16: projections onto subspaces, least squares'
+        kind: course
+        url: https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/
+        length: 90
+        unit: min
+    checks:
+      - id: la3-rank-explain
+        module: la3
+        type: explain
+        prompt: >-
+          Name the four fundamental subspaces of an m×n matrix of rank r, give
+          the dimension of each, say which ambient space each one lives in, and
+          state which pairs are orthogonal complements.
+        rubric:
+          - Column space, dim r, in R^m
+          - Null space, dim n − r, in R^n
+          - Row space, dim r, in R^n
+          - Left null space, dim m − r, in R^m
+          - Row space ⟂ null space in R^n; column space ⟂ left null space in R^m
+        reference: >-
+          Column space C(A): dimension r, inside R^m. Null space N(A):
+          dimension n − r, inside R^n. Row space C(Aᵀ): dimension r, inside R^n.
+          Left null space N(Aᵀ): dimension m − r, inside R^m. In R^n the row
+          space and null space are orthogonal complements; in R^m the column
+          space and left null space are.
+        est_minutes: 12
+        draft: true
+      - id: la3-rank-derive
+        module: la3
+        type: derive
+        prompt: >-
+          Derive the rank–nullity theorem for an m×n matrix A: rank(A) +
+          dim N(A) = n. Argue from the pivot and free columns of the reduced row
+          echelon form, not by quoting the theorem.
+        rubric:
+          - Reduces to RREF and names pivot columns and free columns
+          - Argues the pivot columns of A form a basis of the column space, so rank = number of pivots
+          - Builds one null-space vector per free column and argues they are independent
+          - Argues those vectors span the null space
+          - Adds the two counts to n, the total number of columns
+        reference: >-
+          Row-reduce A to R. Each column of R is a pivot column or a free
+          column, and there are n of them in total. The r pivot columns of A
+          (not of R) are independent and span C(A), so rank(A) = r. For each
+          free column set that free variable to 1 and the others to 0, and solve
+          for the pivot variables: this gives n − r special solutions. They are
+          independent, because each has a 1 in a coordinate where the others have
+          0, and they span N(A), because every null-space vector is the
+          combination of them given by its own free variables. Hence
+          dim N(A) = n − r, and r + (n − r) = n.
+        est_minutes: 30
+        draft: true
+      - id: la3-lsq-numeric
+        module: la3
+        type: numeric
+        prompt: >-
+          Fit the straight line y = c + dt by least squares to the three points
+          (t, y) = (0, 1), (1, 2), (2, 4). Set up A, form the normal equations
+          AᵀAx̂ = Aᵀb by hand, solve them, and report the residual vector.
+        rubric:
+          - A = [[1,0],[1,1],[1,2]] and b = (1, 2, 4)
+          - AᵀA = [[3, 3], [3, 5]] and Aᵀb = (7, 10), both computed explicitly
+          - Solves to c = 5/6, d = 3/2
+          - Residuals computed and shown to sum to zero
+          - States that the residual vector is orthogonal to both columns of A
+        reference: >-
+          A = [[1,0],[1,1],[1,2]], b = (1,2,4). AᵀA = [[3,3],[3,5]],
+          Aᵀb = (7,10). Solving 3c + 3d = 7 and 3c + 5d = 10 gives 2d = 3, so
+          d = 3/2 and c = (7 − 4.5)/3 = 5/6. Fitted values: 5/6, 7/3, 23/6.
+          Residuals: 1/6, −1/3, 1/6 — they sum to zero, and the residual vector
+          is orthogonal to both columns of A, which is what the normal equations
+          say.
+        est_minutes: 25
+        draft: true
+      - id: la3-lsq-judge
+        module: la3
+        type: judge
+        prompt: >-
+          A colleague writes: "AᵀA is always invertible, so least squares always
+          has a unique answer. And since x̂ = (AᵀA)⁻¹Aᵀb solves it, you should
+          always compute it that way in code." Mark this against what you know.
+          What is right, what is wrong, and what would you tell them to do?
+        must_cover: false
+        rubric:
+          - Identifies that AᵀA is invertible only when A has independent columns
+          - "Gives the failure case: rank-deficient or collinear columns"
+          - Notes the solution is then a whole affine set, not unique
+          - Rejects forming the normal equations in code, on conditioning grounds
+          - Recommends QR or SVD instead, and says why
+        reference: >-
+          The first claim is false as stated: AᵀA is invertible exactly when A
+          has linearly independent columns (equivalently N(A) = {0}). With
+          collinear or duplicated columns AᵀA is singular and the least-squares
+          solution set is an affine subspace, not a point — the projection of b
+          is still unique, but x̂ is not. The second claim is bad practice:
+          forming AᵀA squares the condition number, so digits are lost before any
+          solving happens. Use a QR factorisation of A, or the SVD when the
+          matrix may be rank-deficient.
+        est_minutes: 15
+        draft: true
+
+  # ------------------------------------------------------------------ la4
+  - id: la4
+    phase: ph2
+    area: spectral
+    track: spectral
+    title: Eigenvalues, diagonalisation and the SVD
+    weeks: [9, 12]
+    budget_hours: 18
+    prerequisites: [la3]
+    topics:
+      - id: eigen
+        title: Eigenvectors as the directions a map does not turn
+        summary: >-
+          det(A − λI) = 0 is not a recipe to memorise: it is the statement that
+          A − λI collapses a dimension, which is where the eigenvector lives.
+        resources: [3b1b-eigen, strang-eigen]
+        checks: [la4-eigen-derive, la4-eigen-numeric]
+      - id: svd
+        title: The SVD, and why every matrix has one
+        summary: >-
+          Any matrix is a rotation, then a scaling along axes, then another
+          rotation. Rank, norm, pseudo-inverse and PCA all fall out of it.
+        resources: [strang-svd]
+        checks: [la4-svd-explain, la4-svd-code]
+      - id: recompute-weekly
+        title: Re-derive one eigen-decomposition by hand every week, cold.
+        kind: habit
+    resources:
+      - id: 3b1b-eigen
+        title: '3Blue1Brown — ch. 14: Eigenvectors and eigenvalues'
+        kind: video
+        url: https://www.youtube.com/watch?v=PFDu9oVAE-g
+        length: 17
+        unit: min
+      - id: strang-eigen
+        title: 'Strang, Introduction to Linear Algebra — ch. 6 (eigenvalues, diagonalisation)'
+        kind: book
+        url: https://math.mit.edu/~gs/linearalgebra/
+        length: 60
+        unit: pages
+      - id: strang-svd
+        title: 'Strang, Introduction to Linear Algebra — ch. 7 (the singular value decomposition)'
+        kind: book
+        url: https://math.mit.edu/~gs/linearalgebra/
+        length: 50
+        unit: pages
+    checks:
+      - id: la4-eigen-derive
+        module: la4
+        type: derive
+        prompt: >-
+          From the definition Av = λv with v ≠ 0, derive the characteristic
+          equation det(A − λI) = 0, and explain in one sentence what the
+          determinant condition is saying geometrically.
+        rubric:
+          - Rearranges to (A − λI)v = 0
+          - Notes v ≠ 0 means A − λI has a non-trivial null space
+          - Concludes A − λI is singular, hence its determinant is zero
+          - "States the geometric reading: A − λI collapses at least one dimension"
+        reference: >-
+          Av = λv gives Av − λv = 0, and since λv = λIv, that is (A − λI)v = 0.
+          A non-zero v in the null space means N(A − λI) ≠ {0}, so A − λI is not
+          invertible, so det(A − λI) = 0. Geometrically: λ is an eigenvalue
+          exactly when subtracting λI squashes space flat in at least one
+          direction, and the directions it squashes are the eigenvectors.
+        est_minutes: 15
+        draft: true
+      - id: la4-eigen-numeric
+        module: la4
+        type: numeric
+        prompt: >-
+          By hand, find the eigenvalues and eigenvectors of [[2, 1], [1, 2]],
+          write A = PDP⁻¹ explicitly, and use it to compute A^4 without
+          multiplying A by itself four times.
+        rubric:
+          - Characteristic polynomial (2 − λ)² − 1 written out
+          - Eigenvalues 3 and 1
+          - Eigenvectors (1, 1) and (1, −1), each verified by substitution
+          - P, D and P⁻¹ written out, with P⁻¹ = ½·[[1, 1], [1, −1]]
+          - A^4 = PD^4P⁻¹ = [[41, 40], [40, 41]]
+        reference: >-
+          det([[2−λ, 1], [1, 2−λ]]) = (2 − λ)² − 1 = 0, so 2 − λ = ±1 and
+          λ = 3 or 1. For λ = 3: (A − 3I)v = 0 gives −v1 + v2 = 0, so v = (1, 1).
+          For λ = 1: v1 + v2 = 0, so v = (1, −1). P = [[1, 1], [1, −1]],
+          D = diag(3, 1), P⁻¹ = ½·[[1, 1], [1, −1]]. Then
+          A^4 = P·diag(81, 1)·P⁻¹ = ½·[[81 + 1, 81 − 1], [81 − 1, 81 + 1]]
+          = [[41, 40], [40, 41]].
+        est_minutes: 25
+        draft: true
+      - id: la4-svd-explain
+        module: la4
+        type: explain
+        prompt: >-
+          State the singular value decomposition A = UΣVᵀ, say what each factor
+          is and what it does geometrically, and explain how the SVD gives you
+          the rank of A and a basis for each of the four fundamental subspaces.
+        rubric:
+          - U and V orthogonal, Σ diagonal with non-negative entries in decreasing order
+          - "Geometric reading: rotate, scale along axes, rotate"
+          - Rank = number of non-zero singular values
+          - First r columns of U span the column space; remaining columns span the left null space
+          - First r columns of V span the row space; remaining columns span the null space
+        reference: >-
+          Every m×n real matrix factors as A = UΣVᵀ with U (m×m) and V (n×n)
+          orthogonal and Σ (m×n) diagonal with σ1 ≥ σ2 ≥ … ≥ 0. Reading right to
+          left, A rotates (or reflects) by Vᵀ, scales the axes by the singular
+          values, then rotates by U. The rank r is the number of non-zero σi.
+          Columns 1…r of U are an orthonormal basis of C(A) and columns r+1…m of
+          U a basis of N(Aᵀ); columns 1…r of V are an orthonormal basis of the
+          row space and columns r+1…n of V a basis of N(A).
+        est_minutes: 15
+        draft: true
+      - id: la4-svd-code
+        module: la4
+        type: code
+        prompt: >-
+          From memory, write a function that takes a matrix and an integer k and
+          returns its best rank-k approximation, using only an SVD routine and
+          array slicing. Then write two assertions that would catch a wrong
+          implementation.
+        must_cover: false
+        rubric:
+          - Uses a thin/economy SVD rather than the full one
+          - Truncates U, the singular values and Vᵀ consistently to k
+          - Reassembles the product in the right order
+          - One assertion checks the rank of the result is at most k
+          - One assertion checks the approximation error against the (k+1)-th singular value
+        reference: >-
+          def rank_k(A, k):
+              U, s, Vt = np.linalg.svd(A, full_matrices=False)
+              return (U[:, :k] * s[:k]) @ Vt[:k, :]
+          Assertions: np.linalg.matrix_rank(rank_k(A, k)) <= k, and
+          np.isclose(np.linalg.norm(A - rank_k(A, k), 2), s[k]) — the
+          Eckart–Young theorem says the spectral-norm error of the best rank-k
+          approximation is exactly the (k+1)-th singular value.
+        est_minutes: 20
+        draft: true
+
+capstone:
+  - id: cap-four-subspaces
+    title: A hand-drawn four-subspaces poster, from memory
+    modules: [la3, la4]
+    description: >-
+      One sheet: an m×n matrix of rank r, all four subspaces with their
+      dimensions and orthogonality, where the SVD bases sit in the picture, and
+      what Ax = b means in each region. Drawn without notes, then checked. If
+      you cannot draw it cold, la3 is not finished.

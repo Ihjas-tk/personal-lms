@@ -50,7 +50,7 @@ export default function Shipped() {
             {a.description ? <p className="artefact-desc">{a.description}</p> : null}
             <div className="artefact-next">
               {/* The store fills a missing next action with "", not null, so `??` left
-                  an empty grey bar on seven of the eight cards. */}
+                  an empty grey bar on every card that had not been written yet. */}
               {a.next_action || "No next action written yet."}
             </div>
             <div className="artefact-foot">

@@ -500,7 +500,7 @@ that, `"{status} {statusText}"`.
 | `Next session plan` / `Errors to log (each needs a diagnosis)` | Close dialog legends |
 | `All three fields are required to close.` | Close dialog, invalid |
 | `Fatigue (1 fresh – 5 spent)` | Close dialog label |
-| `To convert this into a Check, add it to `curriculum/track.yaml`.` | Error triage, error with no check |
+| `To convert this into a Check, add it to your `track.yaml`.` | Error triage, error with no check |
 | `The plan that shows on Today is the one written at session close; this box is your scratch space for the week.` | Weekly review block 6 |
 | `Insert the Keshav three-pass stub…` | see §5.5 |
 

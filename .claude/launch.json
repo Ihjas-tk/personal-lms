@@ -4,7 +4,17 @@
     {
       "name": "learn",
       "runtimeExecutable": "uv",
-      "runtimeArgs": ["run", "--project", "learn", "uvicorn", "learn.main:app", "--host", "127.0.0.1", "--port", "8765"],
+      "runtimeArgs": [
+        "run",
+        "--project",
+        "learn",
+        "learn",
+        "--curriculum",
+        "tracks/llm-engineering-and-evals/track.yaml",
+        "--port",
+        "8765",
+        "--no-browser"
+      ],
       "port": 8765
     }
   ]

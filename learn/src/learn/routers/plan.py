@@ -147,7 +147,7 @@ def week_hours(plan: dict[str, Any], today: date) -> dict[str, float]:
 
 
 def activity_strip(start: date) -> list[dict[str, Any]]:
-    """40 weeks × 7 days of hours-per-day intensity. No streak, no number."""
+    """One cell per day of the track, by hours-per-day intensity. No streak, no number."""
     days = session_days()
     out = []
     for offset in range(TRACK_DAYS):

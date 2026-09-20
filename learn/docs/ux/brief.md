@@ -74,4 +74,4 @@ Ranked by how much they hurt the nightly experience.
 ```bash
 cd learn && uv run learn      # http://127.0.0.1:8765
 ```
-Files: `web/src/screens/*` (one file per screen), `web/src/components/*`, `web/src/styles/tokens.css` and `app.css`. The spec the app was built to is `../superpowers/specs/2026-09-19-learn-lms-design.md`; the research behind the non-negotiables is `../../research/sources/09-learning-science-features.md` and `10-ux-patterns.md`.
+Files: `web/src/screens/*` (one file per screen), `web/src/components/*`, `web/src/styles/tokens.css` and `app.css`. The spec the app was built to is `../superpowers/specs/2026-09-19-learn-lms-design.md`; the research behind the non-negotiables is `../../../tracks/llm-engineering-and-evals/research/09-learning-science-features.md` and `10-ux-patterns.md`.

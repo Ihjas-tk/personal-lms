@@ -18,7 +18,7 @@ const LEGEND = [
   ["untouched", "var(--surf2)", "1px solid var(--line)"],
 ] as const;
 
-/** One column per skill area — never one number for the whole nine months. */
+/** One column per skill area — never one number for the whole track. */
 export default function Ridge({
   columns,
   foot,

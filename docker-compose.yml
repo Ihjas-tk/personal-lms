@@ -1,0 +1,17 @@
+# One-off, first time only — install a track into the vault:
+#   docker compose run --rm learn learn init --track /app/tracks/starter/track.yaml
+# Then:
+#   docker compose up -d      # http://127.0.0.1:8765
+# Your data lives in ./vault on the host: plain Markdown and YAML, a git repo the app commits to.
+services:
+  learn:
+    build: .
+    image: learn:local
+    container_name: learn
+    ports:
+      - "127.0.0.1:8765:8765"   # local only by design — there is no login
+    volumes:
+      - ./vault:/vault
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}   # optional: enables Tidy and Explain-back
+    restart: unless-stopped

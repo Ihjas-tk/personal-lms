@@ -234,7 +234,7 @@ An entry reaches `vault/errors.jsonl` in one of two ways.
 | 2 | Error triage | Textarea **Resolution** | **Resolve** stays disabled while it is empty. |
 | 3 | Error triage | Button **Resolve** | *(server)* `PATCH /api/errors {id, resolved: true, resolution}`. The card is removed from the list immediately. |
 | 4 | Error triage | Link **Re-test the Check it came from** | Only when the row carries a `check_id`; deep-links to `/modules/{module}?tab=checks&check={id}`, i.e. straight into flow 3. |
-| 4′ | Error triage | No check behind the row | A static note instead: *"To convert this into a Check, add it to `curriculum/track.yaml`."* There is no in-app conversion. |
+| 4′ | Error triage | No check behind the row | A static note instead: *"To convert this into a Check, add it to your `track.yaml`."* There is no in-app conversion. |
 | 5 | Error triage | All rows resolved | *"No unresolved errors in the ledger."* |
 
 ---

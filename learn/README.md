@@ -1,8 +1,8 @@
 # learn
 
-A local, single-user web app that runs a 40-week LLM-engineering and AI-evaluation track
-and measures whether it is actually working. The metaphor is the thing being studied: the
-app is an eval harness for the learner. Every "done when you can…" line in the curriculum
+A local, single-user web app that runs a **track** — a curriculum you write, in any
+subject — and measures whether it is actually working. The app is an eval harness for the
+learner: every "done when you can…" line in the curriculum
 is a **Check** with a typed answer, a hidden reference, a confidence rating taken *before*
 answering, and a self-grade taken after. Attempts are trials, rubrics are graders,
 confidence ratings are judge calibration, and the error ledger is error analysis. A Check
@@ -23,11 +23,11 @@ Four places, and the session lives in the rail foot rather than in a bar across 
 
 | Where | Route | What it is for |
 | --- | --- | --- |
-| **Desk** | `/` | What to do tonight: the plan you wrote last time, the warm-up, and — for anyone who scrolls — what nine months has actually bought. |
-| **The track** | `/track` | Forty weeks: what you left unfinished, the phase you are in, and the rest compressed. |
+| **Desk** | `/` | What to do tonight: the plan you wrote last time, the warm-up, and — for anyone who scrolls — what the months so far have actually bought. |
+| **The track** | `/track` | The whole calendar: what you left unfinished, the phase you are in, and the rest compressed. |
 | **Review** | `/review` | Checks due for a re-test, most overdue first. |
-| **Sunday debrief** | `/review/weekly` | The cold sweep, how well you know what you know, mistakes worth keeping, next week. |
-| **Shipped** | `/shipped` | The eight capstone artefacts. Each one exists or does not — there is no percentage. |
+| **Weekly debrief** | `/review/weekly` | The cold sweep, how well you know what you know, mistakes worth keeping, next week. Named for the curriculum's `debrief_day` — "Sunday debrief" by default. |
+| **Shipped** | `/shipped` | The capstone artefacts. Each one exists or does not — there is no percentage. |
 
 A module (`/modules/:id`) is one page, not five tabs. It is a syllabus of **topics**: each
 topic owns its sources, its note and the checks that prove it. Alongside the syllabus, a
@@ -56,10 +56,29 @@ already logged, and how spent you are. Nothing closes without all three.
 ## Start
 
 ```bash
+uv run learn init --track ../tracks/llm-engineering-and-evals/track.yaml
 uv run learn        # http://127.0.0.1:8765, opens a browser
 ```
 
-That is the whole thing. `BROWSER=none uv run learn` skips opening the browser.
+`learn init` copies a track into the vault as `vault/track.yaml` and creates the folders
+around it; it refuses to overwrite an existing one without `--force`. After that, `learn`
+on its own is the whole thing.
+
+```bash
+uv run learn --port 8798 --no-browser          # somewhere else, quietly
+uv run learn --curriculum ../tracks/starter/track.yaml   # run a track without installing it
+uv run learn --vault ~/other-subject/vault     # a second subject, a second vault
+uv run learn check ../tracks/starter/track.yaml          # validate a curriculum
+uv run learn schema                            # regenerate curriculum/schema.json
+```
+
+`BROWSER=none uv run learn` still skips the browser, and `--no-browser` is the flag for it.
+`LEARN_PORT` is the environment form of `--port`.
+
+The tracks that ship with the repo are under `../tracks/`: `starter` (a commented
+template), `linear-algebra` (a worked example in a different subject), and
+`llm-engineering-and-evals` (the flagship, 40 weeks). Writing your own is
+`docs/curriculum-schema.md` at the repo root.
 
 On first run the app creates `vault/`, seeds `vault/plan.yaml` from the curriculum's start
 date and weekly budget, and runs `git init` inside `vault/` if it is not already a repo. If
@@ -89,6 +108,7 @@ entries are disabled — not hidden — with the reason shown, and `GET /api/hea
 
 ```
 vault/                       git repo, auto-initialised
+  track.yaml                 your curriculum, put here by `learn init`
   plan.yaml                  start date, week offset, weekly budget
   capstone.yaml              artefact states
   errors.jsonl               error ledger, append-only
@@ -102,7 +122,17 @@ vault/                       git repo, auto-initialised
   sessions/*.md              reflection and the next if-then plan
 ```
 
-`LEARN_VAULT` and `LEARN_CURRICULUM` override the default locations.
+### Where the curriculum comes from
+
+In order, first hit wins:
+
+1. `learn --curriculum PATH`
+2. `LEARN_CURRICULUM`
+3. `<vault>/track.yaml` — what `learn init` writes; the normal case
+4. `learn/curriculum/track.yaml`, the legacy in-repo copy, if it still exists
+5. otherwise an error naming `learn init`
+
+The vault resolves the same way: `--vault` → `LEARN_VAULT` → `./vault`.
 
 ### Editing notes in another editor
 
@@ -116,9 +146,15 @@ silently either way. Reload whenever in doubt.
 
 ## Editing the curriculum
 
-`curriculum/track.yaml` holds phases, modules, resources, capstone artefacts and every
-Check. Edit it in place and reload the page; it is re-parsed and validated whenever the
-file's mtime changes, and a validation error surfaces rather than being swallowed.
+`vault/track.yaml` holds areas, phases, modules, topics, resources, capstone artefacts and
+every Check. Edit it in place and reload the page; it is re-parsed and validated whenever
+the file's mtime changes, and a validation error surfaces rather than being swallowed.
+`uv run learn check vault/track.yaml` validates it from the command line and prints the
+path to the failing field rather than a traceback.
+
+Every field, with its default, is documented in `docs/curriculum-schema.md` at the repo
+root; `curriculum/schema.json` is the same thing as JSON Schema, generated from the
+pydantic models by `learn schema` and kept in sync by `tests/test_cli_schema.py`.
 
 Rubrics and reference answers in the seeded file were AI-drafted from the track's sources
 and carry `draft: true`. The check shows **"reference not yet checked by you"** for as long
@@ -150,8 +186,9 @@ cd web && npx playwright test -c playwright.ux.config.ts   # screenshot capture
 ```
 
 Playwright drives the built app (run `npm run build` first) on port **8799** against a
-throwaway vault under `/tmp` — never port 8765 and never your own `vault/` — and stubs every
-AI call, so it never needs a credential. Both configs start that server themselves. The
+throwaway vault under `/tmp` and the flagship track named explicitly in `LEARN_CURRICULUM`
+— never port 8765 and never your own `vault/` — and stubs every AI call, so it never needs
+a credential. Both configs start that server themselves. The
 capture run writes every screen, light and dark, to `docs/ux/screens-v2/`.
 
 Smoke test before a release: `rm -rf .cache && uv run learn`.

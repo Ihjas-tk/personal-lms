@@ -22,7 +22,6 @@ router = APIRouter(tags=["overview"])
 
 WARMUP_LIMIT = 4
 EXISTS_STATES = ("working", "reviewed", "done")
-PLAN_WRITTEN_ON = "Sunday"
 
 
 @router.get("/desk")
@@ -32,7 +31,8 @@ def get_desk() -> dict[str, Any]:
     tr = track()
     plan = plan_data(tr)
     start: date = plan["start_date"]
-    now = derive.week_now(today, start)
+    total_weeks = tr.total_weeks
+    now = derive.week_now(today, start, total_weeks)
     rows = check_rows(tr, today)
     attempts = store.graded_attempts()
     core = [r for r in rows if r.check.must_cover]
@@ -45,12 +45,13 @@ def get_desk() -> dict[str, Any]:
     return {
         "first_run": not closed,
         "week_now": now,
-        "weeks_total": derive.WEEKS_TOTAL,
-        "plan": _plan_line(),
+        "weeks_total": total_weeks,
+        "debrief_day": tr.debrief_day,
+        "plan": _plan_line(tr),
         "start_label": derive.start_label(plan["weekly_budget_hours"]),
         "first_action": _first_action(tr, rows) if not closed else None,
         "warmup": _warmup(tr, rows, closed, today),
-        "standing": _standing(tr, plan, core_states, now, today),
+        "standing": _standing(tr, plan, core_states, now, today, total_weeks),
         "ridge": _ridge(tr, rows, attempts, today),
         "gains": {
             "lasting_delta_4w": derive.delta_4w(attempts, core_ids, today, "durable"),
@@ -65,9 +66,10 @@ def get_desk() -> dict[str, Any]:
     }
 
 
-def _plan_line() -> dict[str, Any] | None:
+def _plan_line(tr: Track) -> dict[str, Any] | None:
+    """The last IF/THEN plan, tagged with the day the curriculum debriefs on."""
     text = last_if_then()
-    return {"text": text, "written_on": PLAN_WRITTEN_ON} if text else None
+    return {"text": text, "written_on": tr.debrief_day} if text else None
 
 
 def _first_action(tr: Track, rows: list[CheckRow]) -> dict[str, Any] | None:
@@ -106,7 +108,12 @@ def _warmup(
 
 
 def _standing(
-    tr: Track, plan: dict[str, Any], core_states: list[str], now: int, today: date
+    tr: Track,
+    plan: dict[str, Any],
+    core_states: list[str],
+    now: int,
+    today: date,
+    total_weeks: int,
 ) -> dict[str, Any]:
     """The three headline numbers: checks that are yours, artefacts, weeks left."""
     board = capstone_rows()
@@ -119,7 +126,7 @@ def _standing(
         "artefacts_exist": sum(1 for c in board if c["state"] in EXISTS_STATES),
         "artefacts_total": len(board),
         "artefact_note": f"the {draft['title'].lower()} is in draft" if draft else None,
-        "weeks_left": derive.weeks_left(now),
+        "weeks_left": derive.weeks_left(now, total_weeks),
         "weekly_budget": plan["weekly_budget_hours"],
         "skips_banked": max(0, SKIPS_PER_QUARTER * quarters - max(0, plan["offset_weeks"])),
     }
@@ -179,13 +186,14 @@ def _newly_proved(tr: Track, attempts: dict[str, list[Any]]) -> list[dict[str, A
 
 @router.get("/track")
 def get_track() -> dict[str, Any]:
-    """Forty weeks in three bands: what was left behind, what is now, what comes after."""
+    """The whole track in three bands: what was left behind, what is now, what comes after."""
     today = date.today()
     tr = track()
     plan = plan_data(tr)
     start: date = plan["start_date"]
     offset = plan["offset_weeks"]
-    now = derive.week_now(today, start)
+    total_weeks = tr.total_weeks
+    now = derive.week_now(today, start, total_weeks)
     rows = check_rows(tr, today)
     grouped = by_module(rows)
     minutes = store.module_minutes()
@@ -212,9 +220,10 @@ def get_track() -> dict[str, Any]:
 
     return {
         "start_date": start.isoformat(),
-        "end_date": (start + timedelta(weeks=derive.WEEKS_TOTAL + offset)).isoformat(),
+        "end_date": (start + timedelta(weeks=total_weeks + offset)).isoformat(),
         "week_now": now,
-        "weeks_total": derive.WEEKS_TOTAL,
+        "weeks_total": total_weeks,
+        "debrief_day": tr.debrief_day,
         "headline": {
             "lasting_pct": round(lasting / total, 4) if total else 0.0,
             "attempted_pct": round(attempted / total, 4) if total else 0.0,
@@ -223,7 +232,7 @@ def get_track() -> dict[str, Any]:
         },
         "offset_weeks": offset,
         "offset_from": plan["offset_from"].isoformat() if plan["offset_from"] else None,
-        "weeks": derive.week_cells(now, phase_weeks),
+        "weeks": derive.week_cells(now, phase_weeks, total_weeks),
         "unfinished": [row(m, "late") for m in unfinished],
         "this_phase": {
             "phase_id": phase.id if phase else None,

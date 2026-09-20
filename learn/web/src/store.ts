@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import * as api from "./api";
-import { AI_ANSWER_OPEN, AI_UNREACHABLE } from "./labels";
+import { AI_ANSWER_OPEN, AI_UNREACHABLE, DEFAULT_DEBRIEF_DAY } from "./labels";
 import type { Desk, Health, Session, SessionClose, SessionPhase } from "./types";
 
 interface AppState {
@@ -132,3 +132,11 @@ export const useStore = create<AppState>((set, get) => ({
     set({ vaultRevision: get().vaultRevision + 1 });
   },
 }));
+
+/**
+ * The curriculum's debrief day, from `GET /api/desk`. Falls back to the model's
+ * own default while the Desk payload is still in flight, so no screen ever has to
+ * hard-code a day of the week.
+ */
+export const useDebriefDay = (): string =>
+  useStore((s) => s.desk?.debrief_day) ?? DEFAULT_DEBRIEF_DAY;

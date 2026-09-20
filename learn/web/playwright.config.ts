@@ -6,12 +6,15 @@ import { defineConfig, devices } from "@playwright/test";
  * Same pattern as `playwright.ux.config.ts`: an isolated throwaway vault on port
  * 8799, never the learner's `vault/` and never 8765, so a run can never collide
  * with the app they may have open. The vault is wiped when the server starts, so
- * every run begins on the real curriculum with nothing recorded.
+ * every run begins on the flagship curriculum (named explicitly in
+ * `LEARN_CURRICULUM`, since the vault it runs against is empty) with nothing recorded.
  *
  * The flow specs share that one vault and run in file-name order (`01-…` first),
  * because the Desk's first-run state only exists until a session has been closed.
  */
 export const VAULT = "/tmp/learn-e2e-vault";
+/** The flagship track, relative to `cwd: ".."` (the `learn/` folder). */
+export const TRACK = "../tracks/llm-engineering-and-evals/track.yaml";
 export const PORT = 8799;
 
 export default defineConfig({
@@ -34,6 +37,7 @@ export default defineConfig({
   webServer: {
     command:
       `rm -rf ${VAULT} && BROWSER=none LEARN_VAULT=${VAULT} ` +
+      `LEARN_CURRICULUM=${TRACK} ` +
       `uv run uvicorn learn.main:app --host 127.0.0.1 --port ${PORT}`,
     cwd: "..",
     url: `http://127.0.0.1:${PORT}/api/health`,

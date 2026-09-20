@@ -8,6 +8,7 @@ learn/.pytest_cache/
 learn/.ruff_cache/
 learn/src/learn/static/
 learn/web/node_modules/
+**/node_modules/
 learn/web/dist/
 learn/web/e2e/.results/
 learn/web/test-results/
@@ -25,3 +26,8 @@ Thumbs.db
 .vscode/
 *.swp
 .env
+
+# --- capture output from the README asset scripts ---
+learn/web/e2e/.demo-results/
+learn/web/e2e/.ux-results/
+vault/

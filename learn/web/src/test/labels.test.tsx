@@ -22,12 +22,21 @@ describe("the fourteen renames", () => {
     expect(L.CORE).toBe("core");
     expect(L.MISSED_WHILE_SURE).toBe("missed while sure");
     expect(L.DRAFT_REFERENCE).toBe("reference not yet checked by you");
-    expect(L.DEBRIEF).toBe("Sunday debrief");
+    expect(L.DEBRIEF).toBe("Sunday debrief"); // the default day
     expect(L.WRAP_UP).toBe("Wrap up");
     expect(L.WRAP_UP_TITLE).toBe("Stand up well");
     expect(L.SECOND_OPINION).toBe("second opinion");
     expect(L.SHIPPED).toBe("Things that exist");
     expect(L.CAPSTONE.done).toBe("exists");
+  });
+
+  it("takes the debrief day from the curriculum, not from the copy", () => {
+    expect(L.debriefLabel("Friday")).toBe("Friday debrief");
+    expect(L.debriefLabel("Saturday")).toBe("Saturday debrief");
+    expect(L.ifCuePlaceholder("Friday")).toBe("it is Friday after breakfast");
+    // Nothing loaded yet, or an author who left the field out: the model's default.
+    expect(L.debriefLabel(undefined)).toBe("Sunday debrief");
+    expect(L.debriefLabel("  ")).toBe("Sunday debrief");
   });
 
   it("counts real checks instead of printing a percentage", () => {

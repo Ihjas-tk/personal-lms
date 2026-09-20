@@ -78,8 +78,12 @@ export const CORE = "core";
 export const MISSED_WHILE_SURE = "missed while sure";
 /** draft reference, verify → reference not yet checked by you. */
 export const DRAFT_REFERENCE = "reference not yet checked by you";
-/** Weekly review → Sunday debrief. */
-export const DEBRIEF = "Sunday debrief";
+/** Weekly review → "<day> debrief". The day comes from the curriculum. */
+export const DEFAULT_DEBRIEF_DAY = "Sunday";
+export const debriefLabel = (day?: string | null) =>
+  `${day?.trim() || DEFAULT_DEBRIEF_DAY} debrief`;
+/** The label on the default day, for anything rendered before the Desk has loaded. */
+export const DEBRIEF = debriefLabel();
 /** Close session → Wrap up · Stand up well. */
 export const WRAP_UP = "Wrap up";
 export const WRAP_UP_TITLE = "Stand up well";
@@ -223,6 +227,8 @@ export const REFLECTION_Q =
   "What changed in your understanding, and what can you still not do?";
 export const PLAN_Q = "Next time, when you sit down";
 export const PLAN_FOOT = "This sentence is the first thing you will see next time.";
+export const ifCuePlaceholder = (day?: string | null) =>
+  `it is ${day?.trim() || DEFAULT_DEBRIEF_DAY} after breakfast`;
 export const EXTRA_ERROR_Q = "Anything you got wrong that is not already logged?";
 export const FATIGUE_Q = "How spent are you?";
 export const CLOSE_THE_SESSION = "Close the session";
