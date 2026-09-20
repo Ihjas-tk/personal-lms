@@ -1,0 +1,339 @@
+<title>AI & Data Skills Map 2026–2030</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F5F7F3; --surface:#FFFFFF; --ink:#1A222B; --muted:#5E6A74; --rule:#D6DCD3;
+  --accent:#0E6B55; --tint:#E1EFE8; --warn:#B5501F; --warn-tint:#F6E7DD; --bar-off:#DDE3DA;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#12181C; --surface:#1A2227; --ink:#E5E9E3; --muted:#98A3AB; --rule:#2A343B;
+    --accent:#47C39F; --tint:#1B352D; --warn:#E8905E; --warn-tint:#3A2418; --bar-off:#2C363D;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#12181C; --surface:#1A2227; --ink:#E5E9E3; --muted:#98A3AB; --rule:#2A343B;
+  --accent:#47C39F; --tint:#1B352D; --warn:#E8905E; --warn-tint:#3A2418; --bar-off:#2C363D;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 24px 96px}
+.prose{max-width:66ch}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.1;margin:0}
+h1{font-size:clamp(38px,6vw,64px);font-weight:800;letter-spacing:-0.02em}
+h2{font-size:clamp(26px,3.4vw,34px);font-weight:700;letter-spacing:-0.01em;margin-top:72px;margin-bottom:8px;padding-top:24px;border-top:1px solid var(--rule)}
+h3{font-size:20px;font-weight:700;margin-top:36px;margin-bottom:6px}
+p{margin:12px 0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:clamp(20px,2.4vw,24px);line-height:1.35;font-weight:400;margin:20px 0 8px;max-width:30ch}
+.lede b{font-weight:600;color:var(--accent)}
+.meta{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:18px}
+.meta span+span::before{content:" · ";color:var(--rule)}
+small,.small{font-size:14px;color:var(--muted)}
+ul{padding-left:20px}
+li{margin:6px 0}
+li b,p b{font-weight:600}
+
+/* findings ledger */
+.findings{display:grid;grid-template-columns:1fr;gap:0;margin-top:28px;border-top:1px solid var(--rule)}
+.finding{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--rule);align-items:start}
+.finding .stat{font-family:var(--display);font-size:38px;font-weight:800;line-height:1;letter-spacing:-0.02em;color:var(--accent);font-variant-numeric:tabular-nums}
+.finding .stat small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-top:8px;line-height:1.35;max-width:22ch}
+.finding p{margin:0;max-width:66ch}
+.finding p b{display:block;font-family:var(--display);font-size:19px;font-weight:700;margin-bottom:4px}
+@media (max-width:640px){.finding{grid-template-columns:1fr;gap:10px}}
+
+/* tables */
+.tablewrap{overflow-x:auto;margin:16px 0 8px;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--mono);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--ground)}
+td.num,th.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.skill{font-family:var(--display);font-weight:700;font-size:16px;min-width:200px}
+td.skill small{display:block;font-family:var(--body);font-weight:400;font-size:14px;color:var(--muted);margin-top:2px}
+.lvl{display:inline-flex;gap:3px;vertical-align:middle}
+.lvl i{display:block;width:14px;height:10px;background:var(--bar-off);border-radius:1px}
+.lvl[data-n="1"] i:nth-child(-n+1),.lvl[data-n="2"] i:nth-child(-n+2),.lvl[data-n="3"] i:nth-child(-n+3),.lvl[data-n="4"] i:nth-child(-n+4),.lvl[data-n="5"] i:nth-child(-n+5){background:var(--accent)}
+td.why{max-width:46ch;color:var(--ink)}
+.tier{margin-top:32px}
+.tier .eyebrow{display:flex;align-items:center;gap:10px}
+.tier .eyebrow::before{content:"";width:10px;height:10px;background:var(--accent);border-radius:50%}
+.tier.t2 .eyebrow::before{background:var(--ink);opacity:.55}
+.tier.t3 .eyebrow::before{background:transparent;border:2px solid var(--accent);width:8px;height:8px}
+.legend{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:18px;margin:6px 0 0}
+.legend .lvl{margin-right:6px}
+
+/* declining */
+.decline{border-left:3px solid var(--warn);background:var(--warn-tint);padding:16px 20px;margin-top:28px}
+.decline .eyebrow{color:var(--warn)}
+.decline ul{margin:8px 0 0;padding-left:18px}
+
+/* chips */
+.chip{display:inline-block;font-family:var(--mono);font-size:11.5px;letter-spacing:0.04em;padding:2px 8px;border:1px solid var(--rule);border-radius:999px;color:var(--muted);white-space:nowrap}
+.chip.up{color:var(--accent);border-color:var(--accent);background:var(--tint)}
+.chip.dn{color:var(--warn);border-color:var(--warn);background:var(--warn-tint)}
+
+/* timeline */
+.timeline{overflow-x:auto;margin:20px 0;border:1px solid var(--rule);background:var(--surface);padding:18px 16px 14px}
+.tl{display:grid;grid-template-columns:190px repeat(18,minmax(28px,1fr));gap:6px 0;min-width:820px;align-items:center}
+.tl .mh{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+.tl .mh:first-child{text-align:left}
+.tl .lab{font-family:var(--display);font-weight:700;font-size:14px;padding:6px 10px 6px 0;line-height:1.2}
+.tl .lab small{display:block;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--muted);margin-top:2px}
+.tl .bar{grid-column:calc(var(--s) + 1) / calc(var(--e) + 1);height:26px;background:var(--accent);color:#fff;font-family:var(--mono);font-size:11.5px;display:flex;align-items:center;padding:0 8px;white-space:nowrap;overflow:hidden;border-radius:2px}
+.tl .bar.thin{height:8px;background:repeating-linear-gradient(90deg,var(--accent) 0 8px,transparent 8px 14px);opacity:.7}
+.tl .bar.ms{background:var(--ink);color:var(--ground)}
+.tl .cell{grid-column:2 / span 18;height:0}
+
+/* two-col */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:8px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+ol.protocol{counter-reset:p;list-style:none;padding:0;margin:12px 0 0}
+ol.protocol li{counter-increment:p;padding:10px 0 10px 40px;position:relative;border-bottom:1px solid var(--rule)}
+ol.protocol li::before{content:counter(p);position:absolute;left:0;top:9px;width:26px;height:26px;border-radius:50%;background:var(--tint);color:var(--accent);font-family:var(--mono);font-size:12px;display:flex;align-items:center;justify-content:center}
+.callout{background:var(--surface);border:1px solid var(--rule);padding:18px 22px;margin-top:20px}
+.callout .eyebrow{margin-bottom:6px}
+.sources{columns:2;column-gap:32px;font-size:14px}
+.sources li{break-inside:avoid;margin:4px 0}
+@media (max-width:760px){.sources{columns:1}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Research brief · compiled 18 September 2026</div>
+  <h1 style="margin-top:14px">AI &amp; Data Skills Map<br>2026–2030</h1>
+  <p class="lede">The bottleneck in AI work has moved from building things to <b>proving they work</b>. Plan around "ship it, then prove it works."</p>
+  <div class="meta"><span>4 research angles</span><span>4 Opus agents, ~340 tool calls</span><span>≈90 primary and practitioner sources</span><span>Reddit uncrawlable; WEF, Gartner, PwC, McKinsey via press releases</span></div>
+
+  <div class="prose">
+    <p style="margin-top:28px">Four independent evidence streams were run in parallel and then reconciled: <b>employer demand</b> (Stanford AI Index / Lightcast, Indeed Hiring Lab, LinkedIn, Levels.fyi, ITJobsWatch), <b>the 2027–2030 forecast</b> (WEF, BLS, Gartner, McKinsey, PwC, Stanford Digital Economy Lab, the EU AI Act calendar), <b>practitioner voice</b> (Hacker News, practitioner blogs, LangChain / Datadog / Databricks surveys, live GitHub and PyPI telemetry), and <b>learning-path evidence</b> (course data, randomised trials on learning with AI, hiring-manager guides). Where they disagree, the disagreement is shown rather than averaged away.</p>
+  </div>
+
+  <h2>Five findings that shape the plan</h2>
+  <div class="findings">
+    <div class="finding">
+      <div class="stat">+1,358%<small>AWS in US AI postings vs 2013–15</small></div>
+      <p><b>Hiring moved from models to deployment.</b> The fastest-growing skills inside AI postings are infrastructure, not modelling: AWS, workflow management (+818%) and scalability (+733%). Lightcast's own summary: AI hiring "has moved away from experimentation and toward execution."</p>
+    </div>
+    <div class="finding">
+      <div class="stat">+10,854%<small>"Agentic AI" mentions, year on year</small></div>
+      <p><b>Agentic AI is the growth story. Generic GenAI is already commoditizing.</b> LangGraph +2,113%, RAG +337%, context engineering from 9 to 703 postings. Meanwhile generic GenAI's <i>share</i> of AI postings fell 5% and chat-era terms (ChatGPT, chatbot, conversational AI) lost 35–68% of share. "GenAI experience" on its own no longer differentiates.</p>
+    </div>
+    <div class="finding">
+      <div class="stat">52%<small>of orgs run offline evals at all (LangChain, n=1,340)</small></div>
+      <p><b>Verification is the scarce skill.</b> Lightcast's "trustworthiness" skill moved from a below-average $84.4k to an above-average $181.1k median, the largest single-skill pay move in the data. Hamel Husain tells teams to spend 60–80% of development time on error analysis. Gartner expects over 40% of agentic projects to be cancelled by end-2027 for "inadequate risk controls."</p>
+    </div>
+    <div class="finding">
+      <div class="stat">£0<small>pay premium for Python or SQL on their own (UK medians flat to down)</small></div>
+      <p><b>Foundations are table stakes, not optional.</b> Python appears in 258,674 US AI postings and pays at the market. Statistics and causal reasoning are the one analytic task LLMs demonstrably cannot bootstrap from data. Classic ML still beats LLMs on tabular problems. Soft skills hold seven of LinkedIn's top ten rising skills.</p>
+    </div>
+    <div class="finding">
+      <div class="stat">4.5%<small>of software-dev postings are entry-level (Indeed, Q1 2026)</small></div>
+      <p><b>The door is narrow at the bottom, and AI-specific roles are the widest opening.</b> Workers aged 22–25 in AI-exposed occupations sit about 19% below trend (Stanford DEL, payroll microdata). But AI Engineer is LinkedIn's #1 fastest-growing US role with a median of only 3.7 years' prior experience, and India's AI/ML hiring is up 31% year on year.</p>
+    </div>
+  </div>
+
+  <h2>The skill map</h2>
+  <div class="prose"><p>Ratings are a synthesis across the four reports. <b>Now</b> blends current posting frequency and pay signal. <b>2027–30</b> is confidence that the skill gains value over the window. Five segments is the maximum.</p></div>
+  <div class="legend"><span><span class="lvl" data-n="5"><i></i><i></i><i></i><i></i><i></i></span>strong</span><span><span class="lvl" data-n="3"><i></i><i></i><i></i><i></i><i></i></span>moderate</span><span><span class="lvl" data-n="1"><i></i><i></i><i></i><i></i><i></i></span>thin or untracked</span></div>
+
+  <div class="tier t1">
+    <div class="eyebrow">Tier 1 · Learn now. High demand today and still rising</div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Skill</th><th>Now</th><th>2027–30</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="skill">LLM application engineering<small>RAG, agents, context engineering</small></td><td><span class="lvl" data-n="5"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">Fastest-growing posting cluster. LinkedIn's #1 role names LangChain, RAG and PyTorch as its top skills. Gartner's 2027 cull will punish framework-only skills, so pair this with evals.</td></tr>
+        <tr><td class="skill">AI evals &amp; reliability engineering<small>error analysis, eval suites, LLM-as-judge calibration, tracing</small></td><td><span class="lvl" data-n="3"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="5"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">No posting series tracks it yet, but practitioners rank it #1, the pay signal is the largest on record, and every forecast puts it top. The most under-supplied skill in the whole map.</td></tr>
+        <tr><td class="skill">Production &amp; cloud engineering<small>AWS, MLOps, scalability, workflow orchestration</small></td><td><span class="lvl" data-n="5"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">The decade's biggest growth inside AI postings. Levels.fyi's $126k gap between ML Engineer and AI Engineer is largely production-systems depth and employer mix.</td></tr>
+        <tr><td class="skill">Data engineering for AI<small>pipelines, lakehouse, data contracts, Databricks / Snowflake</small></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="5"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">Databricks +13.3% and Snowflake +12.5% UK median pay while Python and SQL fell. Gartner, McKinsey and MIT NANDA independently name data readiness as the rate limiter on AI deployments.</td></tr>
+        <tr><td class="skill">Python + SQL<small>hygiene skills</small></td><td><span class="lvl" data-n="5"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">No premium, non-negotiable. 45% of data and analytics postings mention AI, and that AI work sits on top of SQL, not instead of it.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="tier t2">
+    <div class="eyebrow">Tier 2 · Keep sharp. Foundations that make AI output trustworthy</div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Skill</th><th>Now</th><th>2027–30</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="skill">Statistics, experimentation, causal inference</td><td><span class="lvl" data-n="3"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">Posting data does not track it. Structurally defensible: "no algorithm can consistently recover a target that is not identified by the observation regime" (Sosa &amp; Betancourt, 2026). Someone has to own the assumptions.</td></tr>
+        <tr><td class="skill">Classic ML for tabular problems<small>gradient boosting, regression</small></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="3"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">Credit, churn, fraud and forecasting still run on it. EU AI Act high-risk explainability obligations favour it over LLMs.</td></tr>
+        <tr><td class="skill">Software engineering fundamentals &amp; systems design<small>testing, code review, debugging AI output</small></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="5"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">"Writing code is cheap now" (Willison). Reviewing and debugging AI-generated code is now a common interview screen; BLS still projects software developers +15.8% to 2034.</td></tr>
+        <tr><td class="skill">Writing &amp; stakeholder communication</td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="5"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">Lightcast's fastest-growing skills <i>inside</i> AI jobs are cross-functional collaboration and stakeholder management. PwC: AI-exposed entry-level roles are 7x more likely to demand senior judgement.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="tier t3">
+    <div class="eyebrow">Tier 3 · Bets for 2027–2030. Small base today, strong forecast</div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Skill</th><th>Now</th><th>2027–30</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="skill">AI governance, assurance &amp; compliance</td><td><span class="lvl" data-n="2"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="5"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">Demand created by statute. EU AI Act Annex III high-risk obligations apply <span class="num">2027-12-02</span>, Annex I <span class="num">2028-08-02</span>, fines to €15M or 3% of turnover. Only 0.05% of postings today.</td></tr>
+        <tr><td class="skill">Small &amp; domain-specific model engineering<small>fine-tuning, distillation, routing, quantization</small></td><td><span class="lvl" data-n="2"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">Gartner: task-specific models used 3x more than general LLMs by 2027. Models under 1B parameters are 83% of all-time Hugging Face downloads.</td></tr>
+        <tr><td class="skill">Tool interoperability (MCP)</td><td><span class="lvl" data-n="2"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">238.9M PyPI downloads a month and Linux Foundation governance. No labour-market series yet, and senior practitioners disagree on whether it is infrastructure or overhead.</td></tr>
+        <tr><td class="skill">Security for AI systems<small>prompt injection, agent permissions, model supply chain</small></td><td><span class="lvl" data-n="3"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">BLS projects information-security analysts +28.5% to 2034. Agents with tool access expand the attack surface structurally.</td></tr>
+        <tr><td class="skill">Domain × AI hybrid<small>your industry plus AI fluency</small></td><td><span class="lvl" data-n="4"><i></i><i></i><i></i><i></i><i></i></span></td><td><span class="lvl" data-n="5"><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">PwC's AI wage premium runs from 16% (government) to 118% (consumer) by sector. Which industry you attach AI to matters more than which exam you pass.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="decline">
+    <div class="eyebrow">Declining or commoditizing · do not build a plan around these</div>
+    <ul>
+      <li><b>"Prompt engineer" as a title.</b> The skill spread into every role; the title fell 30–40% from its 2023 peak.</li>
+      <li><b>Routine dashboards, EDA and ad-hoc BI.</b> Gartner: 75% of analytics content GenAI-assisted by 2027.</li>
+      <li><b>Hand-tuned hyperparameter work and boilerplate coding.</b> AutoML and code generation made these nearly free.</li>
+      <li><b>Generic "GenAI experience."</b> Its share of postings is already falling.</li>
+      <li><b>Single-framework loyalty and multi-agent architectures.</b> 59% of production agentic requests make a single service call (Datadog). Frameworks churn; reliability skills survive the cull.</li>
+      <li><b>Generic eval metrics</b> (BERTScore, ROUGE, Likert "helpfulness"). Husain: they "create false confidence."</li>
+      <li><b>Certifications as differentiators.</b> A Databricks recruiter on the Data Engineer Associate cert: "adds nothing to the band."</li>
+      <li><b>Kaggle medals as a portfolio.</b> Cleaned datasets skip the problem-framing that dominates real work.</li>
+    </ul>
+  </div>
+
+  <h2>Role landscape</h2>
+  <div class="prose"><p>US total compensation from Levels.fyi as of 18 September 2026. Self-reported, skews senior and big-tech, so treat as an upper bound.</p></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Role</th><th>Demand</th><th class="num">Median TC</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="skill">AI Engineer (applied)</td><td><span class="chip up">#1 fastest-growing US role</span></td><td class="num">$153,750</td><td class="why">Median 3.7 years' prior experience. The widest entry door. Top cities SF, NYC, Dallas; 26% remote.</td></tr>
+      <tr><td class="skill">ML Engineer</td><td><span class="chip up">growing</span></td><td class="num">$280,000</td><td class="why">Big-tech and frontier-lab heavy (Apple median $386k). The gap vs AI Engineer is mostly employer mix, not proof the work pays badly.</td></tr>
+      <tr><td class="skill">Data Scientist</td><td><span class="chip">title splitting</span></td><td class="num">$180,000</td><td class="why">Occupation growing (BLS +33.5% to 2034) while the title loses share to AI/ML Engineer. Pay roughly flat in real terms.</td></tr>
+      <tr><td class="skill">Data Engineer</td><td><span class="chip up">quietly strong</span></td><td class="num">~$170,000</td><td class="why">Highest growth in AI-skill requirements across Lightcast's 16 markets. The most reliably employable stack.</td></tr>
+      <tr><td class="skill">Forward Deployed Engineer</td><td><span class="chip up">+800–1,000% postings (secondary)</span></td><td class="num">not tracked</td><td class="why">Domain depth plus willingness to sit with a customer's data. Named a defining 2026 trend by Latent Space; hard to fill.</td></tr>
+      <tr><td class="skill">AI Governance / Risk</td><td><span class="chip up">tiny base, fastest pay move</span></td><td class="num">~$169k (weak)</td><td class="why">Regulation-driven from December 2027.</td></tr>
+      <tr><td class="skill">Analytics Engineer</td><td><span class="chip dn">tooling commoditizing</span></td><td class="num">no reliable figure</td><td class="why">UK dbt and Airflow ads flat with medians falling; warehouse spend rising faster than team budgets.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>The 2026 stack that is actually winning</h2>
+  <div class="prose"><p>GitHub stars and PyPI monthly downloads pulled live on 18 September 2026. Stars measure attention; downloads measure use. Where they disagree, trust downloads.</p></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Layer</th><th>Use</th><th>Evidence</th></tr></thead>
+    <tbody>
+      <tr><td class="skill">Deep learning</td><td>PyTorch</td><td class="why">37.7% of AI-engineer postings vs TensorFlow 32.9%; 66M PyPI/mo. JAX real but niche.</td></tr>
+      <tr><td class="skill">Serving open weights</td><td>vLLM</td><td class="why">92k stars; consensus production server. SGLang the credible #2.</td></tr>
+      <tr><td class="skill">Agent orchestration</td><td>LangGraph for install base; OpenAI Agents SDK the fast riser; raw provider SDKs the practitioner favourite</td><td class="why">LangGraph 48.7M PyPI/mo. AutoGen stale since April. CrewAI's stars far exceed its usage. Anthropic's own guidance: reduce abstraction layers in production.</td></tr>
+      <tr><td class="skill">Tool protocol</td><td>MCP</td><td class="why">238.9M PyPI/mo; roughly 10,000 public servers; 41% of orgs in some production use.</td></tr>
+      <tr><td class="skill">Evals &amp; observability</td><td>Langfuse, Braintrust, LangSmith, Arize Phoenix</td><td class="why">No single winner; vendors' "features are very similar." Build error analysis and a custom annotation loop first.</td></tr>
+      <tr><td class="skill">Vector storage</td><td>pgvector on Postgres first; Qdrant or Milvus on measured pressure</td><td class="why">2026 community consensus: migrate on evidence, not anticipation.</td></tr>
+      <tr><td class="skill">Dataframes &amp; analytics</td><td>pandas remains the floor; DuckDB and Polars rising</td><td class="why">pandas 558.6M PyPI/mo vs ~55M each for DuckDB and Polars. "Polars replaced pandas" is narrative, not usage. Spark still the enterprise floor above ~100GB.</td></tr>
+      <tr><td class="skill">Orchestration &amp; transform</td><td>Airflow, dbt</td><td class="why">Airflow 47% install base (Dagster 6%); dbt-core 34.8M PyPI/mo. Iceberg only 9% in production.</td></tr>
+      <tr><td class="skill">Platforms</td><td>Databricks, Snowflake</td><td class="why">The clearest rising pay signal in UK posting data.</td></tr>
+      <tr><td class="skill">Open weights</td><td>Qwen family</td><td class="why">151k derivative models on the Hub, 2.6x Meta's footprint. Llama's local-inference lead is gone.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Where the evidence disagrees</h2>
+  <div class="prose">
+    <p>Read this before quoting any number from the map.</p>
+    <ul>
+      <li><b>AI wage premium: 17.7% vs 28% vs 62%.</b> Dice (within-tech), Lightcast (postings with vs without AI skills) and PwC (unconditional, 27 countries) measure different things. Dice is the closest like-for-like.</li>
+      <li><b>AI share of postings: 2.5% vs 6.3%.</b> Lightcast tags skills against a taxonomy; Indeed keyword-matches, and 74% of its hits say only "AI."</li>
+      <li><b>AI Engineer pays $126k less than ML Engineer on Levels.fyi.</b> A composition effect between title populations, not evidence the work pays badly. But "become an AI Engineer" is not automatically the highest-paying move.</li>
+      <li><b>Frameworks and MCP: infrastructure or overhead?</b> LangGraph and MCP have the adoption. Armin Ronacher, building agents in production, uses raw SDKs and moved off MCP entirely; Anthropic's engineering guidance also says to reduce abstraction. This is not converging.</li>
+      <li><b>The agentic cull.</b> Gartner: over 40% of agentic projects cancelled by end-2027. The historical pattern is cull-then-plateau, not cull-then-disappear. Skills that survive are reliability skills, not framework skills.</li>
+      <li><b>Bubble risk.</b> Goldman Sachs and Fortune draw 1999 parallels. A capex correction would compress comp before 2030 even if skill demand persists.</li>
+      <li><b>Trust paradox.</b> 84% of developers use AI tools; 3% highly trust the output (Stack Overflow 2025, n≈49,000). Practitioner adoption is ahead of practitioner trust, and hiring for verification has not caught up. That gap is the opportunity.</li>
+    </ul>
+  </div>
+
+  <h2>An 18-month plan</h2>
+  <div class="prose"><p>Assumes a working adult at 10–15 hours a week with some coding ability; about 6–9 months if you already have a CS or quantitative background. Strict order is not obligatory (fast.ai teaches top-down with good results), but SQL, statistics and evaluation discipline must never be permanently skipped.</p></div>
+
+  <div class="timeline">
+    <div class="tl">
+      <div class="mh">Month</div>
+      <div class="mh">1</div><div class="mh">2</div><div class="mh">3</div><div class="mh">4</div><div class="mh">5</div><div class="mh">6</div><div class="mh">7</div><div class="mh">8</div><div class="mh">9</div><div class="mh">10</div><div class="mh">11</div><div class="mh">12</div><div class="mh">13</div><div class="mh">14</div><div class="mh">15</div><div class="mh">16</div><div class="mh">17</div><div class="mh">18</div>
+
+      <div class="lab">Python + SQL<small>~100 hrs</small></div><div class="bar" style="--s:1;--e:3">Stage 0</div>
+      <div class="lab">Statistics &amp; linear algebra<small>~120 hrs</small></div><div class="bar" style="--s:3;--e:6">Stage 1</div>
+      <div class="lab">Classic ML<small>~100 hrs</small></div><div class="bar" style="--s:6;--e:8">Stage 2</div>
+      <div class="lab">Deep learning<small>~90 hrs, smaller than in 2022</small></div><div class="bar" style="--s:8;--e:10">Stage 3</div>
+      <div class="lab">LLMs, RAG, agents, evals<small>~150 hrs</small></div><div class="bar" style="--s:10;--e:13">Stage 4</div>
+      <div class="lab">MLOps &amp; data engineering<small>~120 hrs</small></div><div class="bar" style="--s:13;--e:16">Stage 5</div>
+      <div class="lab">Domain + writing<small>continuous</small></div><div class="bar thin" style="--s:1;--e:19"></div>
+      <div class="lab">Ship<small>portfolio milestones</small></div><div class="bar ms" style="--s:12;--e:14">app + eval harness</div>
+      <div class="lab"></div><div class="bar ms" style="--s:15;--e:17">pipeline w/ cost</div>
+      <div class="lab"></div><div class="bar ms" style="--s:17;--e:19">OSS + writing</div>
+    </div>
+  </div>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>Stage</th><th>What you must be able to do</th><th>Best free-first resources</th></tr></thead>
+    <tbody>
+      <tr><td class="skill">0 · Python + SQL</td><td class="why">pandas, SQL joins and window functions, JSON handling.</td><td class="why">Kaggle Learn micro-courses.</td></tr>
+      <tr><td class="skill">1 · Statistics &amp; linear algebra</td><td class="why">Distributions, hypothesis tests, experimental design, regression, enough matrices to read a matmul. The stage most self-learners skip and the hardest to retrofit.</td><td class="why">MIT OCW 18.06 (Strang), selectively. Coursera saw critical-thinking enrolments +185% among GenAI learners for exactly this reason.</td></tr>
+      <tr><td class="skill">2 · Classic ML</td><td class="why">Supervised and unsupervised learning, cross-validation, regularisation, tree ensembles, leakage, honest evaluation.</td><td class="why">Andrew Ng's Machine Learning Specialization (839k enrolled; the name recruiters know). Stanford CS229 notes as the rigour layer.</td></tr>
+      <tr><td class="skill">3 · Deep learning</td><td class="why">Backprop, CNNs and transformers, transfer learning, fine-tuning. Go deeper only if targeting ML or research roles.</td><td class="why">Karpathy's Zero to Hero; fast.ai (2022 recording, principles hold). Optional depth: Stanford CS336 (200–250 hrs), nanochat ($15–100 compute).</td></tr>
+      <tr><td class="skill">4 · LLMs, RAG, agents, evals</td><td class="why">Context engineering, retrieval, agent loops, error analysis, golden datasets, LLM-as-judge validated against human labels. "I can build a RAG demo" is table stakes; "I can prove whether it works" is the differentiator.</td><td class="why">Hugging Face LLM, Agents and MCP courses (free with certificates); hamel.dev evals FAQ; Anthropic's "Building Effective Agents" and "Demystifying evals for AI agents".</td></tr>
+      <tr><td class="skill">5 · MLOps &amp; data engineering</td><td class="why">AWS, containers, orchestration, monitoring, cost accounting for a nightly job.</td><td class="why">Full Stack Deep Learning (2022, principles only); Databricks and dbt documentation; the Databricks hiring-manager guide's three callback signals: production, cost, architecture.</td></tr>
+      <tr><td class="skill">6 · Domain + communication</td><td class="why">Attach AI to the industry you already know. Write publicly about what broke.</td><td class="why">Your current job is the resource. PwC's sector spread (16% to 118%) says the domain half is the expensive half.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="cols">
+    <div>
+      <h3>What to ship</h3>
+      <p class="small">New-grad tech hiring is down roughly 65–76% versus 2019 (SignalFire). You compete on evidence against experienced people. Three deep projects beat ten tutorials.</p>
+      <ol class="protocol">
+        <li><b>A deployed agentic app with at least one real user</b>, plus documented customer discovery.</li>
+        <li><b>An eval harness for that app.</b> Golden dataset, error analysis, code checks, a validated LLM-as-judge, and a write-up of what changed. Rare in portfolios; matches the scarcest skill.</li>
+        <li><b>An end-to-end data pipeline with a cost figure.</b> "Nightly job from $X to $Y" is the sentence that gets a callback.</li>
+        <li><b>Two substantive merged open-source PRs.</b> Not twenty typo fixes; maintainers are openly hostile to AI-generated CV padding.</li>
+        <li><b>Public writing</b> about what broke and what you learned.</li>
+      </ol>
+    </div>
+    <div>
+      <h3>Learning with AI without hollowing out fundamentals</h3>
+      <p class="small">Anthropic's randomised trial (Jan 2026): AI-assisted learners scored 50% vs 67% on concepts they had just used, with debugging worst hit. Learners who used AI for conceptual questioning did fine, and a Socratic AI tutor doubled learning gains in a Harvard trial. AI configured to make you think beats a good teacher; AI configured to save effort underperforms doing it yourself.</p>
+      <ol class="protocol">
+        <li><b>Attempt first, always.</b> Getting stuck is the mechanism, not the obstacle.</li>
+        <li><b>Use explanatory or study modes</b> when the goal is retention.</li>
+        <li><b>Ban paste-the-error debugging</b> while learning. It is the single behaviour most associated with poor outcomes.</li>
+        <li><b>Ask "why," then close the tab and re-derive.</b></li>
+        <li><b>Self-test without the tool.</b> Feeling fluent is not evidence.</li>
+        <li><b>Separate build mode from learn mode.</b> Full agentic help when shipping the portfolio; the protocol above when learning. Confusing them produces an impressive repo you cannot discuss in an interview.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="eyebrow">Certifications · the honest verdict</div>
+    <p style="margin:0">Every "certification adds 26% to salary" figure traces to training vendors with no methodology. The measured premium is for AI <b>skills in the posting</b>, not badges. Certs pass keyword filters and give study structure; they do not convince a technical hiring manager. With a fixed 100 hours, a shipped and evaluated project beats any exam on the list. Hugging Face certificates are free, so take them. AWS or Azure certs are worth it only if you are targeting that specific enterprise ecosystem.</p>
+  </div>
+
+  <h2>Method and key sources</h2>
+  <div class="prose"><p>Four Opus research agents ran in parallel on 18 September 2026, each making 50–110 searches and fetches, and each writing a fully cited report. The full reports, with every claim sourced and weak sources flagged, sit alongside this page in <span class="chip">research/sources/</span>. Known gaps: Reddit was uncrawlable; WEF, Gartner, PwC and McKinsey figures came via press releases; no primary labour series exists yet for vector databases, MCP or evals as tracked skills; the Stack Overflow 2026 survey was not yet published.</p></div>
+  <ul class="sources">
+    <li><a href="https://hai.stanford.edu/assets/files/ai_index_report_2026_chapter_4_economy.pdf">Stanford AI Index 2026, Economy chapter (Lightcast data)</a></li>
+    <li><a href="https://hiringlab.indeed.com/2026/07/23/the-labor-market-is-tilting-toward-seniority/">Indeed Hiring Lab, The labor market is tilting toward seniority</a></li>
+    <li><a href="https://lightcast.io/resources/blog/emerging-skills-in-ai-jobs">Lightcast, Emerging skills in AI jobs</a></li>
+    <li><a href="https://www.linkedin.com/pulse/linkedin-jobs-rise-2026-25-fastest-growing-roles-us-linkedin-news-dlb1c">LinkedIn Jobs on the Rise 2026</a></li>
+    <li><a href="https://www.pwc.com/gx/en/news-room/press-releases/2026/pwc-2026-ai-jobs-barometer.html">PwC 2026 Global AI Jobs Barometer</a></li>
+    <li><a href="https://digitaleconomy.stanford.edu/news/canariesaug26/">Stanford DEL, Canaries in the Coal Mine (Aug 2026)</a></li>
+    <li><a href="https://www.bls.gov/opub/ted/2026/artificial-intelligence-information-technology-and-employment-2024-34.htm">BLS, AI, IT and employment 2024–34</a></li>
+    <li><a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027">Gartner, 40% of agentic AI projects cancelled by 2027</a></li>
+    <li><a href="https://artificialintelligenceact.eu/implementation-timeline/">EU AI Act implementation timeline</a></li>
+    <li><a href="https://arxiv.org/abs/2608.20541">Sosa &amp; Betancourt, Statistics in the Age of AI</a></li>
+    <li><a href="https://hamel.dev/blog/posts/evals-faq/">Hamel Husain, AI evals FAQ</a></li>
+    <li><a href="https://www.langchain.com/state-of-agent-engineering">LangChain, State of Agent Engineering</a></li>
+    <li><a href="https://www.datadoghq.com/state-of-ai-engineering/">Datadog, State of AI Engineering</a></li>
+    <li><a href="https://lucumr.pocoo.org/2025/11/21/agents-are-hard/">Armin Ronacher, Agent design is still hard</a></li>
+    <li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic, Building effective agents</a></li>
+    <li><a href="https://www.anthropic.com/research/AI-assistance-coding-skills">Anthropic, How AI assistance impacts coding-skill formation (RCT)</a></li>
+    <li><a href="https://www.nature.com/articles/s41598-025-97652-6">Kestin et al., AI tutoring outperforms active learning (RCT)</a></li>
+    <li><a href="https://www.signalfire.com/blog/signalfire-state-of-talent-report-2026">SignalFire, State of Talent 2026</a></li>
+    <li><a href="https://dataengineerwiki.substack.com/p/the-databricks-hiring-managers-guide">Jakub Lasak, The Databricks hiring manager's guide</a></li>
+    <li><a href="https://huggingface.co/blog/state-of-open-models-summer-2026">Hugging Face, State of Open Models, Summer 2026</a></li>
+    <li><a href="https://survey.stackoverflow.co/2025/ai">Stack Overflow Developer Survey 2025, AI section</a></li>
+    <li><a href="https://www.levels.fyi/t/software-engineer/title/ai-engineer">Levels.fyi, AI Engineer and ML Engineer compensation</a></li>
+  </ul>
+</div>

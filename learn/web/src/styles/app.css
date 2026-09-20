@@ -1,0 +1,308 @@
+/* Shell, rail, controls. Spacing only from --s1…--s8; radii only from the tokens. */
+
+.shell {
+  display: grid;
+  grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  align-items: start;
+  min-height: 100%;
+}
+
+/* ----------------------------------------------------------------- rail */
+.rail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s6);
+  padding: var(--s7) var(--s5);
+  background: var(--surf);
+  border-right: 1px solid var(--line);
+}
+
+.rail-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: 0 var(--s2);
+}
+
+.rail-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  background: var(--vio);
+  display: grid;
+  place-items: center;
+  color: var(--on-vio);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.rail-brand h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.rail-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rail-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  padding: var(--s3) 12px;
+  border-radius: var(--r-btn);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink2);
+  text-decoration: none;
+}
+
+.rail-link:hover {
+  background: var(--surf2);
+  color: var(--ink2);
+  text-decoration: none;
+}
+
+.rail-link[aria-current="page"],
+.rail-link[data-active="true"] {
+  background: var(--vio-soft);
+  color: var(--vio);
+  font-weight: 650;
+}
+
+.rail-badge {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail-link[aria-current="page"] .rail-badge,
+.rail-link[data-active="true"] .rail-badge {
+  color: var(--vio);
+}
+
+.rail-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.rail-note {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink3);
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------- session card */
+.session-card {
+  border-radius: var(--r-inner);
+  padding: var(--s4);
+  background: var(--vio-soft);
+  border: 1px solid var(--vio-line);
+}
+
+.session-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s2);
+}
+
+.session-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vio);
+}
+
+.session-clock {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.session-module {
+  display: block;
+  margin-top: var(--s2);
+  font-size: 13px;
+  color: var(--ink2);
+}
+
+.session-phases {
+  margin-top: var(--s3);
+  display: flex;
+  gap: var(--s1);
+}
+
+.session-phases button {
+  flex: 1;
+  padding: 5px 0;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--vio);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.session-phases button[aria-pressed="true"] {
+  background: var(--vio);
+  color: var(--on-vio);
+}
+
+.session-idle {
+  border-radius: var(--r-inner);
+  padding: var(--s4);
+  background: var(--surf2);
+  border: 1px solid var(--line);
+}
+
+.session-idle p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.45;
+}
+
+.session-card .btn-wide,
+.session-idle .btn-wide {
+  margin-top: var(--s3);
+}
+
+/* -------------------------------------------------------------- buttons */
+.btn {
+  padding: 8px var(--s5);
+  border-radius: var(--r-btn);
+  border: 1px solid var(--line);
+  background: var(--surf);
+  color: var(--ink2);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--vio-line);
+  color: var(--vio);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  border-color: var(--vio);
+  background: var(--vio);
+  color: var(--on-vio);
+}
+
+.btn-primary:hover:not(:disabled) {
+  color: var(--on-vio);
+  filter: brightness(1.06);
+}
+
+.btn-soft {
+  border-color: var(--vio-line);
+  background: var(--vio-soft);
+  color: var(--vio);
+}
+
+.btn-wide {
+  width: 100%;
+  display: block;
+}
+
+.btn-big {
+  padding: var(--s4) var(--s7);
+  border-radius: var(--r-inner);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.btn-inline {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--vio);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------- chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  padding: 3px var(--s3);
+  border-radius: 999px;
+  background: var(--surf2);
+  border: 1px solid var(--line);
+  color: var(--ink3);
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+.chip[data-tone="good"] {
+  background: var(--good-soft);
+  border-color: var(--good-line);
+  color: var(--good);
+}
+
+.chip[data-tone="amber"] {
+  background: var(--amber-soft);
+  border-color: var(--amber-line);
+  color: var(--amber);
+}
+
+.chip[data-tone="vio"] {
+  background: var(--vio-soft);
+  border-color: var(--vio-line);
+  color: var(--vio);
+}
+
+/* ------------------------------------------------------- appearance toggle */
+.theme-seg {
+  display: flex;
+  gap: var(--s1);
+  padding: 3px;
+  border-radius: var(--r-sm);
+  background: var(--surf2);
+  border: 1px solid var(--line);
+}
+
+.theme-seg-btn {
+  flex: 1;
+  padding: 5px 0;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.theme-seg-btn:hover {
+  color: var(--ink2);
+}
+
+.theme-seg-btn[aria-pressed="true"] {
+  background: var(--surf);
+  color: var(--vio);
+  font-weight: 500;
+  box-shadow: var(--shadow);
+}

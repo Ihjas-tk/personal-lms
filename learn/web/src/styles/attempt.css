@@ -1,0 +1,228 @@
+/* The check attempt, staged: prompt card, how sure, write, compare, self-grade. */
+
+.attempt-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s5);
+  margin-bottom: var(--s5);
+  flex-wrap: wrap;
+}
+
+.stages {
+  display: flex;
+  gap: var(--s2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stages li {
+  padding: 7px var(--s4);
+  border-radius: var(--r-btn);
+  border: 1px solid var(--line);
+  background: var(--surf);
+  color: var(--ink3);
+  font-size: 12.5px;
+}
+
+.stages li[data-now="true"] {
+  background: var(--vio-soft);
+  border-color: var(--vio);
+  color: var(--vio);
+  font-weight: 600;
+}
+
+.attempt-col {
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+
+.prompt-card,
+.stage-card {
+  border-radius: 18px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 28px 32px;
+}
+
+.prompt-tags {
+  display: flex;
+  gap: var(--s3);
+  align-items: center;
+  margin-bottom: var(--s4);
+  flex-wrap: wrap;
+}
+
+.prompt-kind {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.prompt-text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1.35;
+}
+
+.stage-card h2 {
+  margin: 0 0 var(--s1);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.stage-sub {
+  margin: 0 0 var(--s6);
+  font-size: 13px;
+  color: var(--ink3);
+}
+
+.stage-foot {
+  margin: var(--s5) 0 0;
+  font-size: 12.5px;
+  color: var(--ink3);
+}
+
+.sure {
+  display: flex;
+  align-items: center;
+  gap: var(--s6);
+}
+
+.sure input[type="range"] {
+  flex: 1;
+  accent-color: var(--vio);
+}
+
+.sure-read {
+  font-size: 22px;
+  width: 64px;
+  text-align: right;
+}
+
+.sure-ends {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.stage-card .btn-big {
+  margin-top: var(--s7);
+}
+
+/* --------------------------------------------------------- stage 2 */
+.stage-write {
+  padding: 0;
+  overflow: hidden;
+}
+
+.stage-write header {
+  padding: var(--s4) var(--s6);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s4);
+  font-size: 13px;
+  color: var(--ink2);
+}
+
+.stage-write header .mono {
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.write-body {
+  padding: var(--s6);
+}
+
+.write-body .cm-editor {
+  min-height: 220px;
+  line-height: 1.75;
+}
+
+.stage-write .stage-foot {
+  margin: var(--s3) 0 0;
+}
+
+.stage-write footer {
+  padding: var(--s5) var(--s6);
+  border-top: 1px solid var(--line);
+  background: var(--surf2);
+  display: flex;
+  align-items: center;
+  gap: var(--s5);
+  flex-wrap: wrap;
+}
+
+.stage-write footer span,
+.attempt-foot span {
+  font-size: 12.5px;
+  color: var(--ink3);
+}
+
+/* --------------------------------------------------------- stage 3 */
+.compare {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+  /* Side by side means side by side: the panes share a top and a baseline. */
+  align-items: stretch;
+}
+
+.compare-pane {
+  border-radius: 18px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.compare-pane header {
+  padding: var(--s4) var(--s5);
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--ink3);
+}
+
+.compare-pane pre {
+  margin: 0;
+  padding: var(--s5);
+  white-space: pre-wrap;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--ink2);
+}
+
+.compare-ref {
+  background: var(--vio-soft);
+  border-color: var(--vio-line);
+}
+
+.compare-ref header {
+  border-bottom-color: var(--vio-line);
+  color: var(--vio);
+  font-weight: 600;
+}
+
+.compare-ref-body {
+  padding: var(--s5);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ink2);
+}
+
+@media (max-width: 62rem) {
+  .compare {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

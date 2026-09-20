@@ -1,0 +1,231 @@
+/* Overlays and the attempt surfaces the B2 pass will re-cut. */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 16, 32, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--s8) var(--s5);
+  overflow-y: auto;
+  z-index: 40;
+}
+
+.sheet {
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--s6) var(--s7);
+  width: min(720px, 100%);
+}
+
+.sheet.wide {
+  width: min(1120px, 100%);
+}
+
+.menu {
+  position: relative;
+  display: inline-block;
+}
+
+.menu-list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--s1));
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: var(--r-inner);
+  padding: var(--s1);
+  min-width: 15rem;
+  z-index: 20;
+  box-shadow: var(--shadow);
+}
+
+.menu-list button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: var(--s2) var(--s3);
+}
+
+.merge-host {
+  border: 1px solid var(--line);
+  border-radius: var(--r-inner);
+  overflow: auto;
+  max-height: 60vh;
+}
+
+.merge-host .cm-mergeView {
+  min-height: 20rem;
+}
+
+/*
+ * CodeMirror's merge view ships a light-mode default for the collapsed-lines
+ * widget — a pale gradient with `color: #444` — which painted a white bar across
+ * the diff in dark mode. It is the one part of the merge view that does not use
+ * an alpha colour, so it is the one part that has to be told about the theme.
+ */
+.merge-host .cm-editor .cm-collapsedLines {
+  background: var(--surf2);
+  background-image: none;
+  color: var(--ink3);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.merge-host .cm-editor .cm-collapsedLines:hover {
+  background: var(--vio-soft);
+  color: var(--vio);
+}
+
+/* The change gutter is the other light-mode default in there. */
+.merge-host .cm-editor .cm-gutters {
+  background: var(--surf2);
+  color: var(--ink3);
+  border-right: 1px solid var(--line);
+}
+
+.banner {
+  border: 1px solid var(--amber-line);
+  background: var(--amber-soft);
+  color: var(--amber);
+  border-radius: var(--r-inner);
+  padding: var(--s3) var(--s4);
+  margin-bottom: var(--s4);
+  font-size: 13px;
+}
+
+.banner.plain {
+  border-color: var(--line);
+  background: var(--surf2);
+  color: var(--ink2);
+}
+
+.seg {
+  display: inline-flex;
+  gap: var(--s1);
+}
+
+.seg button {
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 5px var(--s3);
+  font-size: 12px;
+  background: var(--surf);
+  color: var(--ink3);
+}
+
+.seg button[aria-pressed="true"],
+.seg button[aria-selected="true"] {
+  background: var(--vio-soft);
+  border-color: var(--vio);
+  color: var(--vio);
+  font-weight: 600;
+}
+
+@media (max-width: 78rem) {
+  .trio,
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat + .stat {
+    border-left: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .band-grid,
+  .debrief-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .debrief-side {
+    position: static;
+  }
+
+  .ridge {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: var(--s7);
+  }
+}
+
+/* --------------------------------------------- B2: note conflict §6.2 */
+.conflict {
+  border-radius: var(--r-card);
+  background: var(--surf);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: var(--s4);
+}
+
+.conflict-body {
+  padding: var(--s5) var(--s6);
+  border-left: 4px solid var(--amber);
+  background: var(--amber-soft);
+}
+
+.conflict-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--amber);
+}
+
+.conflict-sub {
+  margin: var(--s2) 0 0;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.55;
+}
+
+.conflict-exits {
+  margin-top: var(--s4);
+  display: flex;
+  gap: var(--s3);
+  flex-wrap: wrap;
+}
+
+.conflict-legend {
+  margin: var(--s3) var(--s6) var(--s2);
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+.conflict-status {
+  padding: 12px var(--s6);
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+/* ------------------------------------------------ B2: AI menu §6.3 */
+.menu-reason {
+  margin: 0;
+  padding: 12px var(--s4);
+  background: var(--surf2);
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.5;
+}
+
+.menu-reason code {
+  font-size: 11.5px;
+}
+
+.menu-list button[role="menuitem"] {
+  padding: 12px var(--s4);
+  font-size: 13px;
+  color: var(--ink3);
+  border-bottom: 1px solid var(--line);
+}
+
+.menu-list button[role="menuitem"]:last-child {
+  border-bottom: none;
+}

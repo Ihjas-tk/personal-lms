@@ -1,0 +1,970 @@
+{
+  "health": {
+    "ok": true,
+    "ai_available": false,
+    "ai_reason": "No API credential found. Run `ant auth login`, or set `ANTHROPIC_API_KEY`.",
+    "vault_git": true
+  },
+  "module": {
+    "id": "a1",
+    "phase": "p1",
+    "track": "llm",
+    "title": "Transformers from scratch",
+    "weeks": [
+      3,
+      8
+    ],
+    "budget_hours": 70,
+    "actual_hours": 74.5,
+    "soft_date": "2026-11-16",
+    "offset_weeks": 0,
+    "state": "familiar",
+    "coverage": 0.5,
+    "must_cover": [
+      "Causal self-attention",
+      "BPE tokenization"
+    ],
+    "resources": [
+      {
+        "id": "a1-karpathy-gpt",
+        "title": "Karpathy, Let's build GPT",
+        "kind": "video",
+        "url": "https://www.youtube.com/watch?v=kCc8FmEb1nY",
+        "est_minutes": 480,
+        "state": "read",
+        "minutes": 120,
+        "path": null,
+        "position": 95,
+        "position_updated": null,
+        "length": 116,
+        "unit": "min",
+        "pct": 0.819,
+        "meta": "video \u00b7 95 of 116 min",
+        "action": "Resume",
+        "counts": false
+      }
+    ],
+    "checks": [
+      {
+        "id": "a1-mha-from-memory",
+        "module": "a1",
+        "type": "code",
+        "must_cover": true,
+        "prompt": "Write multi-head causal self-attention from memory.",
+        "state": "familiar",
+        "next_due": "2026-09-21",
+        "last_score": "partial",
+        "attempt_count": 2,
+        "draft_reference": true,
+        "check_id": "a1-mha-from-memory",
+        "module_id": "a1",
+        "overdue_days": 14,
+        "at_risk": true,
+        "durable": false,
+        "overconfident_miss": true,
+        "warning": "14 days overdue",
+        "action": "Re-test",
+        "topic_id": "attention"
+      },
+      {
+        "id": "a1-bpe-explain",
+        "module": "a1",
+        "type": "explain",
+        "must_cover": true,
+        "prompt": "Explain BPE merges.",
+        "state": "durable",
+        "next_due": "2026-11-18",
+        "last_score": "fluent",
+        "attempt_count": 3,
+        "draft_reference": false,
+        "check_id": "a1-bpe-explain",
+        "module_id": "a1",
+        "overdue_days": 0,
+        "at_risk": false,
+        "durable": true,
+        "warning": null,
+        "action": "Re-test",
+        "topic_id": "attention"
+      }
+    ],
+    "capstone": [
+      {
+        "id": "golden-dataset",
+        "title": "The golden dataset",
+        "description": "150 labelled rows.",
+        "modules": [
+          "a1"
+        ],
+        "state": "draft",
+        "path": "vault/capstone/golden.md",
+        "notes": "",
+        "next_action": "Label the last 40 rows."
+      }
+    ],
+    "area_id": "transformers",
+    "overdue_retests": 1,
+    "step_summary": "1 proved \u00b7 1 in progress \u00b7 0 untouched",
+    "topics": [
+      {
+        "id": "tokenization",
+        "title": "BPE tokenization",
+        "summary": "A merge table learned from a corpus, and what breaks downstream when it is wrong.",
+        "kind": "idea",
+        "n": 1,
+        "state": "proved",
+        "sources": [],
+        "note": {
+          "exists": false,
+          "path": "a1/tokenization.md",
+          "excerpt": "",
+          "updated": null
+        },
+        "checks": [
+          {
+            "id": "a1-bpe-explain",
+            "module": "a1",
+            "type": "explain",
+            "must_cover": true,
+            "prompt": "Explain BPE merges.",
+            "state": "durable",
+            "next_due": "2026-11-18",
+            "last_score": "fluent",
+            "attempt_count": 3,
+            "draft_reference": false,
+            "check_id": "a1-bpe-explain",
+            "module_id": "a1",
+            "overdue_days": 0,
+            "at_risk": false,
+            "durable": true,
+            "warning": null,
+            "action": "Re-test",
+            "topic_id": "tokenization"
+          }
+        ],
+        "proof_text": "1 of 1 solid"
+      },
+      {
+        "id": "attention",
+        "title": "Causal self-attention",
+        "summary": "One head, the mask before the softmax, and the shapes through a multi-head merge.",
+        "kind": "idea",
+        "n": 2,
+        "state": "in_progress",
+        "sources": [
+          {
+            "id": "a1-karpathy-gpt",
+            "title": "Karpathy, Let's build GPT",
+            "kind": "video",
+            "url": "https://www.youtube.com/watch?v=kCc8FmEb1nY",
+            "est_minutes": 480,
+            "state": "read",
+            "minutes": 120,
+            "path": null,
+            "position": 95,
+            "position_updated": null,
+            "length": 116,
+            "unit": "min",
+            "pct": 0.819,
+            "meta": "video \u00b7 95 of 116 min",
+            "action": "Resume",
+            "counts": false
+          }
+        ],
+        "note": {
+          "exists": true,
+          "path": "a1/attention.md",
+          "excerpt": "## Scaled dot-product attention\nOne head, with the causal mask added before the softmax.",
+          "updated": "2026-09-19T09:00:00+00:00"
+        },
+        "checks": [
+          {
+            "id": "a1-mha-from-memory",
+            "module": "a1",
+            "type": "code",
+            "must_cover": true,
+            "prompt": "Write multi-head causal self-attention from memory.",
+            "state": "familiar",
+            "next_due": "2026-09-21",
+            "last_score": "partial",
+            "attempt_count": 2,
+            "draft_reference": true,
+            "check_id": "a1-mha-from-memory",
+            "module_id": "a1",
+            "overdue_days": 14,
+            "at_risk": true,
+            "durable": false,
+            "overconfident_miss": true,
+            "warning": "14 days overdue",
+            "action": "Re-test",
+            "topic_id": "attention"
+          }
+        ],
+        "proof_text": "0 of 1 solid"
+      }
+    ],
+    "chores": [
+      {
+        "topic_id": "pick-lane",
+        "title": "Pick one lane: Raschka ch 2\u20135 or CS336 Assignment 1, not both",
+        "done": true,
+        "done_at": "2026-09-10T18:00:00+00:00"
+      },
+      {
+        "topic_id": "setup-gpu",
+        "title": "Rent a GPU (Modal or RunPod) and run one nanochat step",
+        "done": false,
+        "done_at": null
+      }
+    ],
+    "habits": [
+      {
+        "topic_id": "habit-cannot",
+        "title": "at the end of every session, write the one thing you still cannot do"
+      }
+    ],
+    "all_notes": [
+      {
+        "path": "a1/notes.md",
+        "topic_id": null,
+        "updated": "2026-09-01T10:00:00+00:00",
+        "words": 40
+      },
+      {
+        "path": "a1/attention.md",
+        "topic_id": "attention",
+        "updated": "2026-09-19T09:00:00+00:00",
+        "words": 220
+      }
+    ],
+    "behind": true,
+    "expected_hours_by_now": 11.67
+  },
+  "note": {
+    "frontmatter": {
+      "title": "Transformers from scratch",
+      "status": "wip"
+    },
+    "body": "# Attention\n\nThe scale is $\\frac{1}{\\sqrt{d_k}}$.\n\n```python\nimport torch\n\ndef sdpa(q, k, v):\n    return torch.softmax(q @ k.T, dim=-1) @ v\n```\n",
+    "mtime_ns": 1758000000000000000
+  },
+  "check": {
+    "id": "a1-mha-from-memory",
+    "module": "a1",
+    "type": "code",
+    "must_cover": true,
+    "prompt": "Write multi-head causal self-attention from memory.",
+    "state": "familiar",
+    "next_due": "2026-09-21",
+    "last_score": "partial",
+    "attempt_count": 2,
+    "draft_reference": true,
+    "rubric": [
+      "Scaled dot-product with 1/sqrt(d_k)",
+      "Causal mask applied before softmax with -inf"
+    ],
+    "attempts": [],
+    "topic_id": "attention"
+  },
+  "attemptStart": {
+    "attempt_path": "vault/modules/a1/attempts/a1-mha-from-memory--2026-09-19T10:00:00+04:00.md",
+    "check_id": "a1-mha-from-memory",
+    "started": "2026-09-19T10:00:00+04:00"
+  },
+  "attemptSubmit": {
+    "attempt_path": "vault/modules/a1/attempts/a1-mha-from-memory--2026-09-19T10:00:00+04:00.md",
+    "score": "partial",
+    "reference": "```python\n# reference implementation\n```",
+    "next_due": "2026-09-21",
+    "state": "familiar",
+    "overconfident_miss": false
+  },
+  "desk": {
+    "first_run": false,
+    "week_now": 10,
+    "weeks_total": 40,
+    "plan": {
+      "text": "IF it is Tuesday and the laptop is already open THEN I will work the sample-size arithmetic for the held-out judge slice.",
+      "written_on": "Sunday"
+    },
+    "start_label": "Start \u00b7 about 2 hours",
+    "first_action": null,
+    "warmup": [
+      {
+        "check_id": "a1-mha-from-memory",
+        "module_id": "a1",
+        "prompt": "Write multi-head causal self-attention from memory on a blank page, with a correct mask and correct shapes.",
+        "reason": "14 days overdue \u00b7 you were sure and wrong last time",
+        "chip": "due"
+      },
+      {
+        "check_id": "a1-bpe",
+        "module_id": "a1",
+        "prompt": "Implement BPE training and encoding: learn a merge table from a corpus and encode a new string with it.",
+        "reason": "14 days overdue",
+        "chip": "due"
+      }
+    ],
+    "standing": {
+      "checks_lasting": 2,
+      "core_total": 84,
+      "artefacts_exist": 1,
+      "artefacts_total": 8,
+      "artefact_note": "the golden dataset is in draft",
+      "weeks_left": 30,
+      "weekly_budget": 12,
+      "skips_banked": 2
+    },
+    "ridge": [
+      {
+        "area_id": "transformers",
+        "title": "Transformers and training",
+        "scope": "weeks 3\u20138 \u00b7 1 module",
+        "counts": {
+          "lasting": 1,
+          "solid": 1,
+          "shaky": 1,
+          "tried": 1,
+          "untouched": 7
+        },
+        "delta_4w": 1
+      },
+      {
+        "area_id": "evals-found",
+        "title": "Error analysis and taxonomies",
+        "scope": "weeks 9\u201314 \u00b7 1 module",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 1,
+          "tried": 1,
+          "untouched": 4
+        },
+        "delta_4w": 2
+      },
+      {
+        "area_id": "datasets",
+        "title": "Datasets and judges",
+        "scope": "weeks 9\u201314 \u00b7 2 modules",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 0,
+          "tried": 1,
+          "untouched": 11
+        },
+        "delta_4w": 1
+      },
+      {
+        "area_id": "context",
+        "title": "Prompting and context",
+        "scope": "weeks 9\u201314 \u00b7 1 module",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 0,
+          "tried": 0,
+          "untouched": 6
+        },
+        "delta_4w": 0
+      },
+      {
+        "area_id": "rag",
+        "title": "Retrieval and RAG evals",
+        "scope": "weeks 9\u201318 \u00b7 3 modules",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 0,
+          "tried": 0,
+          "untouched": 19
+        },
+        "delta_4w": 0
+      },
+      {
+        "area_id": "agents",
+        "title": "Agents, production, safety",
+        "scope": "weeks 19\u201330 \u00b7 6 modules",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 0,
+          "tried": 0,
+          "untouched": 32
+        },
+        "delta_4w": 0
+      }
+    ],
+    "gains": {
+      "lasting_delta_4w": 1,
+      "solid_delta_4w": 1,
+      "checks_attempted_4w": 4,
+      "hours_4w": 17.5
+    },
+    "calibration_by_week": [
+      {
+        "week": 7,
+        "brier": 0.52
+      },
+      {
+        "week": 8,
+        "brier": 0.48
+      },
+      {
+        "week": 9,
+        "brier": 0.44
+      },
+      {
+        "week": 10,
+        "brier": 0.39
+      }
+    ],
+    "newly_proved": [
+      {
+        "check_id": "a1-tokenization-failures",
+        "module_id": "a1",
+        "prompt": "Name three model failures that trace back to tokenization",
+        "date": "2026-09-10",
+        "state": "proficient"
+      }
+    ],
+    "hours": {
+      "new": 1.7,
+      "review": 1.4,
+      "build": 1.7,
+      "budget": 12
+    },
+    "slipping": "Two checks are 14 days past their re-test and one was missed while you were sure."
+  },
+  "deskFirstRun": {
+    "first_run": true,
+    "week_now": 1,
+    "weeks_total": 40,
+    "plan": null,
+    "start_label": "Start the first session",
+    "first_action": {
+      "label": "Start with one thing: explain, without notes, the difference between pretraining, SFT, RLHF and inference-time scaling.",
+      "module_id": "a0",
+      "check_id": "a0-stages"
+    },
+    "warmup": [
+      {
+        "check_id": "a0-stages",
+        "module_id": "a0",
+        "prompt": "Explain to a colleague the difference between pretraining, SFT, RLHF and inference-time scaling.",
+        "reason": "first thing in the track \u2014 nothing attempted yet",
+        "chip": "new"
+      }
+    ],
+    "standing": {
+      "checks_lasting": 0,
+      "core_total": 84,
+      "artefacts_exist": 0,
+      "artefacts_total": 8,
+      "artefact_note": null,
+      "weeks_left": 40,
+      "weekly_budget": 12,
+      "skips_banked": 0
+    },
+    "ridge": [
+      {
+        "area_id": "transformers",
+        "title": "Transformers and training",
+        "scope": "weeks 3\u20138 \u00b7 1 module",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 0,
+          "tried": 0,
+          "untouched": 11
+        },
+        "delta_4w": 0
+      },
+      {
+        "area_id": "evals-found",
+        "title": "Error analysis and taxonomies",
+        "scope": "weeks 9\u201314 \u00b7 1 module",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 0,
+          "tried": 0,
+          "untouched": 6
+        },
+        "delta_4w": 0
+      },
+      {
+        "area_id": "datasets",
+        "title": "Datasets and judges",
+        "scope": "weeks 9\u201314 \u00b7 2 modules",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 0,
+          "tried": 0,
+          "untouched": 12
+        },
+        "delta_4w": 0
+      },
+      {
+        "area_id": "context",
+        "title": "Prompting and context",
+        "scope": "weeks 9\u201314 \u00b7 1 module",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 0,
+          "tried": 0,
+          "untouched": 6
+        },
+        "delta_4w": 0
+      },
+      {
+        "area_id": "rag",
+        "title": "Retrieval and RAG evals",
+        "scope": "weeks 9\u201318 \u00b7 3 modules",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 0,
+          "tried": 0,
+          "untouched": 19
+        },
+        "delta_4w": 0
+      },
+      {
+        "area_id": "agents",
+        "title": "Agents, production, safety",
+        "scope": "weeks 19\u201330 \u00b7 6 modules",
+        "counts": {
+          "lasting": 0,
+          "solid": 0,
+          "shaky": 0,
+          "tried": 0,
+          "untouched": 32
+        },
+        "delta_4w": 0
+      }
+    ],
+    "gains": {
+      "lasting_delta_4w": 0,
+      "solid_delta_4w": 0,
+      "checks_attempted_4w": 0,
+      "hours_4w": 0.0
+    },
+    "calibration_by_week": [],
+    "newly_proved": [],
+    "hours": {
+      "new": 0,
+      "review": 0,
+      "build": 0,
+      "budget": 12
+    },
+    "slipping": "Nothing can slip yet. Checks start coming back two days after your first attempt."
+  },
+  "track": {
+    "start_date": "2026-07-06",
+    "end_date": "2027-04-12",
+    "week_now": 10,
+    "weeks_total": 40,
+    "headline": {
+      "lasting_pct": 2,
+      "attempted_pct": 7,
+      "core_total": 84,
+      "lasting_total": 2
+    },
+    "offset_weeks": 0,
+    "offset_from": null,
+    "weeks": [
+      {
+        "week": 1,
+        "state": "past",
+        "phase_id": null
+      },
+      {
+        "week": 2,
+        "state": "past",
+        "phase_id": null
+      },
+      {
+        "week": 3,
+        "state": "past",
+        "phase_id": null
+      },
+      {
+        "week": 4,
+        "state": "past",
+        "phase_id": null
+      },
+      {
+        "week": 5,
+        "state": "past",
+        "phase_id": null
+      },
+      {
+        "week": 6,
+        "state": "past",
+        "phase_id": null
+      },
+      {
+        "week": 7,
+        "state": "past",
+        "phase_id": null
+      },
+      {
+        "week": 8,
+        "state": "past",
+        "phase_id": null
+      },
+      {
+        "week": 9,
+        "state": "phase",
+        "phase_id": "p2"
+      },
+      {
+        "week": 10,
+        "state": "current",
+        "phase_id": "p2"
+      },
+      {
+        "week": 11,
+        "state": "phase",
+        "phase_id": "p2"
+      },
+      {
+        "week": 12,
+        "state": "phase",
+        "phase_id": "p2"
+      },
+      {
+        "week": 13,
+        "state": "phase",
+        "phase_id": "p2"
+      },
+      {
+        "week": 14,
+        "state": "phase",
+        "phase_id": "p2"
+      },
+      {
+        "week": 15,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 16,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 17,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 18,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 19,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 20,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 21,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 22,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 23,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 24,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 25,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 26,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 27,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 28,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 29,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 30,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 31,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 32,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 33,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 34,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 35,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 36,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 37,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 38,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 39,
+        "state": "future",
+        "phase_id": null
+      },
+      {
+        "week": 40,
+        "state": "future",
+        "phase_id": null
+      }
+    ],
+    "unfinished": [
+      {
+        "module_id": "a1",
+        "title": "Transformers from scratch",
+        "track": "llm",
+        "weeks": [
+          3,
+          8
+        ],
+        "due": "2026-09-05",
+        "tone": "late",
+        "hours_logged": 3.0,
+        "hours_budget": 70,
+        "proof": {
+          "total": 11,
+          "lasting": 1,
+          "solid": 0,
+          "partial": 2
+        },
+        "proof_text": "1 of 11 lasting",
+        "warning": "two checks 14 days overdue",
+        "action": "Resume",
+        "artefact_state": null
+      }
+    ],
+    "this_phase": {
+      "phase_id": "p2",
+      "title": "v0 app + evals foundation",
+      "weeks": [
+        9,
+        14
+      ],
+      "hours_budget": 115,
+      "order_note": "Do them in this order: error analysis before judges, judges before the harness.",
+      "rows": [
+        {
+          "module_id": "b0",
+          "title": "Error analysis first",
+          "track": "evals",
+          "weeks": [
+            9,
+            14
+          ],
+          "due": "2026-10-17",
+          "tone": "now",
+          "hours_logged": 2.0,
+          "hours_budget": 16,
+          "proof": {
+            "total": 6,
+            "lasting": 0,
+            "solid": 0,
+            "partial": 2
+          },
+          "proof_text": "2 of 6 attempted",
+          "warning": "one re-test overdue",
+          "action": "Open",
+          "artefact_state": null
+        },
+        {
+          "module_id": "b1",
+          "title": "Golden dataset",
+          "track": "evals",
+          "weeks": [
+            9,
+            14
+          ],
+          "due": "2026-10-17",
+          "tone": "now",
+          "hours_logged": 2.8,
+          "hours_budget": 14,
+          "proof": {
+            "total": 5,
+            "lasting": 0,
+            "solid": 0,
+            "partial": 1
+          },
+          "proof_text": "1 of 5 attempted",
+          "warning": null,
+          "action": "Open",
+          "artefact_state": "draft"
+        },
+        {
+          "module_id": "b2",
+          "title": "Judge design & calibration",
+          "track": "evals",
+          "weeks": [
+            9,
+            14
+          ],
+          "due": "2026-10-17",
+          "tone": "now",
+          "hours_logged": 0.0,
+          "hours_budget": 20,
+          "proof": {
+            "total": 7,
+            "lasting": 0,
+            "solid": 0,
+            "partial": 0
+          },
+          "proof_text": "0 of 7 attempted",
+          "warning": "needs Golden dataset first",
+          "action": "Open",
+          "artefact_state": null
+        }
+      ]
+    },
+    "later": [
+      {
+        "module_id": "c0",
+        "title": "RAG evaluation \u00b7 Offline, online, CI and A/B",
+        "track": "llm",
+        "weeks": [
+          15,
+          18
+        ],
+        "due": null,
+        "tone": "later",
+        "hours_logged": 0.0,
+        "hours_budget": 32,
+        "proof": {
+          "total": 11,
+          "lasting": 0,
+          "solid": 0,
+          "partial": 0
+        },
+        "proof_text": "11 core checks",
+        "warning": null,
+        "action": "Preview",
+        "artefact_state": null
+      }
+    ]
+  },
+  "topicNote": {
+    "frontmatter": {
+      "topic": "attention",
+      "title": "Causal self-attention",
+      "updated": null
+    },
+    "body": "## Scaled dot-product attention\n\nOne head, mask before softmax.\n",
+    "mtime_ns": 1758000000000000000,
+    "path": "a1/attention.md"
+  },
+  "jots": [
+    {
+      "id": "jot-1",
+      "ts": "2026-09-19T19:00:00+00:00",
+      "module_id": "a1",
+      "topic_id": "attention",
+      "resource_id": "a1-karpathy-gpt",
+      "stamp": "41:02",
+      "text": "He reshapes before the transpose \u2014 check whether the order matters.",
+      "filed": false
+    },
+    {
+      "id": "jot-2",
+      "ts": "2026-09-19T19:04:00+00:00",
+      "module_id": "a1",
+      "topic_id": "attention",
+      "resource_id": "a1-karpathy-gpt",
+      "stamp": "38:44",
+      "text": "Dropout sits after the softmax, before the value multiply.",
+      "filed": false
+    }
+  ],
+  "attemptFreeze": {
+    "attempt_path": "vault/modules/a1/attempts/a1-mha-from-memory--2026-09-19T10:00:00+04:00.md",
+    "reference": "```python\n# reference implementation\n```",
+    "draft_reference": true,
+    "rubric": [
+      "Scaled dot-product with 1/sqrt(d_k)",
+      "Causal mask applied before softmax with -inf"
+    ],
+    "frozen": "2026-09-19T10:14:00+04:00"
+  },
+  "session": {
+    "id": "s1",
+    "module_id": "a1",
+    "started": "2026-09-19T18:00:00+00:00",
+    "closed": null,
+    "phase": "review",
+    "minutes": {
+      "new": 40,
+      "review": 60,
+      "build": 34
+    },
+    "elapsed_seconds": 8040,
+    "warmup_skipped": false,
+    "open_attempt_path": null,
+    "checks_attempted": 1,
+    "errors_logged": 1
+  }
+}

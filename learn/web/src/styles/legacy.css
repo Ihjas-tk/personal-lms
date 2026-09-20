@@ -1,0 +1,250 @@
+/**
+ * Classes the not-yet-re-cut components still use — the module page and its tabs,
+ * AttemptFlow, TidyDialog, NoteEditor, CritiquePanel, SelfGrade, CloseSessionDialog.
+ * B2 replaces these screens; until then they run on the new palette.
+ */
+
+:root {
+  --radius: var(--r-btn);
+}
+
+h2 {
+  font-size: 23px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0 0 var(--s1);
+}
+
+h3 {
+  font-size: 15px;
+  margin: var(--s7) 0 var(--s3);
+  font-weight: 700;
+}
+
+h4 {
+  font-size: 13.5px;
+  margin: 0 0 var(--s2);
+  font-weight: 700;
+}
+
+.sub {
+  color: var(--ink3);
+  margin: 0 0 var(--s6);
+  font-size: 13px;
+}
+
+.card {
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  padding: var(--s5) var(--s6);
+  margin-bottom: var(--s4);
+  box-shadow: var(--shadow);
+}
+
+.grid {
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  flex-wrap: wrap;
+}
+
+.row.spread {
+  justify-content: space-between;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+button {
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: var(--r-btn);
+  padding: var(--s2) var(--s4);
+  color: var(--ink2);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--vio-line);
+  color: var(--vio);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.primary {
+  background: var(--vio);
+  border-color: var(--vio);
+  color: var(--on-vio);
+}
+
+button.primary:hover:not(:disabled) {
+  color: var(--on-vio);
+  filter: brightness(1.06);
+}
+
+button.link {
+  background: none;
+  border: none;
+  color: var(--vio);
+  padding: 0;
+  text-decoration: underline;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s3);
+  width: 100%;
+}
+
+textarea {
+  resize: vertical;
+  font-family: var(--font-ui);
+}
+
+label {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink2);
+  margin-bottom: var(--s1);
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--vio);
+}
+
+fieldset {
+  border: 1px solid var(--line);
+  border-radius: var(--r-inner);
+  padding: var(--s3) var(--s4);
+  margin: 0 0 var(--s4);
+}
+
+legend {
+  font-size: 12.5px;
+  color: var(--ink2);
+  padding: 0 var(--s1);
+}
+
+.bar {
+  display: flex;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--surf2);
+}
+
+.bar span {
+  display: block;
+}
+
+.bar .seg-new {
+  background: var(--vio);
+}
+
+.bar .seg-review {
+  background: var(--good);
+}
+
+.bar .seg-build {
+  background: var(--amber);
+}
+
+.legend {
+  display: flex;
+  gap: var(--s4);
+  font-size: 11.5px;
+  color: var(--ink3);
+  margin-top: var(--s2);
+  flex-wrap: wrap;
+}
+
+.legend i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  margin-right: var(--s1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink3);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--s2) var(--s3);
+  border-bottom: 1px solid var(--line);
+}
+
+td {
+  padding: var(--s2) var(--s3);
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.cm-host {
+  border: 1px solid var(--line);
+  border-radius: var(--r-inner);
+  overflow: hidden;
+  background: var(--surf);
+}
+
+.cm-host .cm-editor {
+  max-height: 34rem;
+}
+
+.cm-host .cm-scroller {
+  overflow: auto;
+}
+
+.preview {
+  border: 1px solid var(--line);
+  border-radius: var(--r-inner);
+  background: var(--surf);
+  padding: var(--s4) var(--s5);
+  overflow-x: auto;
+}
+
+/* Only the side-by-side note preview is capped, so it tracks the editor's height.
+   A revealed reference must render in full — a cap there cuts it off mid-sentence. */
+.preview pre {
+  background: var(--surf2);
+  padding: var(--s3) var(--s4);
+  border-radius: var(--r-btn);
+  overflow-x: auto;
+}
+
+.preview :is(h1, h2, h3) {
+  margin-top: var(--s5);
+}
+
+.preview .mermaid-block svg {
+  max-width: 100%;
+}

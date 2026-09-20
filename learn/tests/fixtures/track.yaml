@@ -1,0 +1,206 @@
+version: 1
+start_date: 2026-09-22
+weekly_budget_hours: 12
+
+phases:
+  - id: p0
+    title: Orient & set up
+    weeks: [1, 2]
+    modules: [p0-orient]
+  - id: p1
+    title: Transformers & tokenisation
+    weeks: [3, 10]
+    modules: [a1, a2]
+
+modules:
+  - id: p0-orient
+    phase: p0
+    track: shared
+    title: Orient and set up the harness
+    weeks: [1, 2]
+    budget_hours: 20
+    prerequisites: []
+    must_cover:
+      - Repo, venv and test runner
+      - What an eval harness is
+    resources:
+      - id: p0-uv-docs
+        title: "uv documentation"
+        kind: doc
+        url: https://docs.astral.sh/uv/
+        est_minutes: 60
+      - id: p0-evals-primer
+        title: "A short primer on LLM evaluation"
+        kind: paper
+        url: https://example.invalid/evals-primer
+        est_minutes: 90
+    checks:
+      - id: p0-harness-definition
+        module: p0-orient
+        type: explain
+        must_cover: true
+        prompt: "Explain what an eval harness is and name its three moving parts."
+        rubric:
+          - "Task set is separate from the grader"
+          - "Runner executes trials and records them"
+          - "Results are comparable across model versions"
+        reference: |
+          REFERENCE-P0-HARNESS: a harness is a task set, a runner and a grader,
+          kept separate so a model swap changes one input and nothing else.
+        known_prior: false
+        est_minutes: 15
+        draft: true
+      - id: p0-tooling-setup
+        module: p0-orient
+        type: code
+        must_cover: false
+        prompt: "From memory, write the uv commands that create a project and add a dev dependency."
+        rubric:
+          - "uv init used to create the project"
+          - "uv add --dev used for the dev group"
+        reference: |
+          REFERENCE-P0-TOOLING: `uv init`, then `uv add --dev pytest`.
+        known_prior: true
+        est_minutes: 10
+        draft: true
+
+  - id: a1
+    phase: p1
+    track: llm
+    title: Transformers from scratch
+    weeks: [3, 8]
+    budget_hours: 70
+    prerequisites: [p0-orient]
+    must_cover:
+      - Causal self-attention
+      - Positional encoding
+      - Residual stream and layer norm placement
+    resources:
+      - id: a1-karpathy-gpt
+        title: "Karpathy, Let's build GPT"
+        kind: video
+        url: https://example.invalid/build-gpt
+        est_minutes: 480
+      - id: a1-attention-paper
+        title: "Attention Is All You Need"
+        kind: paper
+        url: https://example.invalid/attention
+        est_minutes: 180
+      - id: a1-nanogpt
+        title: "nanoGPT repository"
+        kind: repo
+        url: https://example.invalid/nanogpt
+        est_minutes: 240
+    checks:
+      - id: a1-mha-from-memory
+        module: a1
+        type: code
+        must_cover: true
+        prompt: "Write multi-head causal self-attention from memory with a correct mask and correct shapes."
+        rubric:
+          - "Scaled dot-product with 1/sqrt(d_k)"
+          - "Causal mask applied before softmax with -inf, not after with 0"
+          - "Heads split and merged with correct reshape/transpose order"
+          - "Output projection applied"
+        reference: |
+          REFERENCE-A1-MHA: scale by 1/sqrt(d_k), add a -inf upper-triangular mask
+          before the softmax, then merge heads before the output projection.
+        known_prior: false
+        est_minutes: 30
+        draft: true
+      - id: a1-softmax-gradient
+        module: a1
+        type: derive
+        must_cover: true
+        prompt: "Derive the gradient of the softmax with respect to its logits."
+        rubric:
+          - "Jacobian written as diag(p) - p p^T"
+          - "Off-diagonal sign is negative"
+        reference: |
+          REFERENCE-A1-SOFTMAX: the Jacobian is diag(p) - p p^T.
+        known_prior: true
+        est_minutes: 20
+        draft: true
+      - id: a1-layernorm-placement
+        module: a1
+        type: explain
+        must_cover: true
+        prompt: "Explain why pre-norm transformers train more stably than post-norm ones."
+        rubric:
+          - "Residual stream stays an identity path in pre-norm"
+          - "Gradient scale at initialisation is bounded"
+        reference: |
+          REFERENCE-A1-LAYERNORM: pre-norm keeps the residual path unnormalised,
+          so gradients reach early layers without a compounding scale factor.
+        known_prior: false
+        est_minutes: 15
+        draft: true
+      - id: a1-positional-numeric
+        module: a1
+        type: numeric
+        must_cover: false
+        prompt: "For d_model 512 and position 10, give the first two sinusoidal encoding values."
+        rubric:
+          - "Uses sin for even indices and cos for odd indices"
+          - "Wavelength term 10000^(2i/d_model) applied"
+        reference: |
+          REFERENCE-A1-POSENC: sin(10) and cos(10) for i = 0.
+        known_prior: false
+        est_minutes: 10
+        draft: true
+
+  - id: a2
+    phase: p1
+    track: llm
+    title: Tokenisation
+    weeks: [9, 10]
+    budget_hours: 25
+    prerequisites: [a1]
+    must_cover:
+      - BPE merge rules
+      - Vocabulary and unknown-token behaviour
+    resources:
+      - id: a2-bpe-paper
+        title: "Neural machine translation of rare words with subword units"
+        kind: paper
+        url: https://example.invalid/bpe
+        est_minutes: 120
+    checks:
+      - id: a2-bpe-from-memory
+        module: a2
+        type: code
+        must_cover: true
+        prompt: "Implement byte-pair encoding training from memory over a small corpus."
+        rubric:
+          - "Pair counts recomputed after each merge"
+          - "Merges stored in order and replayed at encode time"
+        reference: |
+          REFERENCE-A2-BPE: count adjacent pairs, merge the most frequent,
+          record the merge, repeat; encoding replays merges in the same order.
+        known_prior: false
+        est_minutes: 40
+        draft: true
+      - id: a2-vocab-tradeoff
+        module: a2
+        type: judge
+        must_cover: true
+        prompt: "Judge whether a 32k or 128k vocabulary suits a code-heavy corpus, and say why."
+        rubric:
+          - "Sequence length versus embedding-table size traded off"
+          - "Rare identifier fragmentation named"
+        reference: |
+          REFERENCE-A2-VOCAB: a larger vocabulary shortens sequences but grows
+          the embedding table; code benefits up to the point identifiers stop splitting.
+        known_prior: false
+        est_minutes: 20
+        draft: true
+
+capstone:
+  - id: cap-golden-set
+    title: Golden dataset
+    modules: [a2]
+    description: A hand-labelled set of 200 items with a documented labelling guide.
+  - id: cap-failure-taxonomy
+    title: Failure taxonomy
+    modules: [a1, a2]
+    description: A taxonomy of observed failures with counts and one example each.

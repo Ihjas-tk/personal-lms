@@ -1,0 +1,148 @@
+/* The unfiled-jots strip and the pop-out jotter. */
+
+/* ------------------------------------------------------------ the jots */
+.jotstrip {
+  flex: none;
+  border-top: 1px solid var(--line);
+  background: var(--surf2);
+  padding: var(--s4) var(--s6);
+}
+
+.jotstrip-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--s3);
+}
+
+.jotstrip-head h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.jotstrip-head span {
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+.jotstrip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-height: 22vh;
+  overflow: auto;
+}
+
+.jotstrip-line {
+  display: flex;
+  gap: var(--s3);
+  align-items: flex-start;
+  font-size: 12.5px;
+  color: var(--ink2);
+  line-height: 1.45;
+}
+
+.jotstrip-at {
+  font-size: 11px;
+  color: var(--vio);
+  flex: none;
+  margin-top: 1px;
+}
+
+.jotstrip-empty {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.jotstrip-input {
+  margin-top: 12px;
+  display: flex;
+  gap: var(--s3);
+  align-items: center;
+}
+
+.jotstrip-input input {
+  flex: 1;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: var(--surf);
+  padding: var(--s3) var(--s4);
+  font-size: 12.5px;
+}
+
+.jotstrip-hint {
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+/* ---------------------------------------------------------- the jotter */
+.focus-popout {
+  position: absolute;
+  right: 28px;
+  bottom: 28px;
+  z-index: 2;
+}
+
+.jotter {
+  width: 340px;
+  border-radius: var(--r-card);
+  background: var(--surf);
+  border: 1px solid var(--vio-line);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.jotter-bar {
+  padding: var(--s3) var(--s4);
+  background: var(--vio);
+  color: var(--on-vio);
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.jotter-title {
+  font-size: 12px;
+  font-weight: 700;
+  flex: 1;
+}
+
+.jotter-stamp {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.jotter-restore {
+  border: none;
+  background: none;
+  color: var(--on-vio);
+  font-size: 13px;
+  padding: 0;
+}
+
+.jotter-area {
+  width: 100%;
+  border: none;
+  background: var(--surf);
+  padding: var(--s4);
+  font-size: 12.5px;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.jotter-foot {
+  padding: var(--s3) var(--s4);
+  border-top: 1px solid var(--line);
+  background: var(--surf2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s3);
+  font-size: 11px;
+  color: var(--ink3);
+}

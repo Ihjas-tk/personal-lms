@@ -1,0 +1,278 @@
+/* The Desk's lower acts: the capability ridge, the three panes, the quiet footer. */
+
+/* ---------------------------------------------------------------- ridge */
+.section-head {
+  margin-top: 30px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s5);
+}
+
+.section-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 23px;
+  font-weight: 600;
+}
+
+.panel {
+  border-radius: var(--r-lg);
+  padding: var(--s7) 28px var(--s5);
+  background: var(--surf);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.ridge {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--s4);
+}
+
+.ridge-col {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: 22px 168px 44px var(--s7);
+  gap: var(--s3);
+  align-content: start;
+}
+
+.ridge-count {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink3);
+  text-align: center;
+}
+
+.ridge-bar {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 3px;
+  height: 168px;
+  width: 100%;
+}
+
+.ridge-seg {
+  min-height: var(--s2);
+  border-radius: 5px;
+}
+
+.ridge-seg[data-state="durable"] {
+  background: var(--good);
+}
+.ridge-seg[data-state="proficient"] {
+  background: var(--vio);
+}
+.ridge-seg[data-state="familiar"] {
+  background: var(--amber);
+}
+.ridge-seg[data-state="attempted"] {
+  background: var(--vio-line);
+}
+.ridge-seg[data-state="not_started"] {
+  background: var(--surf2);
+  border: 1px solid var(--line);
+}
+
+.ridge-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.25;
+  text-align: center;
+}
+
+.ridge-scope {
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--ink3);
+  text-align: center;
+}
+
+.ridge-delta {
+  text-align: center;
+}
+
+.ridge-legend {
+  margin-top: var(--s5);
+  padding-top: var(--s4);
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: var(--s5);
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+.ridge-legend span {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.ridge-legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.ridge-legend .push {
+  margin-left: auto;
+}
+
+/* --------------------------------------------------------- desk columns */
+.trio {
+  margin-top: var(--s5);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s5);
+  align-items: start;
+}
+
+.pane {
+  border-radius: var(--r-card);
+  padding: var(--s5);
+  background: var(--surf);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.pane h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.pane-sub {
+  margin: var(--s1) 0 var(--s5);
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.pane-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.gain {
+  display: flex;
+  gap: var(--s4);
+  align-items: baseline;
+  margin-bottom: var(--s4);
+}
+
+.gain-num {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 500;
+  width: 62px;
+  flex: none;
+  color: var(--vio);
+}
+
+.gain-num[data-flat="true"] {
+  color: var(--ink3);
+}
+
+.gain-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink2);
+}
+
+.brier {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: var(--s2);
+  height: 84px;
+}
+
+.brier-col {
+  /* Never grow past a bar's width: with one graded week a stretched column reads
+     as a solid violet slab rather than as a measurement. */
+  flex: 0 1 34px;
+  max-width: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.brier-bar {
+  width: 100%;
+  border-radius: 7px 7px 3px 3px;
+  background: var(--vio-line);
+}
+
+.brier-bar[data-last="true"] {
+  background: var(--vio);
+}
+
+.brier-col span {
+  font-size: 10.5px;
+  color: var(--ink3);
+}
+
+.feed-item {
+  display: flex;
+  gap: var(--s4);
+  align-items: flex-start;
+  margin-bottom: var(--s4);
+}
+
+.feed-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  margin-top: var(--s2);
+  border-radius: 3px;
+  background: var(--vio-line);
+}
+
+.feed-dot[data-fresh="true"] {
+  background: var(--good);
+}
+
+.feed-text {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink2);
+}
+
+.feed-when {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+/* ------------------------------------------------------------- footer strip */
+.strip {
+  margin-top: var(--s5);
+  border-radius: var(--r-lg);
+  padding: var(--s6) var(--s7);
+  background: var(--surf2);
+  border: 1px solid var(--line);
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.strip h2 {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.strip-grow {
+  flex: 1 1 300px;
+  min-width: 0;
+}

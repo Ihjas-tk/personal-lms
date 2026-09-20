@@ -1,0 +1,88 @@
+/* Tidy's merge review and its refusal card (§6.1). */
+
+/* ------------------------------------------------- B2: tidy §6.1 */
+.sheet.tidy {
+  padding: 0;
+  overflow: hidden;
+}
+
+.tidy-head {
+  padding: var(--s4) var(--s6);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s5);
+  flex-wrap: wrap;
+}
+
+.tidy-head h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.tidy-head p {
+  margin: var(--s1) 0 0;
+  font-size: 12.5px;
+  color: var(--ink3);
+}
+
+.tidy-shadow {
+  margin: 0;
+  padding: var(--s5) var(--s6);
+  max-height: 40vh;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink2);
+}
+
+.sheet.tidy .merge-host {
+  border: none;
+  border-radius: 0;
+  max-height: 55vh;
+}
+
+.tidy-foot {
+  padding: var(--s4) var(--s6);
+  border-top: 1px solid var(--line);
+  background: var(--surf2);
+  display: flex;
+  gap: var(--s3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tidy-note {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.sheet.refusal {
+  width: min(560px, 100%);
+  border-radius: var(--r-inner);
+  padding: var(--s5) var(--s6);
+  background: var(--amber-soft);
+  border: 1px solid var(--amber-line);
+  box-shadow: var(--shadow);
+}
+
+.refusal-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--amber);
+}
+
+.refusal-body {
+  margin: var(--s2) 0 var(--s4);
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.55;
+}
+
+.sheet.refusal .btn {
+  border-color: var(--amber-line);
+}

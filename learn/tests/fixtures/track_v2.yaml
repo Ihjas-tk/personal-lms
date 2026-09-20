@@ -1,0 +1,266 @@
+version: 2
+start_date: 2026-09-22
+weekly_budget_hours: 12
+
+areas:
+  - {id: transformers, title: Transformers & training, scope: "a1 · p0"}
+  - {id: evals-found, title: Evals foundation, scope: "b0"}
+
+phases:
+  - id: p0
+    title: Orient & set up
+    weeks: [1, 2]
+    modules: [p0-orient]
+  - id: p1
+    title: Transformers & first evals
+    weeks: [3, 10]
+    modules: [a1, b0]
+    order_note: "Do them in this order: the transformer before the harness."
+
+modules:
+  - id: p0-orient
+    phase: p0
+    area: transformers
+    track: shared
+    title: Orient and set up the harness
+    weeks: [1, 2]
+    budget_hours: 20
+    prerequisites: []
+    topics:
+      - id: harness
+        title: What an eval harness is
+        summary: "The task set, the runner and the grader, and why they stay apart."
+        kind: idea
+        resources: [p0-evals-primer]
+        checks: [p0-harness-definition]
+      - id: setup-uv
+        title: Install uv and create the project
+        kind: chore
+      - id: habit-evening
+        title: Four evenings a week, same hour, laptop already open
+        kind: habit
+      - id: tooling
+        title: The tooling underneath
+        summary: "uv, the test runner and the one command that runs everything."
+        kind: idea
+        resources: [p0-uv-docs]
+        checks: [p0-tooling-setup]
+    resources:
+      - id: p0-uv-docs
+        title: "uv documentation"
+        kind: doc
+        url: https://docs.astral.sh/uv/
+        est_minutes: 60
+        length: 24
+        unit: items
+      - id: p0-evals-primer
+        title: "A short primer on LLM evaluation"
+        kind: paper
+        url: https://example.invalid/evals-primer
+        est_minutes: 90
+        length: 18
+        unit: pages
+    checks:
+      - id: p0-harness-definition
+        module: p0-orient
+        type: explain
+        must_cover: true
+        prompt: "Explain what an eval harness is and name its three moving parts."
+        rubric:
+          - "Task set is separate from the grader"
+          - "Runner executes trials and records them"
+          - "Results are comparable across model versions"
+        reference: |
+          REFERENCE-P0-HARNESS: a harness is a task set, a runner and a grader,
+          kept separate so a model swap changes one input and nothing else.
+        known_prior: false
+        est_minutes: 15
+        draft: true
+      - id: p0-tooling-setup
+        module: p0-orient
+        type: code
+        must_cover: true
+        prompt: "From memory, write the uv commands that create a project and add a dev dependency."
+        rubric:
+          - "uv init used to create the project"
+          - "uv add --dev used for the dev group"
+        reference: |
+          REFERENCE-P0-TOOLING: `uv init`, then `uv add --dev pytest`.
+        known_prior: true
+        est_minutes: 10
+        draft: true
+
+  - id: a1
+    phase: p1
+    area: transformers
+    track: llm
+    title: Transformers from scratch
+    weeks: [3, 8]
+    budget_hours: 70
+    prerequisites: [p0-orient]
+    topics:
+      - id: attention
+        title: Causal self-attention
+        summary: "One head, the mask before the softmax, and the shapes through a merge."
+        kind: idea
+        resources: [a1-karpathy-gpt, a1-attention-paper]
+        checks: [a1-mha-from-memory, a1-softmax-gradient]
+      - id: residual
+        title: Residual stream and layer norm placement
+        summary: "Why pre-norm keeps the identity path clean."
+        kind: idea
+        resources: [a1-nanogpt]
+        checks: [a1-layernorm-placement]
+      - id: positional
+        title: Positional encoding
+        summary: "Sinusoids, and what the model can and cannot extrapolate."
+        kind: idea
+        checks: [a1-positional-numeric]
+      - id: setup-gpu
+        title: Rent a GPU and run one training step
+        kind: chore
+      - id: habit-email-course
+        title: Start the free 17-part evals email course this week
+        kind: habit
+    resources:
+      - id: a1-karpathy-gpt
+        title: "Karpathy, Let's build GPT"
+        kind: video
+        url: https://example.invalid/build-gpt
+        est_minutes: 480
+        length: 116
+        unit: min
+      - id: a1-attention-paper
+        title: "Attention Is All You Need"
+        kind: paper
+        url: https://example.invalid/attention
+        est_minutes: 180
+        length: 15
+        unit: pages
+      - id: a1-nanogpt
+        title: "nanoGPT repository"
+        kind: repo
+        url: https://example.invalid/nanogpt
+        est_minutes: 240
+    checks:
+      - id: a1-mha-from-memory
+        module: a1
+        type: code
+        must_cover: true
+        prompt: "Write multi-head causal self-attention from memory with a correct mask and correct shapes."
+        rubric:
+          - "Scaled dot-product with 1/sqrt(d_k)"
+          - "Causal mask applied before softmax with -inf, not after with 0"
+          - "Heads split and merged with correct reshape/transpose order"
+          - "Output projection applied"
+        reference: |
+          REFERENCE-A1-MHA: scale by 1/sqrt(d_k), add a -inf upper-triangular mask
+          before the softmax, then merge heads before the output projection.
+        known_prior: false
+        est_minutes: 30
+        draft: true
+      - id: a1-softmax-gradient
+        module: a1
+        type: derive
+        must_cover: true
+        prompt: "Derive the gradient of the softmax with respect to its logits."
+        rubric:
+          - "Jacobian written as diag(p) - p p^T"
+          - "Off-diagonal sign is negative"
+        reference: |
+          REFERENCE-A1-SOFTMAX: the Jacobian is diag(p) - p p^T.
+        known_prior: true
+        est_minutes: 20
+        draft: true
+      - id: a1-layernorm-placement
+        module: a1
+        type: explain
+        must_cover: true
+        prompt: "Explain why pre-norm transformers train more stably than post-norm ones."
+        rubric:
+          - "Residual stream stays an identity path in pre-norm"
+          - "Gradient scale at initialisation is bounded"
+        reference: |
+          REFERENCE-A1-LAYERNORM: pre-norm keeps the residual path unnormalised,
+          so gradients reach early layers without a compounding scale factor.
+        known_prior: false
+        est_minutes: 15
+        draft: true
+      - id: a1-positional-numeric
+        module: a1
+        type: numeric
+        must_cover: false
+        prompt: "For d_model 512 and position 10, give the first two sinusoidal encoding values."
+        rubric:
+          - "Uses sin for even indices and cos for odd indices"
+          - "Wavelength term 10000^(2i/d_model) applied"
+        reference: |
+          REFERENCE-A1-POSENC: sin(10) and cos(10) for i = 0.
+        known_prior: false
+        est_minutes: 10
+        draft: true
+
+  - id: b0
+    phase: p1
+    area: evals-found
+    track: evals
+    title: Error analysis first
+    weeks: [9, 10]
+    budget_hours: 25
+    prerequisites: [a1]
+    topics:
+      - id: open-coding
+        title: Open coding a hundred traces
+        summary: "Read the failures before inventing metrics for them."
+        kind: idea
+        resources: [b0-error-analysis]
+        checks: [b0-open-coding, b0-taxonomy-judgement]
+      - id: setup-traces
+        title: Export a hundred traces into one folder
+        kind: chore
+    resources:
+      - id: b0-error-analysis
+        title: "Error analysis for LLM products"
+        kind: course
+        url: https://example.invalid/error-analysis
+        est_minutes: 120
+        length: 9
+        unit: items
+    checks:
+      - id: b0-open-coding
+        module: b0
+        type: explain
+        must_cover: true
+        prompt: "Explain open coding over traces and when you stop adding codes."
+        rubric:
+          - "Codes come from the traces, not from a prior list"
+          - "Stop when new traces stop producing new codes"
+        reference: |
+          REFERENCE-B0-OPEN-CODING: read traces, name each failure in your own words,
+          stop when saturation hits.
+        known_prior: false
+        est_minutes: 20
+        draft: true
+      - id: b0-taxonomy-judgement
+        module: b0
+        type: judge
+        must_cover: false
+        prompt: "Judge whether a five-code taxonomy covers a sample of twenty failures."
+        rubric:
+          - "Counts per code reported"
+          - "Residual bucket named and sized"
+        reference: |
+          REFERENCE-B0-TAXONOMY: report counts per code and the size of the leftovers.
+        known_prior: false
+        est_minutes: 15
+        draft: true
+
+capstone:
+  - id: cap-golden-set
+    title: Golden dataset
+    modules: [b0]
+    description: A hand-labelled set of 200 items with a documented labelling guide.
+  - id: cap-failure-taxonomy
+    title: Failure taxonomy
+    modules: [a1, b0]
+    description: A taxonomy of observed failures with counts and one example each.

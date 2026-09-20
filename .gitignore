@@ -1,0 +1,27 @@
+# --- personal data: the learner's vault is its own git repo and stays local ---
+learn/vault/
+
+# --- caches, build output, environments ---
+learn/.cache/
+learn/.venv/
+learn/.pytest_cache/
+learn/.ruff_cache/
+learn/src/learn/static/
+learn/web/node_modules/
+learn/web/dist/
+learn/web/e2e/.results/
+learn/web/test-results/
+learn/web/playwright-report/
+**/__pycache__/
+*.pyc
+
+# --- duplicates of what is already in learn/docs/ux ---
+*.zip
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+.env

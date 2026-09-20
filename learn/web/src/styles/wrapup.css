@@ -1,0 +1,159 @@
+/* The wrap-up modal, and the two form primitives it shares with the grade card. */
+
+/* ------------------------------------------------- B2: wrap up §6 */
+.wrap {
+  width: min(720px, 100%);
+  border-radius: var(--r-lg);
+  background: var(--surf);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  /* On a short screen the three questions are taller than the viewport. The head
+     and the footer stay put and the questions scroll, so `Close the session` is
+     never below the fold. */
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--s8) * 2);
+}
+
+.wrap-head {
+  padding: var(--s7) 30px var(--s6);
+  background: var(--vio-soft);
+  border-bottom: 1px solid var(--vio-line);
+}
+
+.wrap-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.wrap-summary {
+  margin: var(--s2) 0 0;
+  font-size: 12.5px;
+  color: var(--ink2);
+}
+
+.wrap-body {
+  padding: var(--s6) 30px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s6);
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.wrap-q {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.wrap-body textarea,
+.wrap-body input[type="text"] {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surf2);
+  padding: var(--s4) var(--s5);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.wrap-count {
+  margin: var(--s2) 0 0;
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.wrap-count[data-enough="true"] {
+  color: var(--good);
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: var(--s3);
+  align-items: center;
+}
+
+.plan-grid label {
+  font-size: 12px;
+  color: var(--ink3);
+  text-align: right;
+}
+
+.wrap-foot {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.wrap-error {
+  display: flex;
+  gap: var(--s3);
+  align-items: center;
+  margin-bottom: var(--s3);
+  flex-wrap: wrap;
+}
+
+.wrap-error input[type="text"] {
+  flex: 1;
+  min-width: 200px;
+}
+
+.wrap-jots {
+  display: flex;
+  gap: var(--s3);
+  align-items: center;
+  flex-wrap: wrap;
+  padding: var(--s4) var(--s5);
+  border-radius: 12px;
+  background: var(--surf2);
+  border: 1px solid var(--line);
+}
+
+.wrap-jots span {
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.wrap-foot-bar {
+  padding: var(--s5) 30px;
+  border-top: 1px solid var(--line);
+  background: var(--surf2);
+  display: flex;
+  gap: var(--s4);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.wrap-foot-bar span {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.pill-select {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--ink2);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

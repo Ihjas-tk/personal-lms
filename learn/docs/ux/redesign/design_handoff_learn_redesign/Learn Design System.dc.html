@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--vio:#6D3BEE;--vio2:#8B5CF6;--vio-soft:#EFEAFE;--vio-line:#D8CCFB;--on-vio:#ffffff;
+--ink:#1A1626;--ink2:#54506A;--ink3:#8A86A0;
+--bg:#F6F5FC;--surf:#FFFFFF;--surf2:#F3F1FB;--line:#E6E3F1;
+--amber:#9A5A12;--amber-soft:#FCF0E1;--amber-line:#EED9BC;
+--good:#1C7A52;--good-soft:#E2F4EC;--good-line:#BFE4D3;
+--red-soft:#FCEBEB;--red-line:#E9C9C9;
+--shadow:0 1px 2px rgba(26,22,38,.05), 0 10px 28px -16px rgba(26,22,38,.28);
+--shadow-lg:0 24px 64px -24px rgba(26,22,38,.40);
+}
+[data-theme="dark"]{
+--vio:#A78BFA;--vio2:#8B5CF6;--vio-soft:#2A2440;--vio-line:#453B68;--on-vio:#16112B;
+--ink:#EEEBF8;--ink2:#B2ADC8;--ink3:#827D9B;
+--bg:#121020;--surf:#1B1930;--surf2:#232038;--line:#2E2A46;
+--amber:#E0B27A;--amber-soft:#2F2617;--amber-line:#4C3D22;
+--good:#8ED0AC;--good-soft:#182C23;--good-line:#2B4A3A;
+--red-soft:#2E1C1C;--red-line:#4A2E2E;
+--shadow:0 1px 2px rgba(0,0,0,.30), 0 10px 28px -16px rgba(0,0,0,.6);
+--shadow-lg:0 24px 64px -24px rgba(0,0,0,.75);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:var(--vio);text-decoration:none}
+a:hover{color:var(--vio2);text-decoration:underline}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:15px;line-height:1.55;padding:44px 48px 90px">
+<div style="max-width:1100px;margin:0 auto">
+
+  <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding-bottom:26px;border-bottom:1px solid var(--line)">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--ink3)">learn · design pass 2026-09</div>
+      <h1 style="margin:10px 0 0;font-family:'Playfair Display',serif;font-size:40px;font-weight:600;letter-spacing:-.01em">The component system</h1>
+      <p style="margin:10px 0 0;font-size:15px;color:var(--ink2);max-width:62ch">Tokens, type, spacing, the reduced state vocabulary, plain-language naming, the three states the screens do not show, and what maps onto which file. Everything here is CSS custom properties and plain React — no library, no Tailwind.</p>
+    </div>
+    <button onClick="{{ toggleTheme }}" style="flex:none;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:13px">{{ themeLabel }}</button>
+  </header>
+
+  <section style="margin-top:44px">
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:26px;font-weight:600">1 · Colour</h2>
+    <p style="margin:8px 0 20px;font-size:13.5px;color:var(--ink2);max-width:74ch">Nine token families, same names as today's <code style="font-family:'JetBrains Mono',monospace;font-size:12.5px">tokens.css</code> where they already existed. Violet replaces the slate accent; amber stays the only warning; a red tint is added for destructive confirmation only, never for learning state. No colour carries meaning on its own — every state also carries text.</p>
+    <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+      <div style="display:grid;grid-template-columns:52px 190px 130px 130px minmax(0,1fr);gap:0;padding:12px 18px;border-bottom:1px solid var(--line);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)">
+        <span></span><span>Token</span><span>Light</span><span>Dark</span><span>Used for</span>
+      </div>
+      <sc-for list="{{ tokens }}" as="t" hint-placeholder-count="10">
+        <div style="display:grid;grid-template-columns:52px 190px 130px 130px minmax(0,1fr);gap:0;padding:11px 18px;border-bottom:1px solid var(--line);align-items:center;font-size:12.5px">
+          <div style="{{ t.swatch }}"></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink)">{{ t.name }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">{{ t.light }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">{{ t.dark }}</span>
+          <span style="color:var(--ink2)">{{ t.use }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="margin-top:44px">
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:26px;font-weight:600">2 · Type</h2>
+    <p style="margin:8px 0 20px;font-size:13.5px;color:var(--ink2);max-width:74ch">Three families with one job each. Playfair Display carries the human voice — your own sentences, the prompts you have to answer. Plus Jakarta Sans is every label and control. JetBrains Mono is anything countable: hours, dates, paths, timestamps, ids, scores. The old app had one 15px system font doing all three.</p>
+    <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+      <sc-for list="{{ typeScale }}" as="ty" hint-placeholder-count="7">
+        <div style="padding:16px 22px;border-bottom:1px solid var(--line);display:flex;gap:26px;align-items:baseline">
+          <div style="width:190px;flex:none;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3);line-height:1.5">{{ ty.spec }}</div>
+          <div style="{{ ty.sampleStyle }}">{{ ty.sample }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="margin-top:44px">
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:26px;font-weight:600">3 · Spacing, radius, elevation</h2>
+    <p style="margin:8px 0 20px;font-size:13.5px;color:var(--ink2);max-width:74ch">One scale, no ad-hoc values. The old build had eleven inline margins between 0.2 and 1 rem; this has eight steps and they are the only legal gaps.</p>
+    <div style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px">
+      <div style="border-radius:16px;padding:22px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <h3 style="margin:0 0 16px;font-size:13px;font-weight:700">Space</h3>
+        <div style="display:flex;gap:10px;align-items:flex-end">
+          <sc-for list="{{ spacing }}" as="sp" hint-placeholder-count="8">
+            <div style="flex:1;text-align:center">
+              <div style="{{ sp.style }}"></div>
+              <div style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">{{ sp.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <p style="margin:18px 0 0;font-size:12.5px;color:var(--ink3);line-height:1.6">Row padding 14/18–22. Card padding 20–26. Gap between cards 20. Page padding 34 top, 40 sides. Band padding 38/40.</p>
+      </div>
+      <div style="border-radius:16px;padding:22px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <h3 style="margin:0 0 16px;font-size:13px;font-weight:700">Radius and elevation</h3>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <sc-for list="{{ radii }}" as="rd" hint-placeholder-count="5">
+            <div style="text-align:center">
+              <div style="{{ rd.style }}"></div>
+              <div style="margin-top:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">{{ rd.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <p style="margin:18px 0 0;font-size:12.5px;color:var(--ink3);line-height:1.6">Two shadows only: <code style="font-family:'JetBrains Mono',monospace">--shadow</code> on every raised surface, <code style="font-family:'JetBrains Mono',monospace">--shadow-lg</code> on the violet band and modals. Nothing else lifts.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top:44px">
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:26px;font-weight:600">4 · State vocabulary</h2>
+    <p style="margin:8px 0 20px;font-size:13.5px;color:var(--ink2);max-width:74ch">Four rules. A row shows at most one state chip, at most one warning, all other metadata in mono grey, and exactly one action. Everything that used to be a chip and is not one of those becomes plain text.</p>
+    <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+      <div style="padding:20px 22px;border-bottom:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <sc-for list="{{ chips }}" as="c" hint-placeholder-count="6">
+          <span style="{{ c.style }}">{{ c.label }}</span>
+        </sc-for>
+      </div>
+      <div style="padding:20px 22px;border-bottom:1px solid var(--line)">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px">Before — seven chips, nothing leads</div>
+        <div style="border-radius:12px;border:1px solid var(--line);background:var(--surf2);padding:14px 16px">
+          <div style="font-size:13.5px;font-weight:600;margin-bottom:8px">Write multi-head causal self-attention from memory on a blank page, with a correct mask and correct shapes.</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ beforeChips }}" as="b" hint-placeholder-count="7">
+              <span style="{{ b.style }}">{{ b.label }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="padding:20px 22px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px">After — one state, one warning, one action</div>
+        <div style="border-radius:12px;border:1px solid var(--line);background:var(--surf2);padding:14px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <div style="flex:1 1 320px;min-width:0">
+            <div style="font-size:13.5px;font-weight:500;line-height:1.45">Write multi-head causal self-attention from memory on a blank page, with a correct mask and correct shapes.</div>
+            <div style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);letter-spacing:.04em">CODE · 1 ATTEMPT · DUE 05 SEP</div>
+          </div>
+          <span style="padding:3px 10px;border-radius:999px;background:var(--surf);border:1px solid var(--line);color:var(--ink3);font-size:11.5px">tried</span>
+          <span style="font-size:11.5px;color:var(--amber)">missed while sure · 14 days overdue</span>
+          <button style="flex:none;padding:8px 16px;border-radius:10px;border:none;background:var(--vio);color:var(--on-vio);font-size:12.5px;font-weight:600">Re-test</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top:44px">
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:26px;font-weight:600">5 · Naming</h2>
+    <p style="margin:8px 0 20px;font-size:13.5px;color:var(--ink2);max-width:74ch">The learner knows attention and RAG; they do not know this app's words. Every rename is a phrase they would say out loud, and the definition follows the word the first time it appears on a screen.</p>
+    <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+      <div style="display:grid;grid-template-columns:200px 180px minmax(0,1fr);padding:12px 20px;border-bottom:1px solid var(--line);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)">
+        <span>Was</span><span>Now</span><span>Why</span>
+      </div>
+      <sc-for list="{{ naming }}" as="n" hint-placeholder-count="10">
+        <div style="display:grid;grid-template-columns:200px 180px minmax(0,1fr);padding:12px 20px;border-bottom:1px solid var(--line);gap:12px;align-items:baseline;font-size:12.5px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3);text-decoration:line-through">{{ n.was }}</span>
+          <span style="font-weight:600;color:var(--ink)">{{ n.now }}</span>
+          <span style="color:var(--ink2);line-height:1.5">{{ n.why }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="margin-top:44px">
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:26px;font-weight:600">6 · The three states the screens do not show</h2>
+
+    <h3 style="margin:26px 0 10px;font-size:15px;font-weight:700">6.1 Tidy — reviewing the copy-edit</h3>
+    <p style="margin:0 0 14px;font-size:13px;color:var(--ink2);max-width:74ch">AI never writes to a file. The tidied text streams into a shadow buffer and arrives as a diff you take chunk by chunk. Left is yours and read-only; right is editable.</p>
+    <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+      <div style="padding:16px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+        <div>
+          <h4 style="margin:0;font-size:14px;font-weight:700">Tidy · review each change</h4>
+          <p style="margin:4px 0 0;font-size:12.5px;color:var(--ink3)">Six words added, nothing else. Numbers, code, maths and links are checked before you see this.</p>
+        </div>
+        <button style="padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:12.5px">Keep original · Esc</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 34px 1fr;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7">
+        <sc-for list="{{ diff }}" as="d" hint-placeholder-count="5">
+          <div style="{{ d.leftStyle }}">{{ d.left }}</div>
+          <div style="{{ d.gutterStyle }}">{{ d.arrow }}</div>
+          <div style="{{ d.rightStyle }}">{{ d.right }}</div>
+        </sc-for>
+      </div>
+      <div style="padding:14px 22px;border-top:1px solid var(--line);background:var(--surf2);display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button style="padding:9px 18px;border-radius:11px;border:none;background:var(--vio);color:var(--on-vio);font-size:13px;font-weight:600">Take all</button>
+        <button style="padding:9px 18px;border-radius:11px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:13px">Revert all</button>
+        <span style="margin-left:auto;font-size:12px;color:var(--ink3)">A snapshot is committed before anything is written.</span>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;border-radius:14px;padding:16px 20px;background:var(--amber-soft);border:1px solid var(--amber-line)">
+      <div style="font-size:13.5px;font-weight:700;color:var(--amber)">Refused — the tidy changed something it is not allowed to change</div>
+      <p style="margin:6px 0 0;font-size:13px;color:var(--ink2);line-height:1.55">Numbers differ: <code style="font-family:'JetBrains Mono',monospace">1/sqrt(d_k)</code> became <code style="font-family:'JetBrains Mono',monospace">1/d_k</code>. Your note was not touched and there is no diff to review. The refusal is logged.</p>
+      <button style="margin-top:12px;padding:8px 16px;border-radius:10px;border:1px solid var(--amber-line);background:var(--surf);color:var(--ink2);font-size:12.5px">Keep original</button>
+    </div>
+
+    <h3 style="margin:30px 0 10px;font-size:15px;font-weight:700">6.2 The note changed underneath you</h3>
+    <p style="margin:0 0 14px;font-size:13px;color:var(--ink2);max-width:74ch">Conflicts are refused, never merged. Two exits, both named for what they destroy.</p>
+    <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+      <div style="padding:18px 22px;border-left:4px solid var(--amber);background:var(--amber-soft)">
+        <div style="font-size:13.5px;font-weight:700;color:var(--amber)">This note changed on disk since you opened it, so the save was refused</div>
+        <p style="margin:6px 0 0;font-size:13px;color:var(--ink2);line-height:1.55">Both versions still exist. Your edits are held in the editor until you choose.</p>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button style="padding:9px 16px;border-radius:10px;border:none;background:var(--vio);color:var(--on-vio);font-size:12.5px;font-weight:600">Keep mine and overwrite the file</button>
+          <button style="padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:12.5px">Reload the file and lose my edits</button>
+          <button style="padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:12.5px">Show me the difference first</button>
+        </div>
+      </div>
+      <div style="padding:12px 22px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">save refused · a1/attention.md · mtime mismatch</div>
+    </div>
+
+    <h3 style="margin:30px 0 10px;font-size:15px;font-weight:700">6.3 AI is unavailable</h3>
+    <p style="margin:0 0 14px;font-size:13px;color:var(--ink2);max-width:74ch">Blocked, never hidden. The entries stay where they are, disabled, with the reason stated once in plain words rather than as a tooltip you have to hunt for.</p>
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <div style="width:330px;border-radius:14px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink2)">AI ▾</div>
+        <div style="padding:12px 16px;background:var(--surf2);border-bottom:1px solid var(--line);font-size:12px;color:var(--ink2);line-height:1.5">No API credential found. Run <code style="font-family:'JetBrains Mono',monospace">ant auth login</code>, or set <code style="font-family:'JetBrains Mono',monospace">ANTHROPIC_API_KEY</code>.</div>
+        <div style="padding:12px 16px;font-size:13px;color:var(--ink3);border-bottom:1px solid var(--line)">Tidy — copy-edit, shown as a diff</div>
+        <div style="padding:12px 16px;font-size:13px;color:var(--ink3)">Second opinion — grades an answer you have already submitted</div>
+      </div>
+      <div style="flex:1;min-width:280px;border-radius:14px;padding:18px 20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <h4 style="margin:0 0 10px;font-size:13px;font-weight:700">The other two reasons, same treatment</h4>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--ink2);line-height:1.5">
+          <div style="padding:10px 14px;border-radius:10px;background:var(--surf2)">An answer is open. Submit or leave it before using AI.</div>
+          <div style="padding:10px 14px;border-radius:10px;background:var(--surf2)">The server is not reachable.</div>
+        </div>
+        <p style="margin:14px 0 0;font-size:12px;color:var(--ink3);line-height:1.55">All three read as a state of the world, not a failure of yours, and none of them removes a control from the page.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top:44px">
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:26px;font-weight:600">7 · Handoff</h2>
+    <p style="margin:8px 0 20px;font-size:13.5px;color:var(--ink2);max-width:74ch">The API does not change; every screen's data already exists. This is the file-level map: what survives, what is re-cut, what goes.</p>
+    <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+      <div style="display:grid;grid-template-columns:240px 130px minmax(0,1fr);padding:12px 20px;border-bottom:1px solid var(--line);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)">
+        <span>Today's file</span><span>Verdict</span><span>What happens</span>
+      </div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="10">
+        <div style="display:grid;grid-template-columns:240px 130px minmax(0,1fr);padding:11px 20px;border-bottom:1px solid var(--line);gap:12px;align-items:baseline;font-size:12.5px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink)">{{ h.file }}</span>
+          <span style="{{ h.verdictStyle }}">{{ h.verdict }}</span>
+          <span style="color:var(--ink2);line-height:1.5">{{ h.note }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px">
+      <div style="border-radius:16px;padding:20px 22px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <h3 style="margin:0 0 12px;font-size:13px;font-weight:700">New components, and that is all of them</h3>
+        <div style="display:flex;flex-direction:column;gap:9px;font-size:12.5px;color:var(--ink2);line-height:1.5">
+          <sc-for list="{{ newComponents }}" as="nc" hint-placeholder-count="6">
+            <div style="display:flex;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--vio);flex:none;width:120px">{{ nc.name }}</span><span style="flex:1;min-width:0">{{ nc.desc }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="border-radius:16px;padding:20px 22px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <h3 style="margin:0 0 12px;font-size:13px;font-weight:700">Order of work</h3>
+        <ol style="margin:0;padding-left:18px;font-size:12.5px;color:var(--ink2);line-height:1.75">
+          <li>Swap <code style="font-family:'JetBrains Mono',monospace">tokens.css</code> and add the three fonts. Nothing else changes; the old screens simply turn violet.</li>
+          <li>Ship <code style="font-family:'JetBrains Mono',monospace">Row</code>, <code style="font-family:'JetBrains Mono',monospace">Chip</code>, <code style="font-family:'JetBrains Mono',monospace">Band</code>, <code style="font-family:'JetBrains Mono',monospace">Ridge</code>; re-cut Today into the Desk.</li>
+          <li>Collapse the rail to four, move session state into it, delete <code style="font-family:'JetBrains Mono',monospace">SessionBar</code>.</li>
+          <li>Re-cut the module page as the syllabus; the five tabs go.</li>
+          <li>Stage the attempt flow; then focus mode for notes.</li>
+          <li>Fix the module-capstone payload defect noted in the inventory before the board ships.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { theme: null };
+  componentDidMount() { this.apply(); }
+  componentDidUpdate() { this.apply(); }
+  apply() {
+    const theme = this.state.theme ?? this.props.startTheme ?? 'light';
+    const root = document.documentElement;
+    if (root.getAttribute('data-theme') !== theme) root.setAttribute('data-theme', theme);
+  }
+
+  renderVals() {
+    const theme = this.state.theme ?? this.props.startTheme ?? 'light';
+    const chip = (bg, line, ink) => `padding:3px 10px;border-radius:999px;background:var(${bg});border:1px solid var(${line});color:var(${ink});font-size:11.5px;white-space:nowrap`;
+    const PLAIN = chip('--surf2', '--line', '--ink3');
+    const GOOD = chip('--good-soft', '--good-line', '--good');
+    const AMBER = chip('--amber-soft', '--amber-line', '--amber');
+    const VIO = chip('--vio-soft', '--vio-line', '--vio');
+
+    const tokens = [
+      ['--vio', '#6D3BEE', '#A78BFA', 'The one accent: primary actions, where you are, the tonight band'],
+      ['--vio-soft / --vio-line', '#EFEAFE / #D8CCFB', '#2A2440 / #453B68', 'Quiet accent surfaces and their borders'],
+      ['--ink / --ink2 / --ink3', '#1A1626 / #54506A / #8A86A0', '#EEEBF8 / #B2ADC8 / #827D9B', 'Content, supporting text, metadata — three levels, no more'],
+      ['--bg', '#F6F5FC', '#121020', 'The page behind everything'],
+      ['--surf / --surf2', '#FFFFFF / #F3F1FB', '#1B1930 / #232038', 'Raised surfaces and their inset areas'],
+      ['--line', '#E6E3F1', '#2E2A46', 'Every border and rule'],
+      ['--amber + soft/line', '#9A5A12', '#E0B27A', 'The only warning: overdue, over budget, refused saves'],
+      ['--good + soft/line', '#1C7A52', '#8ED0AC', 'Lasting knowledge and shipped artefacts, nothing else'],
+      ['--red-soft / --red-line', '#FCEBEB / #E9C9C9', '#2E1C1C / #4A2E2E', 'Destructive confirmation only — discarding a session'],
+      ['--on-vio', '#FFFFFF', '#16112B', 'Text on the accent fill']
+    ].map(([name, light, dark, use]) => ({
+      name, light, dark, use,
+      swatch: `width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:${name.includes('ink') ? 'var(--ink2)' : name.includes('amber') ? 'var(--amber)' : name.includes('good') ? 'var(--good)' : name.includes('red') ? 'var(--red-soft)' : name.includes('line') && !name.includes('vio') ? 'var(--line)' : name.includes('bg') ? 'var(--bg)' : name.includes('surf') ? 'var(--surf2)' : name.includes('on-vio') ? 'var(--on-vio)' : name.includes('soft') ? 'var(--vio-soft)' : 'var(--vio)'}`
+    }));
+
+    const typeScale = [
+      ['Playfair Display 600 · 38–40px', 'Two checks are yours', "font-family:'Playfair Display',serif;font-size:38px;font-weight:600;line-height:1.1"],
+      ['Playfair Display 600 · 31px', 'IF it is Tuesday and the laptop is already open…', "font-family:'Playfair Display',serif;font-size:31px;line-height:1.3"],
+      ['Playfair Display 600 · 23–26px', 'What you can actually do', "font-family:'Playfair Display',serif;font-size:24px;font-weight:600"],
+      ['Jakarta 700 · 15px', 'Section and card headings', 'font-size:15px;font-weight:700'],
+      ['Jakarta 500 · 13.5px', 'Check prompts, row titles, body copy', 'font-size:13.5px;font-weight:500'],
+      ['Jakarta 400 · 12.5px · --ink3', 'Supporting sentences and captions', 'font-size:12.5px;color:var(--ink3)'],
+      ['JetBrains Mono 400 · 11.5px', '3.0 / 70 h · weeks 3–8 · due 05 Sep · a1/attention.md', "font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)"]
+    ].map(([spec, sample, sampleStyle]) => ({ spec, sample, sampleStyle }));
+
+    const spacing = [4, 6, 10, 14, 18, 22, 26, 38].map(n => ({
+      label: n + '',
+      style: `height:${n * 2}px;border-radius:5px;background:var(--vio-line)`
+    }));
+
+    const radii = [9, 11, 14, 16, 20, 24].map(n => ({
+      label: n + 'px',
+      style: `width:52px;height:52px;border-radius:${n}px;background:var(--surf2);border:1px solid var(--line)`
+    }));
+
+    const chips = [
+      ['lasting', GOOD], ['solid', VIO], ['shaky', AMBER], ['tried', PLAIN], ['not started', PLAIN],
+      ['draft', VIO], ['exists', GOOD]
+    ].map(([label, style]) => ({ label, style }));
+
+    const beforeChips = ['code', 'must cover', 'draft reference, verify', 'overconfident miss', '1 attempt', "can't", 'due 2026-09-05']
+      .map(label => ({ label, style: PLAIN }));
+
+    const naming = [
+      ['durable', 'lasting', 'Two clean passes a week apart. The word says the thing survives, not that it is filed away.'],
+      ['proficient', 'solid', 'One clean pass. Plain, and it sits naturally below lasting.'],
+      ['familiar', 'shaky', 'Amber meant "not safe yet" but the word said the opposite. Now they agree.'],
+      ['attempted', 'tried', 'Shorter, and it does not read as an achievement.'],
+      ['must cover', 'core', 'A one-word adjective that fits in a mono metadata line.'],
+      ['coverage 2%', 'N of 84 checks are yours', 'A count of real things instead of a percentage that starts life at 2%.'],
+      ['overconfident miss', 'missed while sure', 'Says what happened rather than diagnosing the person.'],
+      ['draft reference, verify', 'reference not yet checked by you', 'Names the action outstanding, and who owes it.'],
+      ['reconstructed / taught', 'rebuilt it / taught it', 'Past tense, first person — the way you would report it.'],
+      ['Check', 'check', 'Kept. It is short, honest and already understood.'],
+      ['Weekly review', 'Sunday debrief', 'Names the moment, not the page.'],
+      ['Close session', 'Wrap up · Stand up well', 'The dialog is a ritual, not a form submission.'],
+      ['Explain-back critique', 'second opinion', 'Describes what it gives you and implies it does not overrule you.'],
+      ['Capstone artefacts', 'Things that exist', 'The board is binary by design, so the title says so.']
+    ].map(([was, now, why]) => ({ was, now, why }));
+
+    const diffRow = (left, right, kind) => ({
+      left, right,
+      arrow: kind === 'same' ? '' : '→',
+      leftStyle: `padding:10px 16px;border-bottom:1px solid var(--line);white-space:pre-wrap;color:var(--ink2);background:${kind === 'change' ? 'var(--amber-soft)' : 'transparent'}`,
+      rightStyle: `padding:10px 16px;border-bottom:1px solid var(--line);border-left:1px solid var(--line);white-space:pre-wrap;color:var(--ink2);background:${kind === 'change' ? 'var(--good-soft)' : 'transparent'}`,
+      gutterStyle: `display:grid;place-items:center;border-bottom:1px solid var(--line);color:var(--vio);font-size:12px;background:var(--surf2)`
+    });
+
+    const diff = [
+      diffRow('## Scaled dot-product attention', '## Scaled dot-product attention', 'same'),
+      diffRow('One head, with the causal mask added **before**\nthe softmax, not after it:', 'A single head, with the causal mask added\n**before** the softmax, not after it:', 'change'),
+      diffRow('⋮ 28 unchanged lines', '⋮ 28 unchanged lines', 'same'),
+      diffRow('Writing the mask as a multiplicative zero is the\nbug I keep reintroducing: it leaks probability mass.', 'Writing the mask as a multiplicative zero is the\nbug I keep reintroducing; it leaks probability\nmass to future positions.', 'change'),
+      diffRow('### What I still cannot do', '### What I still cannot do', 'same')
+    ];
+
+    const V = { keep: GOOD, recut: VIO, gone: PLAIN };
+    const handoff = [
+      ['styles/tokens.css', 'replace', 'New palette above, plus --on-vio, --red-soft, --shadow, --shadow-lg and three font families.'],
+      ['components/Rail.tsx', 're-cut', 'Four destinations; the session card and its phase switch move in at the foot.'],
+      ['components/SessionBar.tsx', 'delete', 'The session lives in the rail. Elapsed time, phase and wrap-up move there.'],
+      ['screens/Today.tsx', 're-cut', 'Becomes Desk: band, three headline numbers, ridge, gains, quiet footer. Same /api/today payload.'],
+      ['screens/Plan.tsx + Modules.tsx', 'merge', 'One Track screen: week strip, then three bands. The flat modules table goes.'],
+      ['screens/Module.tsx + tabs/*', 're-cut', 'One syllabus screen. Overview, Resources, Notes and Checks fold into the topic rows; the tablist goes.'],
+      ['components/NoteEditor.tsx', 'keep', 'Same CodeMirror; wrapped in the focus-mode shell with the source pane and jots strip.'],
+      ['components/TidyDialog.tsx', 'keep', 'Same merge view, restyled per 6.1; footer verbs become Take all / Revert all.'],
+      ['components/AttemptFlow.tsx', 're-cut', 'Same three stages, now three screens rather than one growing page.'],
+      ['components/SelfGrade.tsx', 'keep', 'Rubric lines, second-opinion sub-lines and the error fieldset are unchanged in behaviour.'],
+      ['screens/WeeklyReview.tsx', 're-cut', 'Six blocks become four; calibration becomes a bar picture; the 40-row burn-up becomes four weeks.'],
+      ['screens/Capstone.tsx', 're-cut', 'Cards lead with the next action; commit-on-blur behaviour unchanged.'],
+      ['components/Chip.tsx', 're-cut', 'Four tones survive; most callers stop using it and print mono metadata instead.'],
+      ['components/HoursBar.tsx', 'keep', 'Same stacked bar. ActivityStrip is deleted — 280 grey squares taught nothing.']
+    ].map(([file, verdict, note]) => ({
+      file, verdict, note,
+      verdictStyle: verdict === 'keep' ? V.keep : verdict === 'delete' ? V.gone : V.recut
+    }));
+
+    const newComponents = [
+      ['Band', 'The violet tonight panel. One per screen at most.'],
+      ['Row', 'Title, mono metadata, one state, one warning, one action. Used everywhere.'],
+      ['Ridge', 'Capability columns on the Desk; one per skill area.'],
+      ['StepStrip', 'The numbered topic selector on a module.'],
+      ['Jotter', 'Focus-mode note shell: source pane, editor, unfiled jots, pop-out.'],
+      ['Stat', 'A serif number with a label and a sub-line.']
+    ].map(([name, desc]) => ({ name, desc }));
+
+    return {
+      tokens, typeScale, spacing, radii, chips, beforeChips, naming, diff, handoff, newComponents,
+      themeLabel: theme === 'light' ? 'Dark' : 'Light',
+      toggleTheme: () => this.setState({ theme: theme === 'light' ? 'dark' : 'light' })
+    };
+  }
+}
+
+</script>
+</body>
+</html>

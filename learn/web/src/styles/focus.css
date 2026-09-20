@@ -1,0 +1,287 @@
+/* Focus mode: the source beside the note, the jot strip, the pop-out jotter. */
+
+.focus {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.focus-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--s5);
+  padding: var(--s4) var(--s6);
+  background: var(--surf);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.focus-id {
+  min-width: 0;
+}
+
+.focus-topic {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.focus-path {
+  font-size: 11.5px;
+  color: var(--ink3);
+  min-height: 1.2em;
+}
+
+.focus-sources {
+  flex-wrap: wrap;
+  max-width: 40%;
+}
+
+.focus-right {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.focus-clock {
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.focus-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+}
+
+.focus-body[data-mode="popout"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ----------------------------------------------------------- the source */
+.focus-source {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+  background: var(--surf2);
+}
+
+.focus-source-head {
+  flex: none;
+  padding: var(--s4) var(--s5);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.focus-source-title {
+  font-size: 13px;
+  color: var(--ink2);
+  flex: 1;
+  min-width: 0;
+}
+
+.focus-source-pos {
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+.focus-stage {
+  flex: 1;
+  min-height: 0;
+  padding: 0 var(--s5) var(--s4);
+}
+
+.focus-embed {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-inner);
+  background: var(--surf);
+}
+
+.focus-placeholder {
+  height: 100%;
+  min-height: 220px;
+  border-radius: var(--r-inner);
+  border: 1px solid var(--line);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--surf) 0 12px,
+    var(--surf2) 12px 24px
+  );
+  display: grid;
+  place-items: center;
+}
+
+.focus-placeholder-inner {
+  text-align: center;
+  padding: var(--s6);
+  max-width: 40ch;
+}
+
+.focus-kind {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.focus-placeholder-title {
+  margin: var(--s2) 0 var(--s1);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.focus-placeholder-meta {
+  margin: 0 0 var(--s4);
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+.focus-scrub {
+  flex: none;
+  margin: 0 var(--s5);
+  height: 6px;
+  border-radius: 999px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.focus-scrub-fill {
+  height: 100%;
+  background: var(--vio);
+}
+
+.focus-controls {
+  flex: none;
+  padding: 12px var(--s5) var(--s5);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.focus-posfield {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+.focus-posfield input {
+  width: 84px;
+  padding: 6px 8px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: var(--surf);
+  font-size: 12px;
+}
+
+.focus-note-foot {
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+/* ------------------------------------------------------------ the note */
+.focus-note {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surf);
+}
+
+/*
+ * Pop-out mode keeps the note pane mounted — unmounting it would drop unsaved
+ * keystrokes — and hides it with `hidden`. A class rule's `display` beats the UA
+ * rule for `[hidden]`, so the pane has to be told twice or it stays on screen
+ * under the full-width source.
+ */
+.focus-note[hidden] {
+  display: none;
+}
+
+.focus-prompts {
+  flex: none;
+  padding: 12px var(--s6);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.prompt-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px dashed var(--vio-line);
+  background: var(--vio-soft);
+  color: var(--vio);
+  font-size: 12px;
+}
+
+.focus-ai {
+  margin-left: auto;
+}
+
+.focus-notice {
+  margin: 0;
+  padding: 8px var(--s6);
+  font-size: 12px;
+  color: var(--ink3);
+  border-bottom: 1px solid var(--line);
+}
+
+.focus-editor {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.noteedit {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.noteedit-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s2) 0;
+}
+
+.noteedit-status {
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+.cm-host .cm-editor {
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+@media (max-width: 62rem) {
+  .focus-body {
+    grid-template-columns: minmax(0, 1fr);
+    overflow: auto;
+  }
+
+  .focus-source {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+}

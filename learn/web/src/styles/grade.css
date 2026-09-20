@@ -1,0 +1,128 @@
+/* Stage 3's self-grade card and the second-opinion control beside it. */
+
+/* ------------------------------------------------------- self-grade */
+.grade {
+  border-radius: 18px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.grade-head {
+  padding: var(--s5) var(--s6);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--s5);
+  flex-wrap: wrap;
+}
+
+.grade-head h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.grade-head p {
+  margin: var(--s1) 0 0;
+  font-size: 12.5px;
+  color: var(--ink3);
+}
+
+.grade-line {
+  padding: var(--s4) var(--s6);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: var(--s5);
+  align-items: flex-start;
+}
+
+.grade-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.grade-ai {
+  margin: var(--s1) 0 0;
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.grade-foot {
+  padding: var(--s6);
+  display: flex;
+  gap: var(--s7);
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.grade-label {
+  display: block;
+  font-size: 13px;
+  color: var(--ink2);
+  margin-bottom: 8px;
+}
+
+.grade-diagnosis {
+  flex: 1;
+  min-width: 280px;
+}
+
+.grade-diagnosis textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surf2);
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.grade-cat {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.grade-hint {
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.grade-hint-wide {
+  flex: 1;
+  min-width: 240px;
+  margin: 0;
+}
+
+.attempt-foot {
+  border-radius: 18px;
+  padding: var(--s5) var(--s6);
+  background: var(--surf2);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: var(--s5);
+  flex-wrap: wrap;
+}
+
+.critique {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  align-items: flex-end;
+  max-width: 260px;
+}
+
+.critique-reason {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink3);
+  text-align: right;
+}

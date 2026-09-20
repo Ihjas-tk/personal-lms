@@ -1,0 +1,215 @@
+/**
+ * Design tokens — normative source: `Learn Design System.dc.html` §1–3.
+ *
+ * Light on `:root`, dark under the OS preference. `[data-theme="dark"]` is an
+ * escape hatch for a host that wants to force a scheme; the app itself never sets
+ * it and ships no toggle (the capture run emulates the media query instead).
+ */
+:root {
+  color-scheme: light dark;
+
+  --vio: #6d3bee;
+  --vio2: #8b5cf6;
+  --vio-soft: #efeafe;
+  --vio-line: #d8ccfb;
+  --on-vio: #ffffff;
+
+  --ink: #1a1626;
+  --ink2: #54506a;
+  --ink3: #8a86a0;
+
+  --bg: #f6f5fc;
+  --surf: #ffffff;
+  --surf2: #f3f1fb;
+  --line: #e6e3f1;
+
+  --amber: #9a5a12;
+  --amber-soft: #fcf0e1;
+  --amber-line: #eed9bc;
+
+  --good: #1c7a52;
+  --good-soft: #e2f4ec;
+  --good-line: #bfe4d3;
+
+  /* Destructive confirmation only — discarding a session. */
+  --red-soft: #fcebeb;
+  --red-line: #e9c9c9;
+
+  --shadow: 0 1px 2px rgba(26, 22, 38, 0.05), 0 10px 28px -16px rgba(26, 22, 38, 0.28);
+  --shadow-lg: 0 24px 64px -24px rgba(26, 22, 38, 0.4);
+
+  --focus: var(--vio);
+
+  --font-ui: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* 4 · 6 · 10 · 14 · 18 · 22 · 26 · 38 — the only spacing there is. */
+  --s1: 4px;
+  --s2: 6px;
+  --s3: 10px;
+  --s4: 14px;
+  --s5: 18px;
+  --s6: 22px;
+  --s7: 26px;
+  --s8: 38px;
+
+  --r-sm: 9px;
+  --r-btn: 11px;
+  --r-inner: 14px;
+  --r-card: 16px;
+  --r-lg: 20px;
+  --r-band: 24px;
+
+  --rail-w: 244px;
+  --maxw: 1220px;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* An explicit light choice in the rail beats a dark OS. */
+  :root:not([data-theme="light"]) {
+    --vio: #a78bfa;
+    --vio2: #8b5cf6;
+    --vio-soft: #2a2440;
+    --vio-line: #453b68;
+    --on-vio: #16112b;
+
+    --ink: #eeebf8;
+    --ink2: #b2adc8;
+    --ink3: #827d9b;
+
+    --bg: #121020;
+    --surf: #1b1930;
+    --surf2: #232038;
+    --line: #2e2a46;
+
+    --amber: #e0b27a;
+    --amber-soft: #2f2617;
+    --amber-line: #4c3d22;
+
+    --good: #8ed0ac;
+    --good-soft: #182c23;
+    --good-line: #2b4a3a;
+
+    --red-soft: #2e1c1c;
+    --red-line: #4a2e2e;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -16px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 24px 64px -24px rgba(0, 0, 0, 0.75);
+  }
+}
+
+[data-theme="dark"] {
+  --vio: #a78bfa;
+  --vio2: #8b5cf6;
+  --vio-soft: #2a2440;
+  --vio-line: #453b68;
+  --on-vio: #16112b;
+
+  --ink: #eeebf8;
+  --ink2: #b2adc8;
+  --ink3: #827d9b;
+
+  --bg: #121020;
+  --surf: #1b1930;
+  --surf2: #232038;
+  --line: #2e2a46;
+
+  --amber: #e0b27a;
+  --amber-soft: #2f2617;
+  --amber-line: #4c3d22;
+
+  --good: #8ed0ac;
+  --good-soft: #182c23;
+  --good-line: #2b4a3a;
+
+  --red-soft: #2e1c1c;
+  --red-line: #4a2e2e;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -16px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 24px 64px -24px rgba(0, 0, 0, 0.75);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--vio);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--vio2);
+  text-decoration: underline;
+}
+
+code,
+pre,
+.cm-editor {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+/* ------------------------------------------------------------ utilities */
+.page {
+  padding: 34px 40px 80px;
+  max-width: var(--maxw);
+  width: 100%;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  color: var(--ink3);
+}
+
+.err {
+  color: var(--amber);
+  font-size: 13px;
+}
+
+.empty {
+  color: var(--ink3);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-inner);
+  padding: var(--s6);
+  text-align: center;
+}

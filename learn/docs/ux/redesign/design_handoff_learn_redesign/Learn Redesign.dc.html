@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="app">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--vio:#6D3BEE;--vio2:#8B5CF6;--vio-soft:#EFEAFE;--vio-line:#D8CCFB;--on-vio:#ffffff;
+--ink:#1A1626;--ink2:#54506A;--ink3:#8A86A0;
+--bg:#F6F5FC;--surf:#FFFFFF;--surf2:#F3F1FB;--line:#E6E3F1;
+--amber:#9A5A12;--amber-soft:#FCF0E1;--amber-line:#EED9BC;
+--good:#1C7A52;--good-soft:#E2F4EC;--good-line:#BFE4D3;
+--shadow:0 1px 2px rgba(26,22,38,.05), 0 10px 28px -16px rgba(26,22,38,.28);
+--shadow-lg:0 24px 64px -24px rgba(26,22,38,.40);
+}
+[data-theme="dark"]{
+--vio:#A78BFA;--vio2:#8B5CF6;--vio-soft:#2A2440;--vio-line:#453B68;--on-vio:#16112B;
+--ink:#EEEBF8;--ink2:#B2ADC8;--ink3:#827D9B;
+--bg:#121020;--surf:#1B1930;--surf2:#232038;--line:#2E2A46;
+--amber:#E0B27A;--amber-soft:#2F2617;--amber-line:#4C3D22;
+--good:#8ED0AC;--good-soft:#182C23;--good-line:#2B4A3A;
+--shadow:0 1px 2px rgba(0,0,0,.30), 0 10px 28px -16px rgba(0,0,0,.6);
+--shadow-lg:0 24px 64px -24px rgba(0,0,0,.75);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:var(--vio);text-decoration:none}
+a:hover{color:var(--vio2);text-decoration:underline}
+button{font:inherit;cursor:pointer}
+input,textarea,select{font:inherit}
+</style>
+</helmet>
+
+<div style="min-height:100vh;min-width:1320px;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:15px;line-height:1.55">
+<div style="display:grid;grid-template-columns:244px minmax(0,1fr);align-items:start">
+
+<aside style="position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:22px;padding:26px 18px;background:var(--surf);border-right:1px solid var(--line)">
+  <div style="display:flex;align-items:center;gap:10px;padding:0 8px">
+    <div style="width:28px;height:28px;border-radius:9px;background:var(--vio);display:grid;place-items:center;color:var(--on-vio);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500">l</div>
+    <div style="font-family:'Playfair Display',serif;font-size:19px;font-weight:600;letter-spacing:.01em">learn</div>
+  </div>
+
+  <nav style="display:flex;flex-direction:column;gap:2px">
+    <sc-for list="{{ nav }}" as="item" hint-placeholder-count="4">
+      <button onClick="{{ item.go }}" style="{{ item.style }}">
+        <span>{{ item.label }}</span>
+        <span style="{{ item.badgeStyle }}">{{ item.badge }}</span>
+      </button>
+    </sc-for>
+  </nav>
+
+  <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px">
+    <sc-if value="{{ sessionOn }}" hint-placeholder-val="{{ true }}">
+      <div style="border-radius:14px;padding:14px;background:var(--vio-soft);border:1px solid var(--vio-line)">
+        <div style="display:flex;align-items:baseline;justify-content:space-between">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--vio)">Session</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-variant-numeric:tabular-nums;color:var(--ink)">{{ elapsed }}</div>
+        </div>
+        <div style="margin-top:6px;font-size:13px;color:var(--ink2)">Transformers from scratch</div>
+        <div style="margin-top:10px;display:flex;gap:4px">
+          <sc-for list="{{ phases }}" as="p" hint-placeholder-count="3">
+            <button onClick="{{ p.pick }}" style="{{ p.style }}">{{ p.label }}</button>
+          </sc-for>
+        </div>
+        <button onClick="{{ openClose }}" style="margin-top:10px;width:100%;padding:9px 12px;border-radius:10px;border:none;background:var(--vio);color:var(--on-vio);font-weight:600;font-size:13px">Wrap up</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ sessionOff }}" hint-placeholder-val="{{ true }}">
+      <div style="border-radius:14px;padding:14px;background:var(--surf2);border:1px solid var(--line)">
+        <div style="font-size:13px;color:var(--ink2);line-height:1.45">Not working yet. Week 10 of 40.</div>
+        <button onClick="{{ startSession }}" style="margin-top:10px;width:100%;padding:9px 12px;border-radius:10px;border:none;background:var(--vio);color:var(--on-vio);font-weight:600;font-size:13px">Start a session</button>
+      </div>
+    </sc-if>
+    <div style="display:flex;gap:6px">
+      <button onClick="{{ toggleTheme }}" style="flex:1;padding:7px;border-radius:9px;border:1px solid var(--line);background:var(--surf);color:var(--ink3);font-size:12px">{{ themeLabel }}</button>
+      <button onClick="{{ toggleFirstRun }}" style="flex:1;padding:7px;border-radius:9px;border:1px solid var(--line);background:var(--surf);color:var(--ink3);font-size:12px">{{ firstRunLabel }}</button>
+    </div>
+  </div>
+</aside>
+
+<main style="padding:34px 40px 80px;max-width:1220px">
+
+<sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Desk">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:24px;margin-bottom:16px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--ink3)">{{ deskDate }}</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)">{{ deskSkips }}</div>
+  </div>
+
+  <section style="border-radius:24px;padding:38px 40px;background:var(--vio);color:var(--on-vio);box-shadow:var(--shadow-lg)">
+    <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:36px;align-items:start">
+      <div>
+        <div style="font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.7">{{ cueLabel }}</div>
+        <p style="margin:14px 0 0;font-family:'Playfair Display',serif;font-size:31px;line-height:1.3;max-width:24ch">{{ cueText }}</p>
+        <div style="margin-top:26px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <button onClick="{{ startSession }}" style="padding:14px 26px;border-radius:14px;border:none;background:var(--on-vio);color:var(--vio);font-weight:700;font-size:15px">{{ cueButton }}</button>
+          <span style="font-size:13px;opacity:.82;max-width:22ch;line-height:1.45">{{ cueHint }}</span>
+        </div>
+      </div>
+      <div style="border-radius:16px;background:var(--surf);color:var(--ink);padding:16px 18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+          <h2 style="margin:0;font-size:13px;font-weight:700">First ten minutes</h2>
+          <span style="font-size:11.5px;color:var(--ink3)">{{ warmupMeta }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ warmup }}" as="w" hint-placeholder-count="3">
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);margin-top:2px">{{ w.n }}</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:12.5px;line-height:1.4;color:var(--ink2)">{{ w.prompt }}</div>
+                <div style="margin-top:2px;font-size:11px;color:var(--ink3)">{{ w.reason }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink3)">Skippable, and the skip is recorded rather than punished.</div>
+      </div>
+    </div>
+  </section>
+
+  <div style="margin-top:32px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <sc-for list="{{ headline }}" as="hl" hint-placeholder-count="3">
+      <div style="{{ hl.cellStyle }}">
+        <div style="font-family:'Playfair Display',serif;font-size:38px;line-height:1;color:var(--ink)">{{ hl.value }}</div>
+        <div style="margin-top:8px;font-size:13px;color:var(--ink2)">{{ hl.label }}</div>
+        <div style="margin-top:3px;font-size:11.5px;color:var(--ink3)">{{ hl.sub }}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="margin-top:30px;display:flex;align-items:baseline;justify-content:space-between;gap:20px">
+    <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:23px;font-weight:600">What you can actually do</h2>
+    <span style="font-size:12.5px;color:var(--ink3)">{{ skillsCaption }}</span>
+  </div>
+
+  <div style="margin-top:14px;border-radius:20px;padding:26px 28px 20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+    <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px">
+      <sc-for list="{{ skills }}" as="sk" hint-placeholder-count="6">
+        <div style="min-width:0;display:grid;grid-template-rows:22px 168px 44px 26px;gap:10px;align-content:start">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3);text-align:center">{{ sk.count }}</div>
+          <div style="{{ sk.columnStyle }}">
+            <sc-for list="{{ sk.segments }}" as="g" hint-placeholder-count="3">
+              <div style="{{ g.style }}" title="{{ g.title }}"></div>
+            </sc-for>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.25">{{ sk.name }}</div>
+            <div style="margin-top:3px;font-size:11px;color:var(--ink3)">{{ sk.where }}</div>
+          </div>
+          <div style="text-align:center"><span style="{{ sk.deltaStyle }}">{{ sk.delta }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--line);display:flex;gap:18px;font-size:11.5px;color:var(--ink3);flex-wrap:wrap;align-items:center">
+      <span style="display:flex;align-items:center;gap:6px"><i style="width:9px;height:9px;border-radius:3px;background:var(--good);display:inline-block"></i>lasting — two clean passes a week apart</span>
+      <span style="display:flex;align-items:center;gap:6px"><i style="width:9px;height:9px;border-radius:3px;background:var(--vio);display:inline-block"></i>solid</span>
+      <span style="display:flex;align-items:center;gap:6px"><i style="width:9px;height:9px;border-radius:3px;background:var(--amber);display:inline-block"></i>shaky</span>
+      <span style="display:flex;align-items:center;gap:6px"><i style="width:9px;height:9px;border-radius:3px;background:var(--vio-line);display:inline-block"></i>tried</span>
+      <span style="display:flex;align-items:center;gap:6px"><i style="width:9px;height:9px;border-radius:3px;background:var(--surf2);border:1px solid var(--line);display:inline-block"></i>untouched</span>
+      <span style="margin-left:auto">{{ skillsFoot }}</span>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start">
+
+    <div style="border-radius:16px;padding:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+      <h2 style="margin:0 0 4px;font-size:15px;font-weight:700">Four weeks of gains</h2>
+      <p style="margin:0 0 16px;font-size:12px;color:var(--ink3)">Movement, not totals.</p>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ gains }}" as="g" hint-placeholder-count="4">
+          <div style="display:flex;gap:14px;align-items:baseline">
+            <div style="{{ g.numStyle }}">{{ g.num }}</div>
+            <div style="flex:1;min-width:0;font-size:13px;line-height:1.45;color:var(--ink2)">{{ g.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="border-radius:16px;padding:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <h2 style="margin:0;font-size:15px;font-weight:700">Knowing what you know</h2>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink)">{{ brierNow }}</span>
+      </div>
+      <p style="margin:4px 0 16px;font-size:12px;color:var(--ink3)">Brier score by week. Lower is better.</p>
+      <div style="display:flex;align-items:flex-end;gap:6px;height:84px">
+        <sc-for list="{{ brierTrend }}" as="bt" hint-placeholder-count="6">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="{{ bt.style }}"></div>
+            <span style="font-size:10.5px;color:var(--ink3)">{{ bt.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin:14px 0 0;font-size:12px;color:var(--ink3);line-height:1.5">{{ brierSentence }}</p>
+    </div>
+
+    <div style="border-radius:16px;padding:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <h2 style="margin:0;font-size:15px;font-weight:700">Newly proved</h2>
+        <button onClick="{{ goReview }}" style="border:none;background:none;padding:0;color:var(--vio);font-size:12.5px;font-weight:600">All →</button>
+      </div>
+      <p style="margin:4px 0 16px;font-size:12px;color:var(--ink3)">The only progress that counts.</p>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ proofFeed }}" as="p" hint-placeholder-count="4">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="{{ p.dotStyle }}"></div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12.5px;line-height:1.45;color:var(--ink2)">{{ p.text }}</div>
+              <div style="margin-top:2px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">{{ p.when }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;border-radius:20px;padding:22px 26px;background:var(--surf2);border:1px solid var(--line);display:flex;gap:36px;align-items:center;flex-wrap:wrap">
+    <div style="flex:1 1 300px;min-width:0">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <h2 style="margin:0;font-size:13.5px;font-weight:700">Hours this week</h2>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink3)">{{ hoursTotal }} / 12</span>
+      </div>
+      <div style="margin-top:10px;height:8px;border-radius:999px;background:var(--surf);overflow:hidden;display:flex">
+        <div style="{{ barNew }}"></div>
+        <div style="{{ barReview }}"></div>
+        <div style="{{ barBuild }}"></div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:14px;font-size:11.5px;color:var(--ink3);flex-wrap:wrap">
+        <span>new {{ hNew }}</span><span>review {{ hReview }}</span><span>build {{ hBuild }}</span><span>{{ hoursSentence }}</span>
+      </div>
+    </div>
+    <div style="flex:1 1 240px;min-width:0">
+      <h2 style="margin:0;font-size:13.5px;font-weight:700">Slipping</h2>
+      <p style="margin:8px 0 0;font-size:12.5px;color:var(--ink2);line-height:1.5">{{ slippingText }}</p>
+    </div>
+    <div style="flex:none">
+      <button onClick="{{ goReview }}" style="padding:11px 20px;border-radius:12px;border:1px solid var(--vio-line);background:var(--vio-soft);color:var(--vio);font-weight:600;font-size:13px">Sunday debrief</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isTrack }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Track">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:8px">
+    <div>
+      <h1 style="margin:0;font-family:'Playfair Display',serif;font-size:32px;font-weight:600">The track</h1>
+      <p style="margin:6px 0 0;font-size:14px;color:var(--ink2)">40 weeks, nine phases. 2% of core checks are lasting; 7% have been attempted.</p>
+    </div>
+    <button style="padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:13px">Push everything back a week</button>
+  </div>
+
+  <div style="margin:22px 0 30px;border-radius:16px;padding:18px 20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+    <div style="display:flex;gap:2px;height:30px;align-items:stretch">
+      <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="40">
+        <div style="{{ t.style }}" title="{{ t.title }}"></div>
+      </sc-for>
+    </div>
+    <div style="margin-top:10px;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">
+      <span>week 1 · Jul 2026</span><span style="color:var(--vio);font-weight:700">↑ week 10 — you are here</span><span>week 40 · Apr 2027</span>
+    </div>
+    <p style="margin:12px 0 0;font-size:12.5px;color:var(--ink3)">Every date is soft. Pushing the whole schedule back a week is a normal move and costs you one of two banked skips.</p>
+  </div>
+
+  <sc-for list="{{ bands }}" as="b" hint-placeholder-count="3">
+    <section style="margin-bottom:34px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px">
+        <h2 style="margin:0;font-size:19px;font-weight:700;font-family:'Playfair Display',serif">{{ b.title }}</h2>
+        <span style="{{ b.countStyle }}">{{ b.count }}</span>
+      </div>
+      <p style="margin:0 0 14px;font-size:13px;color:var(--ink3)">{{ b.blurb }}</p>
+
+      <div style="{{ b.listStyle }}">
+        <sc-for list="{{ b.rows }}" as="m" hint-placeholder-count="4">
+          <div style="{{ m.rowStyle }}">
+            <div style="{{ m.markStyle }}"></div>
+            <div style="width:86px;flex:none;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3);line-height:1.4">{{ m.weeks }}<br>{{ m.date }}</div>
+            <div style="flex:1 1 260px;min-width:0">
+              <button onClick="{{ m.open }}" style="border:none;background:none;padding:0;text-align:left;font-size:15px;font-weight:650;color:var(--ink);line-height:1.35">{{ m.title }}</button>
+              <div style="margin-top:4px;font-size:12px;color:var(--ink3)">{{ m.sub }}</div>
+            </div>
+            <div style="width:150px;flex:none">
+              <div style="display:flex;gap:3px">
+                <sc-for list="{{ m.cells }}" as="c" hint-placeholder-count="8">
+                  <div style="{{ c.style }}"></div>
+                </sc-for>
+              </div>
+              <div style="margin-top:6px;font-size:11.5px;color:var(--ink3)">{{ m.proof }}</div>
+            </div>
+            <div style="width:128px;flex:none;text-align:right">
+              <span style="{{ m.flagStyle }}">{{ m.flag }}</span>
+            </div>
+            <button onClick="{{ m.open }}" style="{{ m.btnStyle }}">{{ m.action }}</button>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isModule }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Module workspace">
+  <button onClick="{{ goTrack }}" style="border:none;background:none;padding:0;color:var(--ink3);font-size:13px;margin-bottom:10px">← The track</button>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px">
+    <div>
+      <h1 style="margin:0;font-family:'Playfair Display',serif;font-size:30px;font-weight:600">Transformers from scratch</h1>
+      <div style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink3)">weeks 3–8 · llm · soft date 2026-09-05 · 3.0 of 70 h</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span style="padding:6px 12px;border-radius:999px;background:var(--amber-soft);border:1px solid var(--amber-line);color:var(--amber);font-size:12px;font-weight:600">2 re-tests overdue</span>
+      <button onClick="{{ startSession }}" style="padding:11px 20px;border-radius:12px;border:none;background:var(--vio);color:var(--on-vio);font-weight:700;font-size:14px">{{ moduleCta }}</button>
+    </div>
+  </div>
+
+  <div style="margin-top:22px;border-radius:16px;padding:18px 22px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap">
+      <div style="font-size:14px;color:var(--ink2)">Six things to cover. You are on <strong style="color:var(--ink)">2 · Causal self-attention</strong>.</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)">1 proved · 1 in progress · 4 untouched</div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:6px">
+      <sc-for list="{{ topics }}" as="t" hint-placeholder-count="6">
+        <button onClick="{{ t.open }}" style="{{ t.stepStyle }}">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.7">{{ t.n }}</span>
+          <span style="font-size:12.5px;font-weight:600;text-align:left;line-height:1.3">{{ t.short }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start">
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <sc-for list="{{ topics }}" as="t" hint-placeholder-count="6">
+        <div style="{{ t.cardStyle }}">
+          <button onClick="{{ t.open }}" style="width:100%;text-align:left;padding:16px 20px;border:none;background:none;display:flex;gap:14px;align-items:center">
+            <div style="{{ t.markStyle }}">{{ t.n }}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:15.5px;font-weight:650;line-height:1.35;color:var(--ink)">{{ t.title }}</div>
+              <div style="margin-top:4px;font-size:12.5px;color:var(--ink3)">{{ t.summary }}</div>
+            </div>
+            <span style="{{ t.stateStyle }}">{{ t.state }}</span>
+          </button>
+
+          <div style="{{ t.bodyStyle }}">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;border-top:1px solid var(--line)">
+
+              <div style="border-right:1px solid var(--line)">
+                <div style="padding:14px 20px 10px;display:flex;justify-content:space-between;align-items:baseline">
+                  <h3 style="margin:0;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)">Source</h3>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">{{ t.sourceMeta }}</span>
+                </div>
+                <sc-for list="{{ t.sources }}" as="r" hint-placeholder-count="2">
+                  <div style="padding:10px 20px;display:flex;gap:12px;align-items:flex-start">
+                    <div style="{{ r.railStyle }}"></div>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:13px;line-height:1.4;color:var(--ink)">{{ r.title }}</div>
+                      <div style="margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">{{ r.meta }}</span>
+                        <span style="{{ r.chipStyle }}">{{ r.state }}</span>
+                      </div>
+                      <div style="{{ r.trackStyle }}">
+                        <div style="{{ r.fillStyle }}"></div>
+                      </div>
+                    </div>
+                    <button style="{{ r.btnStyle }}">{{ r.btn }}</button>
+                  </div>
+                </sc-for>
+                <div style="padding:8px 20px 16px"><button style="border:none;background:none;padding:0;color:var(--vio);font-size:12.5px;font-weight:600">{{ t.moreSources }}</button></div>
+              </div>
+
+              <div>
+                <div style="padding:14px 20px 10px;display:flex;justify-content:space-between;align-items:baseline">
+                  <h3 style="margin:0;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)">Your note</h3>
+                  <span style="font-size:11.5px;color:var(--ink3)">{{ t.noteMeta }}</span>
+                </div>
+                <div style="padding:0 20px 14px">
+                  <div style="{{ t.noteStyle }}">{{ t.note }}</div>
+                  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button onClick="{{ openNote }}" style="padding:7px 14px;border-radius:9px;border:1px solid var(--vio-line);background:var(--vio-soft);color:var(--vio);font-size:12.5px;font-weight:600">{{ t.noteBtn }}</button>
+                    <button style="padding:7px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:12.5px">Mechanism prompt</button>
+                    <button style="padding:7px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:12.5px">AI ▾</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid var(--line);background:var(--surf2);padding:14px 20px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+                <h3 style="margin:0;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)">Proof — the check that closes this topic</h3>
+                <span style="font-size:11.5px;color:var(--ink3)">{{ t.proofMeta }}</span>
+              </div>
+              <sc-for list="{{ t.checks }}" as="c" hint-placeholder-count="2">
+                <div style="display:flex;gap:14px;align-items:center;padding:8px 0;flex-wrap:wrap">
+                  <div style="flex:1 1 320px;min-width:0;font-size:13.5px;line-height:1.45;color:var(--ink)">{{ c.prompt }}</div>
+                  <span style="{{ c.stateStyle }}">{{ c.state }}</span>
+                  <span style="{{ c.flagStyle }}">{{ c.flag }}</span>
+                  <button onClick="{{ c.go }}" style="{{ c.btnStyle }}">{{ c.action }}</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;position:sticky;top:34px">
+      <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:14px 18px;border-bottom:1px solid var(--line)">
+          <h2 style="margin:0;font-size:14px;font-weight:700">Set-up, once</h2>
+        </div>
+        <sc-for list="{{ chores }}" as="ch" hint-placeholder-count="2">
+          <div style="padding:11px 18px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start">
+            <div style="{{ ch.boxStyle }}">{{ ch.tick }}</div>
+            <div style="flex:1;min-width:0;font-size:13px;line-height:1.45;color:var(--ink2)">{{ ch.label }}</div>
+          </div>
+        </sc-for>
+        <div style="padding:12px 18px;font-size:12px;color:var(--ink3);line-height:1.5">Habit: at the end of every session, write the one thing you still cannot do.</div>
+      </div>
+
+      <div style="border-radius:16px;padding:18px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <h2 style="margin:0 0 12px;font-size:14px;font-weight:700">Time here</h2>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--ink2)"><span>Logged</span><span style="font-family:'JetBrains Mono',monospace;color:var(--ink)">3.0 h</span></div>
+        <div style="margin-top:8px;height:8px;border-radius:999px;background:var(--surf2);overflow:hidden"><div style="width:4.3%;height:100%;background:var(--vio)"></div></div>
+        <div style="margin-top:8px;font-size:12px;color:var(--ink3)">of a 70 h budget. Weeks 3–8, soft date 2026-09-05 — already behind, which is information, not a failure.</div>
+        <button style="margin-top:12px;width:100%;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:12.5px">Push this module back a week</button>
+      </div>
+
+      <div style="border-radius:16px;padding:18px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+          <h2 style="margin:0;font-size:14px;font-weight:700">All notes</h2>
+          <span style="font-size:12px;color:var(--ink3)">3 files</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <sc-for list="{{ noteIndex }}" as="ni" hint-placeholder-count="3">
+            <div style="display:flex;justify-content:space-between;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">
+              <span style="color:var(--vio)">{{ ni.file }}</span><span>{{ ni.when }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAttempt }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Check attempt">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+    <button onClick="{{ goModule }}" style="border:none;background:none;padding:0;color:var(--ink3);font-size:13px">← Transformers from scratch</button>
+    <div style="display:flex;gap:6px">
+      <sc-for list="{{ stages }}" as="s" hint-placeholder-count="3">
+        <button onClick="{{ s.pick }}" style="{{ s.style }}">{{ s.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="max-width:880px;margin:0 auto">
+    <div style="border-radius:18px;padding:28px 32px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">explain · core</span>
+        <span style="padding:3px 10px;border-radius:999px;background:var(--amber-soft);border:1px solid var(--amber-line);color:var(--amber);font-size:11.5px">reference not yet checked by you</span>
+      </div>
+      <p style="margin:0;font-family:'Playfair Display',serif;font-size:26px;line-height:1.35">State the difference between absolute/learned positional embeddings and RoPE.</p>
+    </div>
+
+    <sc-if value="{{ stage1 }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top:18px;border-radius:18px;padding:28px 32px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <h2 style="margin:0 0 4px;font-size:16px;font-weight:700">Before you answer — how sure are you?</h2>
+        <p style="margin:0 0 22px;font-size:13px;color:var(--ink3)">This is the only thing that makes the calibration readout mean anything. It cannot be skipped.</p>
+        <div style="display:flex;align-items:center;gap:20px">
+          <div style="flex:1;height:10px;border-radius:999px;background:var(--surf2);position:relative">
+            <div style="position:absolute;inset:0 35% 0 0;border-radius:999px;background:var(--vio)"></div>
+            <div style="position:absolute;left:65%;top:-7px;width:24px;height:24px;border-radius:999px;background:var(--surf);border:3px solid var(--vio);box-shadow:var(--shadow)"></div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-variant-numeric:tabular-nums;width:64px;text-align:right">65</div>
+        </div>
+        <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:12px;color:var(--ink3)"><span>no idea</span><span>certain</span></div>
+        <button onClick="{{ toStage2 }}" style="margin-top:24px;padding:12px 22px;border-radius:12px;border:none;background:var(--vio);color:var(--on-vio);font-weight:700;font-size:14px">Lock it in and start writing</button>
+        <p style="margin:16px 0 0;font-size:12.5px;color:var(--ink3)">The rubric and the reference answer stay hidden until you submit.</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stage2 }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top:18px;border-radius:18px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:14px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:13px;color:var(--ink2)">Your answer, from memory</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)">04:12 · sure: 65</span>
+        </div>
+        <div style="padding:22px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.75;color:var(--ink);min-height:220px">The residual stream carries the running hidden state; every block reads it through a layer norm, writes its output back with an addition, and never replaces it. That is why the gradient reaches the embedding without passing through every non-linearity.<span style="display:inline-block;width:9px;height:18px;background:var(--vio);vertical-align:-3px;margin-left:2px"></span></div>
+        <div style="padding:16px 22px;border-top:1px solid var(--line);display:flex;align-items:center;gap:16px;background:var(--surf2)">
+          <button onClick="{{ toStage3 }}" style="padding:11px 20px;border-radius:12px;border:none;background:var(--vio);color:var(--on-vio);font-weight:700;font-size:14px">Submit and freeze</button>
+          <span style="font-size:12.5px;color:var(--ink3)">Nothing is graded until you freeze it. AI is off while an answer is open.</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stage3 }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top:18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start">
+        <div style="border-radius:18px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:14px 20px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink3)">What you wrote</div>
+          <div style="padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:var(--ink2)">The residual stream carries the running hidden state; every block reads it through a layer norm, writes its output back with an addition, and never replaces it.</div>
+        </div>
+        <div style="border-radius:18px;background:var(--vio-soft);border:1px solid var(--vio-line);box-shadow:var(--shadow);overflow:hidden">
+          <div style="padding:14px 20px;border-bottom:1px solid var(--vio-line);font-size:13px;color:var(--vio);font-weight:600">The reference</div>
+          <div style="padding:18px 20px;font-size:13px;line-height:1.65;color:var(--ink2)">Absolute or learned positional embeddings are a lookup table of one vector per position, added once at the input. RoPE instead rotates the query and key vectors inside every attention layer, so the q·k product depends on the offset (m − n) only.</div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;border-radius:18px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:16px 22px;border-bottom:1px solid var(--line)">
+          <h2 style="margin:0;font-size:15px;font-weight:700">Mark it yourself, line by line</h2>
+          <p style="margin:4px 0 0;font-size:12.5px;color:var(--ink3)">The AI can give a second opinion. It never overwrites your mark.</p>
+        </div>
+        <sc-for list="{{ rubric }}" as="r" hint-placeholder-count="4">
+          <div style="padding:14px 22px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:flex-start">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;line-height:1.5">{{ r.text }}</div>
+              <div style="{{ r.aiStyle }}">{{ r.ai }}</div>
+            </div>
+            <div style="display:flex;gap:4px;flex:none">
+              <sc-for list="{{ r.marks }}" as="mk" hint-placeholder-count="3">
+                <button style="{{ mk.style }}">{{ mk.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+        <div style="padding:20px 22px;display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+          <div>
+            <div style="font-size:13px;color:var(--ink2);margin-bottom:8px">Overall</div>
+            <div style="display:flex;gap:6px">
+              <sc-for list="{{ overall }}" as="o" hint-placeholder-count="3">
+                <button style="{{ o.style }}">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex:1;min-width:280px">
+            <div style="font-size:13px;color:var(--ink2);margin-bottom:8px">What exactly differed from the reference?</div>
+            <div style="border-radius:12px;border:1px solid var(--line);background:var(--surf2);padding:12px 14px;font-size:13px;color:var(--ink);line-height:1.5">I described the residual stream but never said why the layer norm sits before the block rather than after it.</div>
+            <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+              <span style="padding:5px 12px;border-radius:999px;background:var(--surf2);border:1px solid var(--line);font-size:12px;color:var(--ink2)">misremembered the mechanism</span>
+              <span style="font-size:12px;color:var(--ink3)">goes to the error log</span>
+            </div>
+          </div>
+        </div>
+        <div style="padding:18px 22px;background:var(--surf2);border-top:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <button onClick="{{ goModule }}" style="padding:11px 20px;border-radius:12px;border:none;background:var(--vio);color:var(--on-vio);font-weight:700;font-size:14px">Record and move on</button>
+          <span style="font-size:12.5px;color:var(--ink3)">Comes back in 2 days. Two clean passes a week apart make it lasting.</span>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isReview }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Weekly debrief">
+  <h1 style="margin:0;font-family:'Playfair Display',serif;font-size:32px;font-weight:600">Sunday debrief</h1>
+  <p style="margin:6px 0 26px;font-size:14px;color:var(--ink2)">Week 10 on plan · 2 schedule skips banked this quarter.</p>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:20px">
+
+      <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:18px 22px;border-bottom:1px solid var(--line)">
+          <h2 style="margin:0;font-size:16px;font-weight:700">1 · Cold sweep</h2>
+          <p style="margin:4px 0 0;font-size:12.5px;color:var(--ink3)">Seven checks, drawn cold. Missed-while-sure comes first.</p>
+        </div>
+        <sc-for list="{{ sweep }}" as="s" hint-placeholder-count="3">
+          <div style="padding:13px 22px;border-bottom:1px solid var(--line);display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+            <div style="flex:1 1 320px;min-width:0;font-size:13.5px;line-height:1.45">{{ s.prompt }}</div>
+            <span style="{{ s.flagStyle }}">{{ s.flag }}</span>
+            <button onClick="{{ goAttempt }}" style="padding:7px 14px;border-radius:9px;border:1px solid var(--vio-line);background:var(--vio-soft);color:var(--vio);font-size:12.5px;font-weight:600">Attempt</button>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end">
+          <div>
+            <h2 style="margin:0;font-size:16px;font-weight:700">2 · How well you know what you know</h2>
+            <p style="margin:4px 0 0;font-size:12.5px;color:var(--ink3)">Over 7 graded attempts, you were sure 39 points more often than you were right.</p>
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:24px;color:var(--ink)">0.387</div>
+            <div style="font-size:11px;color:var(--ink3)">Brier</div>
+          </div>
+        </div>
+        <div style="padding:18px 22px;display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ calibration }}" as="cb" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="width:62px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)">{{ cb.bucket }}</div>
+              <div style="flex:1;height:22px;border-radius:7px;background:var(--surf2);position:relative;overflow:hidden">
+                <div style="{{ cb.statedStyle }}"></div>
+                <div style="{{ cb.actualStyle }}"></div>
+              </div>
+              <div style="width:130px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink2)">{{ cb.readout }}</div>
+            </div>
+          </sc-for>
+          <div style="display:flex;gap:16px;font-size:12px;color:var(--ink3);margin-top:2px">
+            <span style="display:flex;align-items:center;gap:6px"><i style="width:8px;height:8px;border-radius:3px;background:var(--vio-line);display:inline-block"></i>said</span>
+            <span style="display:flex;align-items:center;gap:6px"><i style="width:8px;height:8px;border-radius:3px;background:var(--vio);display:inline-block"></i>actually</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:18px 22px;border-bottom:1px solid var(--line)">
+          <h2 style="margin:0;font-size:16px;font-weight:700">3 · Mistakes worth keeping</h2>
+          <p style="margin:4px 0 0;font-size:12.5px;color:var(--ink3)">Seven open. Write what fixed it, or re-test the check it came from.</p>
+        </div>
+        <sc-for list="{{ errors }}" as="e" hint-placeholder-count="3">
+          <div style="padding:16px 22px;border-bottom:1px solid var(--line)">
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+              <span style="padding:3px 10px;border-radius:999px;background:var(--surf2);border:1px solid var(--line);font-size:11.5px;color:var(--ink2)">{{ e.cat }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">{{ e.when }}</span>
+            </div>
+            <p style="margin:0 0 10px;font-size:13.5px;line-height:1.5;color:var(--ink)">{{ e.text }}</p>
+            <div style="display:flex;gap:10px;align-items:center">
+              <div style="flex:1;border-radius:10px;border:1px solid var(--line);background:var(--surf2);padding:9px 12px;font-size:12.5px;color:var(--ink3)">What settled it?</div>
+              <button style="padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:12.5px">Resolve</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="border-radius:16px;padding:22px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <h2 style="margin:0;font-size:16px;font-weight:700">4 · Next week</h2>
+        <p style="margin:6px 0 14px;font-size:13px;color:var(--ink2);line-height:1.55">Scheduled: Prompting &amp; context engineering, RAG, Error analysis first, Golden dataset, Judge design &amp; calibration.</p>
+        <div style="border-radius:12px;border:1px dashed var(--line);background:var(--surf2);padding:14px 16px;font-size:13px;color:var(--ink3)">IF … THEN I will …</div>
+        <p style="margin:10px 0 0;font-size:12px;color:var(--ink3)">Scratch space. The plan that shows on your desk is the one you write when you close a session.</p>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px;position:sticky;top:34px">
+      <div style="border-radius:16px;padding:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <h2 style="margin:0 0 12px;font-size:14px;font-weight:700">Hours, last four weeks</h2>
+        <div style="display:flex;align-items:flex-end;gap:8px;height:90px">
+          <sc-for list="{{ burnup }}" as="b" hint-placeholder-count="4">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="{{ b.style }}"></div>
+              <span style="font-size:11px;color:var(--ink3)">{{ b.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <p style="margin:12px 0 0;font-size:12px;color:var(--ink3)">7.2 h under budget this week. The budget is a ceiling, not a target.</p>
+      </div>
+
+      <div style="border-radius:16px;padding:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+          <h2 style="margin:0;font-size:14px;font-weight:700">Things shipped</h2>
+          <button onClick="{{ goShipped }}" style="border:none;background:none;padding:0;color:var(--vio);font-size:12.5px;font-weight:600">Board →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ shippedMini }}" as="sm" hint-placeholder-count="4">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12.5px">
+              <span style="color:var(--ink2);min-width:0">{{ sm.title }}</span>
+              <span style="{{ sm.style }}">{{ sm.state }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isShipped }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Capstone board">
+  <h1 style="margin:0;font-family:'Playfair Display',serif;font-size:32px;font-weight:600">Things that exist</h1>
+  <p style="margin:6px 0 26px;font-size:14px;color:var(--ink2)">Eight artefacts. Each one either exists or does not — there is no percentage.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px">
+    <sc-for list="{{ artefacts }}" as="a" hint-placeholder-count="6">
+      <div style="{{ a.cardStyle }}">
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
+          <h2 style="margin:0;font-size:15.5px;font-weight:700;line-height:1.35">{{ a.title }}</h2>
+          <span style="{{ a.stateStyle }}">{{ a.state }}</span>
+        </div>
+        <p style="margin:8px 0 0;font-size:12.5px;line-height:1.55;color:var(--ink3)">{{ a.desc }}</p>
+        <div style="{{ a.nextStyle }}">{{ a.next }}</div>
+        <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">{{ a.path }}</span>
+          <button style="{{ a.btnStyle }}">{{ a.btn }}</button>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showRationale }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:36px;border-radius:16px;padding:18px 22px;background:var(--surf2);border:1px solid var(--line)">
+  <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">Why this screen is like this</div>
+  <p style="margin:0;font-size:13.5px;line-height:1.6;color:var(--ink2);max-width:90ch">{{ rationale }}</p>
+</div>
+</sc-if>
+
+</main>
+</div>
+
+<sc-if value="{{ noteOpen }}" hint-placeholder-val="{{ true }}">
+<div style="position:fixed;inset:0;z-index:45;background:var(--bg);display:flex;flex-direction:column">
+  <div style="flex:none;display:flex;align-items:center;gap:18px;padding:14px 22px;background:var(--surf);border-bottom:1px solid var(--line)">
+    <div style="min-width:0">
+      <div style="font-size:14px;font-weight:700;line-height:1.2">Causal self-attention</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">a1/attention.md · saved 4s ago</div>
+    </div>
+    <div style="display:flex;gap:6px;margin-left:12px">
+      <sc-for list="{{ noteSources }}" as="ns" hint-placeholder-count="3">
+        <button onClick="{{ ns.pick }}" style="{{ ns.style }}">{{ ns.label }}</button>
+      </sc-for>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)">2:14 · review</span>
+      <div style="display:flex;gap:4px;padding:3px;border-radius:11px;background:var(--surf2);border:1px solid var(--line)">
+        <button onClick="{{ setSplit }}" style="{{ splitBtn }}">Side by side</button>
+        <button onClick="{{ setPopout }}" style="{{ popBtn }}">Pop-out jotter</button>
+      </div>
+      <button onClick="{{ closeNote }}" style="padding:9px 18px;border-radius:11px;border:none;background:var(--vio);color:var(--on-vio);font-weight:600;font-size:13px">Done</button>
+    </div>
+  </div>
+
+  <div style="{{ noteBodyStyle }}">
+    <div style="min-width:0;display:flex;flex-direction:column;border-right:1px solid var(--line);background:var(--surf2)">
+      <div style="flex:none;padding:14px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="font-size:13px;color:var(--ink2);flex:1;min-width:0">Karpathy, Let's build GPT: from scratch, in code, spelled out</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">42:10 / 3:56:00</span>
+      </div>
+      <div style="flex:1;min-height:0;padding:0 20px 16px">
+        <div style="height:100%;border-radius:14px;border:1px solid var(--line);background:repeating-linear-gradient(135deg,var(--surf) 0 12px,var(--surf2) 12px 24px);display:grid;place-items:center">
+          <div style="text-align:center">
+            <div style="width:56px;height:56px;margin:0 auto;border-radius:999px;background:var(--vio);display:grid;place-items:center;color:var(--on-vio);font-size:18px">▶</div>
+            <div style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink3)">video · drop the source player here</div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:none;padding:0 20px 18px">
+        <div style="height:6px;border-radius:999px;background:var(--surf);border:1px solid var(--line);overflow:hidden"><div style="width:18%;height:100%;background:var(--vio)"></div></div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button style="padding:8px 14px;border-radius:10px;border:1px solid var(--vio);background:var(--vio);color:var(--on-vio);font-size:12.5px;font-weight:600">Stamp 42:10 into the note</button>
+          <button style="padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:12.5px">−15s</button>
+          <button style="padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:12.5px">Pause while I write</button>
+          <span style="align-self:center;font-size:11.5px;color:var(--ink3)">Minutes watched are logged against this resource.</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="{{ notePaneStyle }}">
+      <div style="flex:none;padding:12px 22px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <sc-for list="{{ jotPrompts }}" as="jp" hint-placeholder-count="3">
+          <button style="padding:6px 12px;border-radius:999px;border:1px dashed var(--vio-line);background:var(--vio-soft);color:var(--vio);font-size:12px">{{ jp }}</button>
+        </sc-for>
+        <button style="margin-left:auto;padding:6px 12px;border-radius:9px;border:1px solid var(--line);background:var(--surf);color:var(--ink3);font-size:12px">AI ▾</button>
+      </div>
+      <div style="flex:1;min-height:0;overflow:auto;padding:22px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.85;color:var(--ink);white-space:pre-wrap">## Scaled dot-product attention
+
+One head, with the causal mask added **before** the
+softmax, not after it.
+
+$$\mathrm{Attention}(Q,K,V)=\mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}+M\right)V$$
+
+Writing the mask as a multiplicative zero is the bug
+I keep reintroducing: it leaks probability mass.
+
+### What I still cannot do
+- Merge the heads without stopping to reason about
+  the reshape and transpose order.<span style="display:inline-block;width:8px;height:16px;background:var(--vio);vertical-align:-2px;margin-left:2px"></span></div>
+      <div style="flex:none;border-top:1px solid var(--line);background:var(--surf2);padding:14px 22px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+          <h3 style="margin:0;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)">Unfiled jots</h3>
+          <span style="font-size:11.5px;color:var(--ink3)">File them at session close</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <sc-for list="{{ jots }}" as="j" hint-placeholder-count="3">
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--ink2);line-height:1.45">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--vio);flex:none;margin-top:1px">{{ j.at }}</span>
+              <span style="flex:1;min-width:0">{{ j.text }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+          <div style="flex:1;border-radius:10px;border:1px solid var(--line);background:var(--surf);padding:10px 14px;font-size:12.5px;color:var(--ink3)">Jot a line without losing your place…</div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">⌘↵</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="{{ popoutStyle }}">
+    <div style="width:340px;border-radius:16px;background:var(--surf);border:1px solid var(--vio-line);box-shadow:var(--shadow-lg);overflow:hidden">
+      <div style="padding:10px 14px;background:var(--vio);color:var(--on-vio);display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;font-weight:700;flex:1">Jotter · attention</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.8">42:10</span>
+        <button onClick="{{ setSplit }}" style="border:none;background:none;color:var(--on-vio);font-size:13px;padding:0">⤢</button>
+      </div>
+      <div style="padding:14px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:var(--ink);min-height:120px;white-space:pre-wrap">mask before softmax, not after
+shapes: (b, h, t, d_head)
+why 1/sqrt(d_k)? ask later<span style="display:inline-block;width:7px;height:15px;background:var(--vio);vertical-align:-2px"></span></div>
+      <div style="padding:10px 14px;border-top:1px solid var(--line);background:var(--surf2);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:11px;color:var(--ink3)">Stays on top · ⌘↵ to file a line</span>
+        <button style="padding:5px 11px;border-radius:8px;border:1px solid var(--vio-line);background:var(--vio-soft);color:var(--vio);font-size:11.5px;font-weight:600">Stamp</button>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ closeOpen }}" hint-placeholder-val="{{ true }}">
+<div style="position:fixed;inset:0;background:rgba(18,16,32,.55);backdrop-filter:blur(3px);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:60px 20px;overflow:auto">
+  <div style="width:min(720px,100%);border-radius:20px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow-lg);overflow:hidden">
+    <div style="padding:26px 30px 20px;background:var(--vio-soft);border-bottom:1px solid var(--vio-line)">
+      <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:24px;font-weight:600;color:var(--ink)">Stand up well</h2>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink2)">2 h 14 m · 1 check attempted · 1 error logged. Three questions, then it is written to the vault.</p>
+    </div>
+    <div style="padding:24px 30px;display:flex;flex-direction:column;gap:22px">
+      <div>
+        <div style="font-size:13.5px;font-weight:600;margin-bottom:8px">What changed in your understanding, and what can you still not do?</div>
+        <div style="border-radius:12px;border:1px solid var(--line);background:var(--surf2);padding:14px 16px;font-size:13.5px;line-height:1.6;color:var(--ink)">I rebuilt causal self-attention from memory twice and the second pass was quicker because I stopped treating the mask and the softmax as one step. What I still cannot do is merge the heads without stopping to reason about the reshape and transpose order.</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--good)">67 words — enough.</div>
+      </div>
+      <div>
+        <div style="font-size:13.5px;font-weight:600;margin-bottom:8px">Next time, when you sit down</div>
+        <div style="display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3);text-align:right">IF</span>
+          <div style="border-radius:10px;border:1px solid var(--line);background:var(--surf2);padding:10px 14px;font-size:13.5px">it is Sunday after breakfast</div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3);text-align:right">THEN</span>
+          <div style="border-radius:10px;border:1px solid var(--line);background:var(--surf2);padding:10px 14px;font-size:13.5px">re-derive the attention mask on paper</div>
+        </div>
+        <p style="margin:8px 0 0;font-size:12px;color:var(--ink3)">This sentence is the first thing you will see next time.</p>
+      </div>
+      <div>
+        <div style="font-size:13.5px;font-weight:600;margin-bottom:8px">Anything you got wrong that is not already logged?</div>
+        <div style="border-radius:12px;border:1px solid var(--line);padding:12px 14px;display:flex;gap:10px;align-items:center;background:var(--surf2)">
+          <span style="padding:4px 11px;border-radius:999px;background:var(--surf);border:1px solid var(--line);font-size:12px;color:var(--ink2)">didn't know it</span>
+          <span style="flex:1;font-size:13px;color:var(--ink2)">I reached for the multiplicative mask again before I caught myself.</span>
+        </div>
+        <button style="margin-top:8px;border:none;background:none;padding:0;color:var(--vio);font-size:12.5px;font-weight:600">+ Add another</button>
+      </div>
+      <div>
+        <div style="font-size:13.5px;font-weight:600;margin-bottom:8px">How spent are you?</div>
+        <div style="display:flex;gap:6px">
+          <sc-for list="{{ fatigue }}" as="f" hint-placeholder-count="5">
+            <button style="{{ f.style }}">{{ f.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <div style="padding:18px 30px;border-top:1px solid var(--line);background:var(--surf2);display:flex;gap:12px;align-items:center">
+      <button onClick="{{ doClose }}" style="padding:11px 22px;border-radius:12px;border:none;background:var(--vio);color:var(--on-vio);font-weight:700;font-size:14px">Close the session</button>
+      <button onClick="{{ dismissClose }}" style="padding:11px 20px;border-radius:12px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:14px">Keep working</button>
+      <span style="margin-left:auto;font-size:12px;color:var(--ink3)">Committed to the vault as one markdown file.</span>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:950},&quot;showRationale&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;desk&quot;,&quot;track&quot;,&quot;module&quot;,&quot;attempt&quot;,&quot;review&quot;,&quot;shipped&quot;],&quot;default&quot;:&quot;desk&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;startTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;}}">
+const CHIP = (bg, line, ink) => `padding:3px 10px;border-radius:999px;background:var(${bg});border:1px solid var(${line});color:var(${ink});font-size:11.5px;white-space:nowrap`;
+const PLAIN = CHIP('--surf2', '--line', '--ink3');
+const GOOD = CHIP('--good-soft', '--good-line', '--good');
+const AMBER = CHIP('--amber-soft', '--amber-line', '--amber');
+const VIO = CHIP('--vio-soft', '--vio-line', '--vio');
+const HIDDEN = 'display:none';
+
+class Component extends DCLogic {
+  state = { screen: null, theme: null, firstRun: false, session: false, phase: 'review', stage: 1, closeOpen: false };
+
+  componentDidMount() { this.apply(); }
+  componentDidUpdate() { this.apply(); }
+  apply() {
+    const theme = this.state.theme ?? this.props.startTheme ?? 'light';
+    const root = document.documentElement;
+    if (root.getAttribute('data-theme') !== theme) root.setAttribute('data-theme', theme);
+  }
+
+  set(patch) { this.setState(patch); }
+
+  navBtn(active) {
+    return `display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;padding:10px 12px;border-radius:11px;border:none;font-size:14px;font-weight:${active ? 650 : 500};background:${active ? 'var(--vio-soft)' : 'transparent'};color:${active ? 'var(--vio)' : 'var(--ink2)'}`;
+  }
+  seg(active) {
+    return `padding:6px 12px;border-radius:9px;border:1px solid ${active ? 'var(--vio)' : 'var(--line)'};background:${active ? 'var(--vio)' : 'var(--surf)'};color:${active ? 'var(--on-vio)' : 'var(--ink2)'};font-size:12px;font-weight:${active ? 600 : 500}`;
+  }
+  cells(total, filled, partial) {
+    return Array.from({ length: total }, (_, i) => {
+      const bg = i < filled ? 'var(--vio)' : i < filled + partial ? 'var(--vio-line)' : 'var(--surf2)';
+      return { style: `flex:1;height:12px;border-radius:4px;background:${bg};min-width:6px` };
+    });
+  }
+
+  renderVals() {
+    const s = {
+      ...this.state,
+      screen: this.state.screen ?? this.props.startScreen ?? 'desk',
+      theme: this.state.theme ?? this.props.startTheme ?? 'light'
+    };
+    const fr = s.firstRun;
+    const go = (screen) => () => this.set({ screen, closeOpen: false });
+
+    const rationales = {
+      desk: 'The page reads top to bottom as tonight, then standing, then movement. Tonight is a single violet band holding the cue you wrote last time, one button and the warm-up already listed — nothing else on screen competes with it. Standing is three plain numbers and a capability ridge, one column per skill area, so nine months of work has a shape you can see at a glance without a single hero percentage. Movement is four-week gains, the calibration trend and what was newly proved. Hours and what is slipping sit last, deliberately quiet: they are information for Sunday, not a score for tonight.',
+      track: 'Three bands answer three different questions, so nothing has to be decoded: what did I leave unfinished, what am I on now, and what is the shape of the rest. Rows rather than a grid of identical cards — weeks and date on the left, the module, then proof as squares of core checks, then one warning in amber and one action. The 40-week strip above is the only "you are here" the page needs.',
+      module: 'The module is now a numbered syllabus, not five tabs. Six topics, in order, with the one you are on opened: each carries its own source with a real reading position, its own note, and the check that closes it — so "what must I cover" and "where have I got to" are answered by the same list. Videos, books, courses and repos are tracked the same way, by how far through you are and whether you could rebuild it. Set-up chores and the session habit move out of the syllabus into the sidebar. Opening a note enters focus mode: the source on the left with a timestamp you can stamp into the text, the note on the right, and an unfiled-jots strip for lines you dump mid-video without losing your place — or, when the video needs the whole screen, a pop-out jotter that stays on top.',
+      attempt: 'Three staged moments instead of one long page: say how sure you are, write with nothing else on screen, then compare. Only at the compare stage do your answer and the reference appear side by side, with self-marking first and the AI critique as a quiet second opinion that never overwrites your mark.',
+      review: 'A calm debrief, not a report. Calibration is a picture — what you said against what happened — instead of a five-row table; the 40-row burn-up is reduced to the last four weeks; errors are cards you can close. Everything numeric lives here and at session close, never during work.',
+      shipped: 'The capstone is binary by design: a thing exists or it does not. Each card leads with its one next action, so the board is a queue rather than a scoreboard.'
+    };
+
+    const nav = [
+      { key: 'desk', label: 'Desk', badge: '' },
+      { key: 'track', label: 'The track', badge: '' },
+      { key: 'review', label: 'Review', badge: fr ? '' : '6' },
+      { key: 'shipped', label: 'Shipped', badge: '0 / 8' }
+    ].map(n => ({
+      label: n.label,
+      badge: n.badge,
+      badgeStyle: n.badge ? `font-family:'JetBrains Mono',monospace;font-size:11.5px;color:${s.screen === n.key ? 'var(--vio)' : 'var(--ink3)'}` : HIDDEN,
+      style: this.navBtn(s.screen === n.key || (n.key === 'track' && (s.screen === 'module' || s.screen === 'attempt'))),
+      go: go(n.key)
+    }));
+
+    const phases = ['new', 'review', 'build'].map(p => ({
+      label: p, style: `flex:1;padding:5px 0;border-radius:8px;border:none;font-size:11.5px;font-weight:600;background:${s.phase === p ? 'var(--vio)' : 'rgba(0,0,0,0)'};color:${s.phase === p ? 'var(--on-vio)' : 'var(--vio)'}`,
+      pick: () => this.set({ phase: p })
+    }));
+
+    const warmup = fr ? [
+      { n: '1', prompt: 'Explain to a colleague the difference between pretraining, SFT, RLHF and inference-time scaling.', reason: 'first thing in the track — nothing attempted yet', chip: 'new', chipStyle: PLAIN },
+      { n: '2', prompt: 'Name three model failures that trace back to tokenization.', reason: 'first thing in the track — nothing attempted yet', chip: 'new', chipStyle: PLAIN },
+      { n: '3', prompt: 'Write multi-head causal self-attention from memory on a blank page.', reason: 'first thing in the track — nothing attempted yet', chip: 'new', chipStyle: PLAIN }
+    ] : [
+      { n: '1', prompt: 'Write multi-head causal self-attention from memory on a blank page, with a correct mask and correct shapes.', reason: '14 days overdue · you were sure and wrong last time', chip: 'missed while sure', chipStyle: AMBER },
+      { n: '2', prompt: 'Implement BPE training and encoding: learn a merge table from a corpus and encode a new string with it.', reason: '14 days overdue', chip: 'due', chipStyle: AMBER },
+      { n: '3', prompt: 'Name three model failures that trace back to tokenization and explain the mechanism in each case.', reason: '9 days overdue', chip: 'due', chipStyle: AMBER },
+      { n: '4', prompt: 'Hand over a one-page failure taxonomy with counts, derived from at least 100 traces you personally read.', reason: 'from an unresolved error in the log', chip: 'error', chipStyle: PLAIN }
+    ];
+
+    const holding = [
+      { label: 'Transformers from scratch', value: fr ? '0 of 11' : '1 of 11', cells: this.cells(11, fr ? 0 : 1, fr ? 0 : 2) },
+      { label: 'Evals foundation', value: fr ? '0 of 14' : '0 of 14', cells: this.cells(14, 0, fr ? 0 : 3) },
+      { label: 'Everything else', value: '0 of 63', cells: this.cells(21, 0, 0) }
+    ];
+
+    const skillData = [
+      ['Transformers and training', 'weeks 3–8 · 1 module', [1, 1, 1, 1, 7], '+1 lasting'],
+      ['Error analysis and taxonomies', 'weeks 9–14 · 1 module', [0, 0, 1, 1, 4], '+2 tried'],
+      ['Datasets and judges', 'weeks 9–14 · 2 modules', [0, 0, 0, 1, 11], '+1 tried'],
+      ['Prompting and context', 'weeks 9–14 · 1 module', [0, 0, 0, 0, 6], ''],
+      ['Retrieval and RAG evals', 'weeks 9–18 · 3 modules', [0, 0, 0, 0, 19], ''],
+      ['Agents, production, safety', 'weeks 19–30 · 6 modules', [0, 0, 0, 0, 32], '']
+    ];
+    const segColours = ['var(--good)', 'var(--vio)', 'var(--amber)', 'var(--vio-line)', 'var(--surf2)'];
+    const segNames = ['lasting', 'solid', 'shaky', 'tried', 'untouched'];
+    const skills = skillData.map(([name, where, counts, delta]) => {
+      const c = fr ? [0, 0, 0, 0, counts.reduce((a, b) => a + b, 0)] : counts;
+      const total = c.reduce((a, b) => a + b, 0);
+      return {
+        name, where,
+        count: (c[0] + c[1]) + ' / ' + total,
+        columnStyle: 'display:flex;flex-direction:column-reverse;gap:3px;height:168px;width:100%;align-self:stretch',
+        delta: fr ? '' : delta,
+        deltaStyle: (!fr && delta) ? 'padding:3px 10px;border-radius:999px;background:var(--good-soft);border:1px solid var(--good-line);color:var(--good);font-size:11.5px;white-space:nowrap' : HIDDEN,
+        segments: c.map((n, i) => ({
+          style: n === 0 ? HIDDEN : `flex:${n};min-height:6px;border-radius:5px;background:${segColours[i]};${i === 4 ? 'border:1px solid var(--line);' : ''}`,
+          title: n + ' ' + segNames[i]
+        }))
+      };
+    });
+
+    const gains = (fr ? [
+      ['0', 'checks proved so far — the first one is about ten minutes away'],
+      ['0', 'artefacts started of the eight the capstone needs'],
+      ['40', 'weeks of plan ahead of you, 12 hours a week'],
+      ['—', 'calibration needs three graded attempts before it says anything']
+    ] : [
+      ['+1', 'check became lasting — tokenization failures, proved twice a week apart'],
+      ['+4', 'checks attempted for the first time'],
+      ['+1', 'artefact moved to draft — the golden dataset, 62 of 150 rows'],
+      ['−0.09', 'Brier score, so your confidence is tracking reality a little better']
+    ]).map(([num, label]) => ({
+      num, label,
+      numStyle: `font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;width:62px;flex:none;color:${num.startsWith('+') || num.startsWith('−') ? 'var(--vio)' : 'var(--ink3)'}`
+    }));
+
+    const brierTrend = (fr ? [0, 0, 0, 0, 0, 0] : [0.00, 0.00, 0.52, 0.48, 0.44, 0.39]).map((v, i, arr) => ({
+      label: 'w' + (i + 5),
+      style: v === 0
+        ? 'width:100%;height:4px;border-radius:3px;background:var(--surf2)'
+        : `width:100%;height:${Math.round(v * 140)}px;border-radius:7px 7px 3px 3px;background:${i === arr.length - 1 ? 'var(--vio)' : 'var(--vio-line)'}`
+    }));
+
+    const proofFeed = (fr ? [
+      ['Nothing proved yet. A check becomes yours after two clean passes, at least a week apart.', 'no attempts'],
+      ['Reading alone never moves anything here.', '—']
+    ] : [
+      ['Name three model failures that trace back to tokenization', 'solid · 10 Sep'],
+      ['Implement BPE training and encoding', 'shaky · 05 Sep, back in 2 days'],
+      ['Golden dataset moved to draft', '03 Sep'],
+      ["Karpathy, Let's build GPT — rebuilt from memory", '28 Aug']
+    ]).map(([text, when], i) => ({
+      text, when,
+      dotStyle: `width:8px;height:8px;flex:none;margin-top:6px;border-radius:3px;background:${i === 0 && !fr ? 'var(--good)' : 'var(--vio-line)'}`
+    }));
+
+    const pct = (h) => `width:${(h / 12) * 100}%`;
+    const hours = fr ? { n: 0, r: 0, b: 0 } : { n: 1.7, r: 1.4, b: 1.7 };
+
+    const timeline = Array.from({ length: 40 }, (_, i) => {
+      const w = i + 1;
+      const here = w === 10;
+      const inPhase = w >= 9 && w <= 14;
+      const past = w < 9;
+      const bg = here ? 'var(--vio)' : inPhase ? 'var(--vio-line)' : past ? 'var(--ink3)' : 'var(--surf2)';
+      return { style: `flex:1;border-radius:4px;background:${bg};opacity:${past ? .35 : 1};min-width:4px`, title: `week ${w}` };
+    });
+
+    const mod = (title, state, meta, filled, partial, total, proof, flag) => ({
+      title, state, meta, proof, flag,
+      cells: this.cells(total, filled, partial),
+      stateStyle: state === 'lasting' ? GOOD : state === 'in progress' ? VIO : PLAIN,
+      flagStyle: flag ? `font-size:11.5px;color:var(--amber)` : HIDDEN,
+      cardStyle: `text-align:left;border-radius:16px;padding:16px 18px;background:var(--surf);border:1px solid ${title === 'Transformers from scratch' ? 'var(--vio)' : 'var(--line)'};box-shadow:var(--shadow)`,
+      open: () => this.set({ screen: 'module' })
+    });
+
+    const row = (o) => ({
+      title: o.title, weeks: o.weeks, date: o.date, sub: o.sub, proof: o.proof, flag: o.flag || '',
+      action: o.action, cells: this.cells(o.total, o.filled, o.partial),
+      markStyle: `width:4px;align-self:stretch;flex:none;border-radius:3px;background:${o.tone === 'late' ? 'var(--amber)' : o.tone === 'now' ? 'var(--vio)' : 'var(--line)'}`,
+      rowStyle: `display:flex;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:${o.tone === 'later' ? 'transparent' : 'var(--surf)'}`,
+      flagStyle: o.flag ? 'font-size:11.5px;color:var(--amber);line-height:1.35' : HIDDEN,
+      btnStyle: `flex:none;padding:8px 16px;border-radius:10px;border:1px solid ${o.primary ? 'var(--vio)' : 'var(--line)'};background:${o.primary ? 'var(--vio)' : 'var(--surf)'};color:${o.primary ? 'var(--on-vio)' : 'var(--ink2)'};font-size:12.5px;font-weight:600`,
+      open: () => this.set({ screen: 'module' })
+    });
+
+    const listBox = 'border-radius:16px;background:var(--surf);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden';
+
+    const bands = [
+      {
+        title: 'Left unfinished', count: '1 module', countStyle: AMBER, listStyle: listBox,
+        blurb: 'Its weeks have passed and its checks are overdue. Finish it, or decide out loud to drop it.',
+        rows: [row({ title: 'Transformers from scratch', weeks: 'weeks 3–8', date: 'due 05 Sep', tone: 'late', primary: true,
+          sub: 'llm · 3.0 of 70 h logged · 2 re-tests overdue', total: 11, filled: 1, partial: 2, proof: '1 of 11 lasting',
+          flag: 'two checks 14 days overdue', action: 'Resume' })]
+      },
+      {
+        title: 'This phase — v0 app + evals foundation', count: 'weeks 9–14', countStyle: VIO, listStyle: listBox,
+        blurb: 'Six modules, 115 hours budgeted. Do them in this order: error analysis before judges, judges before the harness.',
+        rows: [
+          row({ title: 'Error analysis first', weeks: 'weeks 9–14', date: 'due 17 Oct', tone: 'now', primary: true,
+            sub: 'evals · 2.0 of 16 h logged', total: 6, filled: 0, partial: 2, proof: '2 of 6 attempted', flag: 'one re-test overdue', action: 'Open' }),
+          row({ title: 'Golden dataset', weeks: 'weeks 9–14', date: 'due 17 Oct', tone: 'now',
+            sub: 'evals · 2.8 of 14 h logged · artefact in draft', total: 5, filled: 0, partial: 1, proof: '1 of 5 attempted', action: 'Open' }),
+          row({ title: 'Prompting & context engineering', weeks: 'weeks 9–14', date: 'due 17 Oct', tone: 'now',
+            sub: 'llm · nothing logged yet', total: 6, filled: 0, partial: 0, proof: '0 of 6 attempted', action: 'Open' }),
+          row({ title: 'RAG', weeks: 'weeks 9–14', date: 'due 17 Oct', tone: 'now',
+            sub: 'llm · nothing logged yet', total: 8, filled: 0, partial: 0, proof: '0 of 8 attempted', action: 'Open' }),
+          row({ title: 'Judge design & calibration', weeks: 'weeks 9–14', date: 'due 17 Oct', tone: 'now',
+            sub: 'evals · nothing logged yet', total: 7, filled: 0, partial: 0, proof: '0 of 7 attempted', flag: 'needs Golden dataset first', action: 'Open' }),
+          row({ title: 'Unlearning: ML evaluation → LLM evals', weeks: 'weeks 9–14', date: 'due 17 Oct', tone: 'now',
+            sub: 'evals · a 5 h aside', total: 3, filled: 0, partial: 0, proof: '0 of 3 attempted', action: 'Open' })
+        ]
+      },
+      {
+        title: 'After this', count: '13 modules · weeks 15–40', countStyle: PLAIN, listStyle: 'border-radius:16px;background:var(--surf2);border:1px solid var(--line);overflow:hidden',
+        blurb: 'Not your problem yet. Listed so the shape of the nine months stays visible.',
+        rows: [
+          row({ title: 'RAG evaluation · Offline, online, CI and A/B', weeks: 'weeks 15–18', date: 'Nov', tone: 'later',
+            sub: 'RAG depth + RAG evals · 2 modules · 32 h', total: 11, filled: 0, partial: 0, proof: '11 core checks', action: 'Preview' }),
+          row({ title: 'Agents · Agent evaluation', weeks: 'weeks 19–25', date: 'Jan', tone: 'later',
+            sub: 'Agents + agent evals · 2 modules · 68 h', total: 14, filled: 0, partial: 0, proof: '14 core checks', action: 'Preview' }),
+          row({ title: 'Production, safety, statistics, tooling', weeks: 'weeks 26–30', date: 'Feb', tone: 'later',
+            sub: '4 modules · 68 h', total: 18, filled: 0, partial: 0, proof: '18 core checks', action: 'Preview' }),
+          row({ title: 'Modern architecture, fine-tuning, inference', weeks: 'weeks 31–36', date: 'Mar', tone: 'later',
+            sub: 'Post-training & inference · 3 modules · 110 h', total: 16, filled: 0, partial: 0, proof: '16 core checks', action: 'Preview' }),
+          row({ title: 'Write-up & publish', weeks: 'weeks 37–40', date: 'Apr', tone: 'later',
+            sub: 'shared · 1 module · 30 h', total: 4, filled: 0, partial: 0, proof: '4 core checks', action: 'Preview' })
+        ]
+      }
+    ];
+
+    const phasesList = [
+      { title: 'v0 app + evals foundation', weeks: 'weeks 9–14', tag: 'you are here', tagStyle: VIO, modules: [
+        mod('Prompting & context engineering', 'not started', '0.0 / 25 h · soft date 2026-10-17', 0, 0, 6, '6 core checks', ''),
+        mod('Error analysis first', 'in progress', '2.0 / 16 h · soft date 2026-10-17', 0, 2, 6, '2 of 6 attempted', 're-test overdue'),
+        mod('Golden dataset', 'in progress', '2.8 / 14 h · soft date 2026-10-17', 0, 1, 5, '1 of 5 attempted', ''),
+        mod('RAG', 'not started', '0.0 / 35 h · soft date 2026-10-17', 0, 0, 8, '8 core checks', ''),
+        mod('Judge design & calibration', 'not started', '0.0 / 20 h · soft date 2026-10-17', 0, 0, 7, '7 core checks', 'needs Golden dataset first'),
+        mod('Unlearning: ML evaluation → LLM evals', 'not started', '0.0 / 5 h · soft date 2026-10-17', 0, 0, 3, '3 core checks', '')
+      ] },
+      { title: 'Transformers from scratch', weeks: 'weeks 3–8', tag: 'behind you, unfinished', tagStyle: AMBER, modules: [
+        mod('Transformers from scratch', 'in progress', '3.0 / 70 h · soft date 2026-09-05', 1, 2, 11, '1 lasting · 2 due', '2 re-tests overdue')
+      ] },
+      { title: 'RAG depth + RAG evals', weeks: 'weeks 15–18', tag: 'ahead', tagStyle: PLAIN, modules: [
+        mod('RAG evaluation', 'not started', '0.0 / 16 h · soft date 2026-11-14', 0, 0, 6, '6 core checks', ''),
+        mod('Offline, online, CI and A/B', 'not started', '0.0 / 16 h · soft date 2026-11-14', 0, 0, 5, '5 core checks', '')
+      ] }
+    ];
+
+    const openTopic = s.openTopic ?? 2;
+    const topicData = [
+      { n: 1, short: 'Tokenization', title: 'BPE tokenization', state: 'proved', summary: 'A merge table learned from a corpus, and what breaks downstream when it is wrong.',
+        sources: [
+          { title: "Karpathy, Let's build the GPT Tokenizer", meta: 'video · 95 of 116 min', state: 'read', pct: 82, btn: 'Resume' },
+          { title: 'Raschka, Build a Large Language Model, ch 2', meta: 'book · 3 of 41 pages', state: 'skimmed', pct: 8, btn: 'Open' }
+        ], moreSources: 'Two more sources',
+        note: '## BPE\nMerges are greedy and frequency-ordered; the table is the model. Byte fallback is what keeps it total.', noteMeta: 'edited 12 days ago', noteBtn: 'Open note',
+        checks: [
+          { prompt: 'Implement BPE training and encoding: learn a merge table from a corpus and encode a new string with it.', state: 'shaky', flag: '14 days overdue', action: 'Re-test', primary: true },
+          { prompt: 'Name three model failures that trace back to tokenization and explain the mechanism in each case.', state: 'solid', flag: '', action: 'Re-test', primary: false }
+        ], proofMeta: '1 of 2 solid' },
+      { n: 2, short: 'Attention', title: 'Causal self-attention', state: 'in progress', summary: 'One head, the mask before the softmax, and the shapes through a multi-head merge.',
+        sources: [
+          { title: "Karpathy, Let's build GPT: from scratch, in code, spelled out", meta: 'video · 240 of 240 min', state: 'rebuilt it', pct: 100, btn: 'Notes' },
+          { title: 'CS336 Assignment 1 (Basics): transformer, BPE, AdamW from primitives', meta: 'course · not opened', state: 'queued', pct: 0, btn: 'Start' }
+        ], moreSources: 'Three more sources',
+        note: '## Scaled dot-product attention\nOne head, with the causal mask added **before** the softmax, not after it.\n\nWriting the mask as a multiplicative zero is the bug I keep reintroducing: it leaks probability mass.', noteMeta: 'edited today', noteBtn: 'Continue note',
+        checks: [
+          { prompt: 'Write multi-head causal self-attention from memory on a blank page, with a correct mask and correct shapes.', state: 'tried', flag: 'missed while sure · 14 days overdue', action: 'Re-test', primary: true }
+        ], proofMeta: '0 of 1 solid' },
+      { n: 3, short: 'Training dynamics', title: 'Training dynamics: init scaling, BatchNorm, dead neurons', state: 'not started', summary: 'What an activation or gradient histogram tells you, and what you change in response.',
+        sources: [
+          { title: 'Karpathy, makemore Part 3: Activations, Gradients, BatchNorm', meta: 'video · 150 of 150 min', state: 'taught it', pct: 100, btn: 'Notes' }
+        ], moreSources: 'One more source',
+        note: '', noteMeta: 'empty', noteBtn: 'Start a note',
+        checks: [
+          { prompt: 'Explain what an activation-histogram or gradient-histogram diagnostic tells you about init scaling, saturated units and dead neurons.', state: 'not started', flag: '', action: 'Attempt', primary: false }
+        ], proofMeta: '0 of 1 solid' },
+      { n: 4, short: 'Modern deltas', title: 'RoPE, RMSNorm, SwiGLU and pre-norm as deltas from GPT-2', state: 'not started', summary: 'Each one stated as a change from the 2019 block, with the reason it was made.',
+        sources: [
+          { title: 'Stanford CS336 lectures 1–4: architectures and attention variants', meta: 'course · 30 of 320 min', state: 'skimmed', pct: 9, btn: 'Resume' }
+        ], moreSources: 'Two more sources',
+        note: '', noteMeta: 'empty', noteBtn: 'Start a note',
+        checks: [
+          { prompt: 'State the difference between absolute/learned positional embeddings and RoPE.', state: 'not started', flag: '', action: 'Attempt', primary: false },
+          { prompt: 'Derive why the RoPE q-k product depends only on the relative offset, then explain what position interpolation changes.', state: 'not started', flag: '', action: 'Attempt', primary: false }
+        ], proofMeta: '0 of 2 solid' },
+      { n: 5, short: 'Scaling laws', title: 'Scaling laws and compute-optimal allocation', state: 'not started', summary: 'Chinchilla, its caveats, and the arithmetic you do before spending money.',
+        sources: [
+          { title: 'CS336 lecture 9 (scaling laws) and Assignment 3 (Scaling)', meta: 'course · not opened', state: 'queued', pct: 0, btn: 'Start' }
+        ], moreSources: 'One more source',
+        note: '', noteMeta: 'empty', noteBtn: 'Start a note',
+        checks: [
+          { prompt: 'Given a $50k compute budget and a target eval, argue for a parameter count and a token count, citing Chinchilla and its known caveats.', state: 'not started', flag: '', action: 'Attempt', primary: false }
+        ], proofMeta: '0 of 1 solid' },
+      { n: 6, short: 'Reproduction', title: 'GPT-2-class reproduction with an explained loss curve', state: 'not started', summary: 'Your own run, your own configuration, and the shape of your own loss curve explained.',
+        sources: [
+          { title: "Karpathy, Let's reproduce GPT-2 (124M)", meta: 'video · not opened', state: 'queued', pct: 0, btn: 'Start' },
+          { title: 'karpathy/nanochat speedrun', meta: 'repo · not opened', state: 'queued', pct: 0, btn: 'Open' }
+        ], moreSources: 'One more source',
+        note: '', noteMeta: 'empty', noteBtn: 'Start a note',
+        checks: [
+          { prompt: "Point at your own repo containing a GPT-2-class model you trained end to end, and name the run's configuration from memory.", state: 'not started', flag: '', action: 'Attempt', primary: false }
+        ], proofMeta: '0 of 1 solid' }
+    ];
+
+    const stateChip = (st) => st === 'proved' || st === 'solid' ? GOOD : st === 'in progress' ? VIO : st === 'shaky' ? AMBER : PLAIN;
+    const resChip = (st) => st === 'rebuilt it' || st === 'taught it' ? GOOD : PLAIN;
+
+    const topics = topicData.map(t => {
+      const on = t.n === openTopic;
+      const done = t.state === 'proved';
+      return {
+        n: t.n, short: t.short, title: t.title, summary: t.summary, state: t.state,
+        stateStyle: stateChip(t.state),
+        stepStyle: `flex:1;display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:11px;border:1px solid ${on ? 'var(--vio)' : 'var(--line)'};background:${on ? 'var(--vio-soft)' : done ? 'var(--good-soft)' : 'var(--surf2)'};color:${on ? 'var(--vio)' : done ? 'var(--good)' : 'var(--ink3)'}`,
+        cardStyle: `border-radius:16px;background:var(--surf);border:1px solid ${on ? 'var(--vio)' : 'var(--line)'};box-shadow:var(--shadow);overflow:hidden`,
+        markStyle: `width:32px;height:32px;flex:none;border-radius:10px;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;background:${done ? 'var(--good-soft)' : on ? 'var(--vio)' : 'var(--surf2)'};color:${done ? 'var(--good)' : on ? 'var(--on-vio)' : 'var(--ink3)'}`,
+        bodyStyle: on ? 'display:block' : 'display:none',
+        open: () => this.set({ openTopic: t.n }),
+        sourceMeta: t.sources.length + ' of ' + (t.sources.length + 2) + ' shown',
+        moreSources: t.moreSources,
+        noteMeta: t.noteMeta, noteBtn: t.noteBtn,
+        note: t.note || 'Nothing written here yet. A note that only restates the source does not count — write the mechanism, the contrast, and the question you cannot answer.',
+        noteStyle: t.note
+          ? `border-radius:12px;border:1px solid var(--line);background:var(--surf2);padding:13px 15px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:var(--ink2);white-space:pre-wrap;max-height:150px;overflow:hidden`
+          : `border-radius:12px;border:1px dashed var(--line);background:var(--surf2);padding:13px 15px;font-size:12.5px;line-height:1.6;color:var(--ink3)`,
+        proofMeta: t.proofMeta,
+        sources: t.sources.map(r => ({
+          title: r.title, meta: r.meta, state: r.state, btn: r.btn,
+          chipStyle: resChip(r.state),
+          railStyle: `width:3px;align-self:stretch;min-height:34px;border-radius:2px;background:${r.pct === 100 ? 'var(--good)' : r.pct > 0 ? 'var(--vio-line)' : 'var(--line)'}`,
+          trackStyle: 'margin-top:7px;height:4px;border-radius:999px;background:var(--surf2);overflow:hidden',
+          fillStyle: `width:${r.pct}%;height:100%;background:${r.pct === 100 ? 'var(--good)' : 'var(--vio)'}`,
+          btnStyle: `flex:none;padding:6px 12px;border-radius:9px;border:1px solid var(--line);background:var(--surf);color:var(--ink2);font-size:12px;font-weight:600`
+        })),
+        checks: t.checks.map(c => ({
+          prompt: c.prompt, state: c.state, flag: c.flag, action: c.action,
+          stateStyle: stateChip(c.state),
+          flagStyle: c.flag ? 'font-size:11.5px;color:var(--amber)' : HIDDEN,
+          btnStyle: `flex:none;padding:8px 16px;border-radius:10px;border:1px solid ${c.primary ? 'var(--vio)' : 'var(--line)'};background:${c.primary ? 'var(--vio)' : 'var(--surf)'};color:${c.primary ? 'var(--on-vio)' : 'var(--ink2)'};font-size:12.5px;font-weight:600`,
+          go: () => this.set({ screen: 'attempt', stage: 1 })
+        }))
+      };
+    });
+
+    const chores = [
+      { label: 'Pick one lane: Raschka ch 2–5 or CS336 Assignment 1, not both', done: true },
+      { label: 'Migrate the project to uv', done: false },
+      { label: 'GPU hours booked for the reproduction run', done: false }
+    ].map(c => ({
+      label: c.label,
+      tick: c.done ? '✓' : '',
+      boxStyle: `width:18px;height:18px;flex:none;border-radius:6px;display:grid;place-items:center;font-size:11px;border:1px solid ${c.done ? 'var(--good)' : 'var(--line-2, var(--line))'};background:${c.done ? 'var(--good-soft)' : 'var(--surf)'};color:var(--good)`
+    }));
+
+    const noteIndex = [
+      { file: 'a1/attention.md', when: 'today' },
+      { file: 'a1/bpe.md', when: '12 d' },
+      { file: 'a1/build-gpt.ipynb', when: '19 d' }
+    ];
+
+    const mustCover = [
+      { label: 'Causal self-attention', sub: 'proved by a check · 1 attempt, partial', action: 'Re-test', kind: 'idea', done: false },
+      { label: 'BPE tokenization', sub: 'proved by a check · 14 days overdue', action: 'Re-test', kind: 'idea', done: false },
+      { label: 'Scaling laws and compute-optimal allocation', sub: 'proved by a check · never attempted', action: 'Attempt', kind: 'idea', done: false },
+      { label: 'GPT-2-class reproduction with an explained loss curve', sub: 'proved by an artefact you push', action: 'Attempt', kind: 'idea', done: false },
+      { label: 'Pick one lane: Raschka ch 2–5 or CS336 Assignment 1, not both', sub: 'a decision to make once', action: 'Decide', kind: 'chore', done: false },
+      { label: 'Training dynamics: init scaling, BatchNorm, dead neurons', sub: 'proved by a check · never attempted', action: 'Attempt', kind: 'idea', done: false }
+    ].map(m => ({
+      label: m.label, sub: m.sub, action: m.action,
+      dotStyle: `width:9px;height:9px;flex:none;border-radius:3px;background:${m.kind === 'chore' ? 'var(--amber)' : 'var(--vio-line)'}`,
+      btnStyle: `padding:6px 14px;border-radius:9px;border:1px solid ${m.action === 'Re-test' ? 'var(--vio)' : 'var(--line)'};background:${m.action === 'Re-test' ? 'var(--vio)' : 'var(--surf)'};color:${m.action === 'Re-test' ? 'var(--on-vio)' : 'var(--ink2)'};font-size:12px;font-weight:600;flex:none`,
+      act: () => this.set({ screen: 'attempt', stage: 1 })
+    }));
+
+    const resources = [
+      { kind: 'video', title: "Karpathy, Let's build GPT: from scratch, in code, spelled out", meta: '240 min · notes/a1/build-gpt.ipynb', state: 'rebuilt it', chipStyle: GOOD },
+      { kind: 'video', title: 'Karpathy, makemore Part 3: Activations, Gradients, BatchNorm', meta: '150 min', state: 'taught it', chipStyle: GOOD },
+      { kind: 'video', title: "Karpathy, Let's build the GPT Tokenizer", meta: '95 min', state: 'read', chipStyle: PLAIN },
+      { kind: 'course', title: 'Stanford CS336 lectures 1–4', meta: '30 min', state: 'skimmed', chipStyle: PLAIN }
+    ];
+
+    const checks = [
+      { prompt: 'Write multi-head causal self-attention from memory on a blank page, with a correct mask and correct shapes.', type: 'code', state: 'tried', stateStyle: PLAIN, flag: 'missed while sure · 14 days overdue', flagStyle: `font-size:11.5px;color:var(--amber)`, action: 'Re-test', primary: true },
+      { prompt: 'Implement BPE training and encoding: learn a merge table from a corpus and encode a new string with it.', type: 'code', state: 'shaky', stateStyle: AMBER, flag: '14 days overdue', flagStyle: `font-size:11.5px;color:var(--amber)`, action: 'Re-test', primary: true },
+      { prompt: 'Name three model failures that trace back to tokenization and explain the mechanism in each case.', type: 'explain', state: 'solid', stateStyle: VIO, flag: '', flagStyle: HIDDEN, action: 'Re-test', primary: false },
+      { prompt: 'State the difference between absolute/learned positional embeddings and RoPE.', type: 'explain', state: 'not started', stateStyle: PLAIN, flag: '', flagStyle: HIDDEN, action: 'Attempt', primary: false },
+      { prompt: 'Given a $50k compute budget and a target eval, argue for a parameter count and a token count, citing Chinchilla.', type: 'numeric', state: 'not started', stateStyle: PLAIN, flag: '', flagStyle: HIDDEN, action: 'Attempt', primary: false }
+    ].map((c, i) => ({
+      ...c,
+      rowStyle: `padding:14px 20px;border-bottom:1px solid var(--line);background:${c.primary ? 'var(--surf2)' : 'transparent'}`,
+      btnStyle: `flex:none;padding:8px 16px;border-radius:10px;border:1px solid ${c.primary ? 'var(--vio)' : 'var(--line)'};background:${c.primary ? 'var(--vio)' : 'var(--surf)'};color:${c.primary ? 'var(--on-vio)' : 'var(--ink2)'};font-size:12.5px;font-weight:600`,
+      go: () => this.set({ screen: 'attempt', stage: 1 })
+    }));
+
+    const rubric = [
+      { text: 'Learned/absolute: a position vector added to the token embedding at the input, one per index, learned', mark: 'met', ai: 'AI agrees — “every block reads it through a layer norm, writes its output back”' },
+      { text: 'RoPE: a rotation applied to q and k inside each attention layer, not added to the residual stream', mark: 'partial', ai: 'AI: partial — you do not say that the addition is what keeps the path linear' },
+      { text: 'RoPE encodes relative position: the q·k dot product depends on (m − n), not on m and n separately', mark: 'missing', ai: 'AI: missing — no mention of pre-norm versus post-norm placement' },
+      { text: 'Learned embeddings are undefined beyond max_seq_len; RoPE is defined for any index', mark: 'partial', ai: '' }
+    ].map(r => ({
+      text: r.text,
+      ai: r.ai,
+      aiStyle: r.ai ? 'margin-top:5px;font-size:12px;color:var(--ink3);line-height:1.45' : HIDDEN,
+      marks: ['met', 'partial', 'missing'].map(m => ({
+        label: m,
+        style: `padding:5px 11px;border-radius:8px;border:1px solid ${r.mark === m ? 'var(--vio)' : 'var(--line)'};background:${r.mark === m ? 'var(--vio-soft)' : 'var(--surf)'};color:${r.mark === m ? 'var(--vio)' : 'var(--ink3)'};font-size:12px;font-weight:${r.mark === m ? 600 : 400}`
+      }))
+    }));
+
+    const overall = [["Couldn't", false], ['Partly', true], ['Fluent', false]].map(([label, on]) => ({
+      label,
+      style: `padding:9px 18px;border-radius:10px;border:1px solid ${on ? 'var(--vio)' : 'var(--line)'};background:${on ? 'var(--vio)' : 'var(--surf)'};color:${on ? 'var(--on-vio)' : 'var(--ink2)'};font-size:13px;font-weight:600`
+    }));
+
+    const stages = [{ n: 1, label: '1 · How sure' }, { n: 2, label: '2 · Write' }, { n: 3, label: '3 · Compare' }].map(st => ({
+      label: st.label, style: this.seg(s.stage === st.n), pick: () => this.set({ stage: st.n })
+    }));
+
+    const calibration = [
+      { bucket: '0–20', n: 0, stated: 0, actual: 0, readout: '—' },
+      { bucket: '20–40', n: 0, stated: 0, actual: 0, readout: '—' },
+      { bucket: '40–60', n: 2, stated: 50, actual: 0, readout: 'said 50% · was 0%' },
+      { bucket: '60–80', n: 3, stated: 65, actual: 67, readout: 'said 65% · was 67%' },
+      { bucket: '80–100', n: 2, stated: 88, actual: 0, readout: 'said 88% · was 0%' }
+    ].map(c => ({
+      bucket: c.bucket, readout: c.readout,
+      statedStyle: `position:absolute;left:0;top:0;bottom:0;width:${c.stated}%;background:var(--vio-line)`,
+      actualStyle: `position:absolute;left:0;top:6px;bottom:6px;width:${c.actual}%;background:var(--vio);border-radius:0 4px 4px 0`
+    }));
+
+    const sweep = [
+      { prompt: 'Write multi-head causal self-attention from memory on a blank page, with a correct mask and correct shapes.', flag: 'missed while sure', flagStyle: AMBER },
+      { prompt: 'Hand over a one-page failure taxonomy with counts, derived from at least 100 traces you personally read.', flag: '', flagStyle: HIDDEN },
+      { prompt: 'Show that the top three failure modes in your taxonomy account for at least 60% of failures.', flag: '', flagStyle: HIDDEN },
+      { prompt: 'Implement BPE training and encoding: learn a merge table from a corpus and encode a new string with it.', flag: '', flagStyle: HIDDEN }
+    ];
+
+    const errors = [
+      { cat: 'off by one, masking', when: '19 Sep', text: 'I was certain and I was wrong: I applied the causal mask after the softmax with zeros instead of before it with −inf, so probability mass leaked to future tokens.' },
+      { cat: 'notation and shapes', when: '19 Sep', text: 'I keep writing d_k where I mean d_head, and then the reshape goes wrong.' },
+      { cat: 'conflated two things', when: '19 Sep', text: 'I collapsed open coding and axial coding into one pass, so the categories came out of my head rather than out of the traces.' }
+    ];
+
+    const burnup = [
+      { label: 'w7', h: 42 }, { label: 'w8', h: 66 }, { label: 'w9', h: 30 }, { label: 'w10', h: 40 }
+    ].map((b, i) => ({
+      label: b.label,
+      style: `width:100%;height:${b.h}px;border-radius:7px 7px 3px 3px;background:${i === 3 ? 'var(--vio)' : 'var(--vio-line)'}`
+    }));
+
+    const artefactData = [
+      ['Golden dataset', 'draft', '150–300 labelled examples with documented provenance, a stated real/synthetic split and a held-out judge slice.', 'Size the held-out judge slice, then write the data card.', 'evals/golden/v0.3'],
+      ['Failure taxonomy', 'not started', '5–9 failure categories with counts, derived from at least 100 hand-read traces.', 'Read the first 20 traces and open-code them.', '—'],
+      ['Evaluators and judge calibration report', 'not started', 'Three code-based scorers plus one LLM judge, with TPR/TNR, a confusion matrix and bias checks.', 'Waiting on the golden dataset.', '—'],
+      ['Eval harness with a CI gate', 'not started', 'One-command harness with deterministic case ids, cost and latency per case, and a diff report.', 'Waiting on the evaluators.', '—'],
+      ['RAG and agent metrics', 'not started', 'recall@k and nDCG on a labelled retrieval set, a faithfulness judge, a trajectory scorer.', 'Scheduled for weeks 15–18.', '—'],
+      ['Safety slice', 'not started', 'At least 20 adversarial cases spanning injection, PII extraction and refusal probes.', 'Scheduled for weeks 26–30.', '—'],
+      ['Model-swap requalification', 'not started', 'A paired comparison with a CI, the judge re-calibrated, and a ship / don’t-ship memo.', 'Needs the harness first.', '—'],
+      ['Write-up', 'not started', 'A 2,000–3,000 word public write-up led by the taxonomy.', 'Scheduled for weeks 37–40.', '—']
+    ];
+    const artefacts = artefactData.map(([title, state, desc, next, path]) => ({
+      title, state, desc, next, path,
+      cardStyle: `border-radius:16px;padding:18px 20px;background:var(--surf);border:1px solid ${state === 'draft' ? 'var(--vio)' : 'var(--line)'};box-shadow:var(--shadow)`,
+      stateStyle: state === 'draft' ? VIO : PLAIN,
+      nextStyle: `margin-top:12px;border-radius:10px;padding:10px 12px;background:var(--surf2);font-size:12.5px;color:var(--ink2);line-height:1.45`,
+      btn: state === 'draft' ? 'Open' : 'Start',
+      btnStyle: `flex:none;padding:6px 14px;border-radius:9px;border:1px solid ${state === 'draft' ? 'var(--vio)' : 'var(--line)'};background:${state === 'draft' ? 'var(--vio)' : 'var(--surf)'};color:${state === 'draft' ? 'var(--on-vio)' : 'var(--ink2)'};font-size:12px;font-weight:600`
+    }));
+
+    const shippedMini = artefactData.slice(0, 5).map(([title, state]) => ({
+      title, state, style: state === 'draft' ? VIO : PLAIN
+    }));
+
+    const fatigue = ['1', '2', '3', '4', '5'].map(f => ({
+      label: f,
+      style: `width:44px;padding:9px 0;border-radius:10px;border:1px solid ${f === '4' ? 'var(--vio)' : 'var(--line)'};background:${f === '4' ? 'var(--vio-soft)' : 'var(--surf)'};color:${f === '4' ? 'var(--vio)' : 'var(--ink3)'};font-size:13px;font-weight:600`
+    }));
+
+    return {
+      nav, phases, warmup, timeline, bands, topics, chores, noteIndex,
+      skills, gains, brierTrend, proofFeed,
+      headline: [
+        { value: fr ? '0' : '2', label: fr ? 'checks are yours' : 'checks are yours', sub: 'of 84 core checks · proved cold, twice' },
+        { value: fr ? '0' : '1', label: 'capstone artefacts exist', sub: 'of 8 · the golden dataset is in draft' },
+        { value: fr ? '40' : '30', label: 'weeks left on the plan', sub: fr ? 'starting today · 12 h a week' : 'at 12 h a week · 2 skips banked' }
+      ].map((h, i) => ({ ...h, cellStyle: `padding:26px 28px;${i < 2 ? 'border-right:1px solid var(--line);' : ''}` })),
+      deskSkips: fr ? 'nothing logged yet' : '2 schedule skips banked',
+      warmupMeta: fr ? '3 items · about 5 min' : '4 items · about 5 min',
+      slippingText: fr ? 'Nothing can slip yet. Checks start coming back two days after your first attempt.' : 'Two checks are 14 days past their re-test and one was missed while you were sure. They lead tonight’s warm-up.',
+      skillsCaption: fr ? 'Nothing proved yet — this fills in from the checks you pass' : '2 of 84 core checks are yours · 4 more are in motion',
+      skillsFoot: fr ? 'One bar per skill area, never one number for the whole nine months. Squares move only when a check is passed cold.' : 'One bar per skill area, never one number for the whole nine months. A bar moves only when a check is passed cold, from memory.',
+      brierNow: fr ? '—' : '0.39',
+      brierSentence: fr ? 'Rate your confidence before each answer and this starts reading after three attempts.' : 'Still overconfident by 39 points, but the gap has narrowed for three weeks running.',
+      rubric, overall, stages, calibration, sweep, errors, burnup, artefacts, shippedMini, fatigue,
+      notePrompts: [
+        'Mechanism — why does this work, step by step?',
+        'Contrast — why this and not the obvious alternative?',
+        'Open question — what would I have to read to settle it?'
+      ],
+      isDesk: s.screen === 'desk', isTrack: s.screen === 'track', isModule: s.screen === 'module',
+      isAttempt: s.screen === 'attempt', isReview: s.screen === 'review', isShipped: s.screen === 'shipped',
+      stage1: s.stage === 1, stage2: s.stage === 2, stage3: s.stage === 3,
+      sessionOn: s.session, sessionOff: !s.session, elapsed: '2:14',
+      closeOpen: s.closeOpen,
+      noteOpen: !!s.noteOpen,
+      noteBodyStyle: `flex:1;min-height:0;display:grid;grid-template-columns:${s.noteMode === 'popout' ? 'minmax(0,1fr)' : 'minmax(0,1.05fr) minmax(0,1fr)'}`,
+      notePaneStyle: s.noteMode === 'popout' ? HIDDEN : 'min-width:0;display:flex;flex-direction:column;background:var(--surf)',
+      popoutStyle: s.noteMode === 'popout' ? 'position:absolute;right:28px;bottom:28px' : HIDDEN,
+      splitBtn: this.seg(s.noteMode !== 'popout'),
+      popBtn: this.seg(s.noteMode === 'popout'),
+      setSplit: () => this.set({ noteMode: 'split' }),
+      setPopout: () => this.set({ noteMode: 'popout' }),
+      openNote: () => this.set({ noteOpen: true }),
+      closeNote: () => this.set({ noteOpen: false }),
+      noteSources: [
+        { label: "Karpathy, Let's build GPT", k: 'v' },
+        { label: 'CS336 Assignment 1', k: 'c' },
+        { label: 'Your own run', k: 'r' }
+      ].map(n => ({ label: n.label, style: this.seg(n.k === 'v'), pick: () => {} })),
+      jotPrompts: ['+ Mechanism', '+ Contrast with…', '+ Open question', '+ Stamp timestamp'],
+      jots: [
+        { at: '41:02', text: 'He reshapes before the transpose — check whether the order actually matters or is just convention.' },
+        { at: '38:44', text: 'Dropout sits after the softmax, before the value multiply.' },
+        { at: '22:15', text: 'Ask: what breaks if the mask is applied per-head rather than broadcast?' }
+      ],
+      showRationale: this.props.showRationale !== false,
+      rationale: rationales[s.screen] || rationales.desk,
+      deskDate: fr ? 'Monday · week 1 of 40' : 'Thursday · week 10 of 40',
+      deskGreeting: fr ? 'Nothing here yet.' : 'Pick it up where you left it.',
+      cueLabel: fr ? 'Your first session' : 'The plan you wrote on Sunday',
+      cueText: fr
+        ? 'Start with one thing: explain, without notes, the difference between pretraining, SFT, RLHF and inference-time scaling.'
+        : 'IF it is Tuesday and the laptop is already open THEN I will work the sample-size arithmetic for the held-out judge slice.',
+      cueButton: fr ? 'Start the first session' : 'Start · about 2 hours',
+      cueHint: fr ? 'You will write your own cue at the end.' : 'Warm-up first, then Transformers from scratch.',
+      hNew: fr ? '0.0 h' : '1.7 h', hReview: fr ? '0.0 h' : '1.4 h', hBuild: fr ? '0.0 h' : '1.7 h',
+      hoursTotal: fr ? '0.0' : '4.8',
+      hoursSentence: fr ? 'Nothing logged yet. The budget is 12 h a week.' : '7.2 h under budget this week. Under is fine.',
+      barNew: pct(hours.n) + ';background:var(--vio)', barReview: pct(hours.r) + ';background:var(--good)', barBuild: pct(hours.b) + ';background:var(--amber)',
+      moduleCta: s.session ? 'Back to the session' : 'Work here now',
+      themeLabel: s.theme === 'light' ? 'Dark' : 'Light',
+      firstRunLabel: fr ? 'Week 10' : 'First run',
+      toggleTheme: () => this.set({ theme: s.theme === 'light' ? 'dark' : 'light' }),
+      toggleFirstRun: () => this.set({ firstRun: !fr }),
+      startSession: () => this.set({ session: true, screen: 'module' }),
+      openClose: () => this.set({ closeOpen: true }),
+      dismissClose: () => this.set({ closeOpen: false }),
+      doClose: () => this.set({ closeOpen: false, session: false, screen: 'desk' }),
+      goReview: go('review'), goShipped: go('shipped'), goTrack: go('track'), goModule: go('module'),
+      goAttempt: () => this.set({ screen: 'attempt', stage: 1 }),
+      toStage2: () => this.set({ stage: 2 }),
+      toStage3: () => this.set({ stage: 3 })
+    };
+  }
+}
+
+</script>
+</body>
+</html>

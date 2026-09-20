@@ -1,0 +1,363 @@
+<title>Oil & Gas LLM Track</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F5F7F3; --surface:#FFFFFF; --ink:#1A222B; --muted:#5E6A74; --rule:#D6DCD3;
+  --accent:#0E6B55; --tint:#E1EFE8; --warn:#B5501F; --warn-tint:#F6E7DD; --bar-off:#DDE3DA; --track-b:#2C4A6E;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#12181C; --surface:#1A2227; --ink:#E5E9E3; --muted:#98A3AB; --rule:#2A343B;
+    --accent:#47C39F; --tint:#1B352D; --warn:#E8905E; --warn-tint:#3A2418; --bar-off:#2C363D; --track-b:#7FA6D6;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#12181C; --surface:#1A2227; --ink:#E5E9E3; --muted:#98A3AB; --rule:#2A343B;
+  --accent:#47C39F; --tint:#1B352D; --warn:#E8905E; --warn-tint:#3A2418; --bar-off:#2C363D; --track-b:#7FA6D6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:48px 24px 96px}
+.prose{max-width:66ch}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.1;margin:0}
+h1{font-size:clamp(38px,6vw,64px);font-weight:800;letter-spacing:-0.02em}
+h2{font-size:clamp(26px,3.4vw,34px);font-weight:700;letter-spacing:-0.01em;margin-top:72px;margin-bottom:8px;padding-top:24px;border-top:1px solid var(--rule)}
+h3{font-size:20px;font-weight:700;margin-top:36px;margin-bottom:6px}
+p{margin:12px 0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:clamp(20px,2.4vw,24px);line-height:1.35;margin:20px 0 8px;max-width:32ch}
+.lede b{font-weight:600;color:var(--accent)}
+.meta{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:18px}
+.meta span+span::before{content:" · ";color:var(--rule)}
+.small{font-size:14px;color:var(--muted)}
+ul,ol{padding-left:20px}
+li{margin:6px 0}
+li b,p b,td b{font-weight:600}
+
+/* shape cards */
+.shape{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--rule);margin-top:28px}
+.shape > div{padding:20px 20px 20px 0;border-bottom:1px solid var(--rule)}
+.shape > div:nth-child(odd){border-right:1px solid var(--rule);padding-right:24px}
+.shape > div:nth-child(even){padding-left:24px}
+.shape b{display:block;font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:4px}
+.shape p{margin:0;font-size:15.5px}
+@media (max-width:720px){.shape{grid-template-columns:1fr}.shape > div{border-right:0!important;padding:16px 0!important}}
+
+/* tables */
+.tablewrap{overflow-x:auto;margin:16px 0 8px;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:760px}
+th,td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--mono);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--ground)}
+td.num,th.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.mod{font-family:var(--display);font-weight:700;font-size:15.5px;min-width:170px}
+td.mod small{display:block;font-family:var(--mono);font-weight:400;font-size:11.5px;color:var(--muted);margin-top:4px;letter-spacing:0.04em}
+td.wide{min-width:240px}
+.chip{display:inline-block;font-family:var(--mono);font-size:11.5px;letter-spacing:0.04em;padding:2px 8px;border:1px solid var(--rule);border-radius:999px;color:var(--muted);white-space:nowrap}
+.chip.up{color:var(--accent);border-color:var(--accent);background:var(--tint)}
+.chip.dn{color:var(--warn);border-color:var(--warn);background:var(--warn-tint)}
+.chip.reg{color:var(--track-b);border-color:var(--track-b)}
+
+.track{margin-top:36px}
+.track .eyebrow{display:flex;align-items:center;gap:10px}
+.track .eyebrow::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--accent)}
+.track.b .eyebrow::before{background:var(--track-b)}
+
+/* declining / callouts */
+.decline{border-left:3px solid var(--warn);background:var(--warn-tint);padding:16px 20px;margin-top:24px}
+.decline .eyebrow{color:var(--warn)}
+.decline ul{margin:8px 0 0;padding-left:18px}
+.callout{background:var(--surface);border:1px solid var(--rule);padding:18px 22px;margin-top:20px}
+.callout .eyebrow{margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding:6px 16px;margin:16px 0;font-style:italic;max-width:66ch}
+.quote span{display:block;font-style:normal;font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
+
+/* timeline */
+.timeline{overflow-x:auto;margin:20px 0;border:1px solid var(--rule);background:var(--surface);padding:18px 16px 14px}
+.tl{display:grid;grid-template-columns:210px repeat(40,minmax(14px,1fr));gap:6px 0;min-width:900px;align-items:center}
+.tl .wh{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:left;padding-bottom:6px;border-bottom:1px solid var(--rule);grid-column:span 4}
+.tl .wh:first-child{grid-column:span 1}
+.tl .lab{font-family:var(--display);font-weight:700;font-size:13.5px;padding:6px 10px 6px 0;line-height:1.2}
+.tl .lab small{display:block;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--muted);margin-top:2px}
+.tl .bar{grid-column:calc(var(--s) + 1) / calc(var(--e) + 1);height:26px;background:var(--accent);color:#fff;font-family:var(--mono);font-size:11px;display:flex;align-items:center;padding:0 8px;white-space:nowrap;overflow:hidden;border-radius:2px}
+.tl .bar.b{background:var(--track-b)}
+.tl .bar.mix{background:linear-gradient(90deg,var(--accent) 0 50%,var(--track-b) 50% 100%)}
+.tl .bar.thin{height:8px;background:repeating-linear-gradient(90deg,var(--track-b) 0 8px,transparent 8px 14px);opacity:.7}
+.tl .bar.ms{background:var(--ink);color:var(--ground)}
+.legend{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:18px;margin:8px 0 0}
+.legend i{display:inline-block;width:14px;height:10px;border-radius:2px;vertical-align:middle;margin-right:6px;background:var(--accent)}
+.legend i.b{background:var(--track-b)}
+.legend i.ms{background:var(--ink)}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:8px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+ol.protocol{counter-reset:p;list-style:none;padding:0;margin:12px 0 0}
+ol.protocol li{counter-increment:p;padding:10px 0 10px 40px;position:relative;border-bottom:1px solid var(--rule)}
+ol.protocol li::before{content:counter(p);position:absolute;left:0;top:9px;width:26px;height:26px;border-radius:50%;background:var(--tint);color:var(--accent);font-family:var(--mono);font-size:12px;display:flex;align-items:center;justify-content:center}
+.sources{columns:2;column-gap:32px;font-size:14px}
+.sources li{break-inside:avoid;margin:4px 0}
+@media (max-width:760px){.sources{columns:1}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Personal study track · compiled 18 September 2026</div>
+  <h1 style="margin-top:14px">Oil &amp; Gas LLM Track</h1>
+  <p class="lede">LLM engineering and AI evals, interleaved on one oil and gas system you build early. <b>About 430 hours, 9–10 months at 12 hours a week.</b></p>
+  <div class="meta"><span>For an MSc Data Science (2022) in oil &amp; gas</span><span>4 Opus research agents, ~250 tool calls</span><span>every source URL-and-date stamped</span></div>
+
+  <div class="shape">
+    <div><b>Skip the foundations</b><p>A 2022 MSc is roughly 70% still valid and 0% sufficient. Nothing you learned is wrong; a discipline has been built on top of it. The gap is applied practice on models you did not train: retrieval, agents, evaluation, cost.</p></div>
+    <div><b>Two tracks, one project spine</b><p>LLM engineering (about 300 hours) and AI evals (about 130 hours) are taught against one system: cited question-answering over Norwegian end-of-well reports, later merged with a text-to-SQL agent. Build a v0 early so evals always have real traces.</p></div>
+    <div><b>Your two edges</b><p>Statistics: judge calibration (TPR/TNR, Rogan–Gladen correction, paired McNemar, clustered bootstrap) is where you overtake engineers who came from software. Domain: SLB's live posting says "a strong understanding of domain problems is highly valued."</p></div>
+    <div><b>Start with Karpathy, with three corrections</b><p>Skip micrograd and makemore 1–2. nanoGPT was deprecated in November 2025 in favour of nanochat, which covers tokenizer → pretrain → SFT → RL → eval → inference in one repo. LLM101n does not exist (archived August 2024); don't wait for it.</p></div>
+  </div>
+
+  <h2>The 40-week calendar</h2>
+  <div class="prose"><p>Twelve hours a week. Green is LLM engineering, blue is evals, black is what you ship. If your employer funds the Maven evals cohort (10 October to 21 November 2026, stated as the last of the year), swap phases 1 and 2 so its homework lands on your own system.</p></div>
+  <div class="timeline">
+    <div class="tl">
+      <div class="wh">Week</div>
+      <div class="wh">1</div><div class="wh">5</div><div class="wh">9</div><div class="wh">13</div><div class="wh">17</div><div class="wh">21</div><div class="wh">25</div><div class="wh">29</div><div class="wh">33</div><div class="wh">37</div>
+      <div class="lab">0 · Orient &amp; set up<small>25 hrs</small></div><div class="bar mix" style="--s:1;--e:3"></div>
+      <div class="lab">1 · Transformers from scratch<small>70 hrs · A1</small></div><div class="bar" style="--s:3;--e:9">Karpathy → CS336 → nanochat</div>
+      <div class="lab">2 · v0 app + evals foundation<small>65 hrs · A5/A6 lite, B0–B3</small></div><div class="bar b" style="--s:9;--e:15">naive RAG → taxonomy → judge</div>
+      <div class="lab">3 · RAG depth + RAG evals<small>45 hrs · A6, B4</small></div><div class="bar mix" style="--s:15;--e:19">retrieval</div>
+      <div class="lab">4 · Agents + agent evals<small>80 hrs · A5, A7, B5</small></div><div class="bar mix" style="--s:19;--e:26">SQL tool · MCP · pass^k</div>
+      <div class="lab">5 · Production, safety, stats<small>50 hrs · A8, B6–B9</small></div><div class="bar mix" style="--s:26;--e:31">red-team · swap</div>
+      <div class="lab">6 · Post-training &amp; inference<small>60 hrs · A2–A4</small></div><div class="bar" style="--s:31;--e:37">QLoRA · vLLM · NPT arm</div>
+      <div class="lab">7 · Write-up &amp; publish<small>30 hrs</small></div><div class="bar" style="--s:37;--e:41">publish</div>
+      <div class="lab">Free evals email course<small>drips over ~3 weeks</small></div><div class="bar thin" style="--s:1;--e:5"></div>
+      <div class="lab">Ship<small>milestones</small></div><div class="bar ms" style="--s:8;--e:10">GPT-2 model</div>
+      <div class="lab"></div><div class="bar ms" style="--s:14;--e:16">judge report</div>
+      <div class="lab"></div><div class="bar ms" style="--s:25;--e:27">agent + evals</div>
+      <div class="lab"></div><div class="bar ms" style="--s:39;--e:41">write-up</div>
+    </div>
+    <div class="legend"><span><i></i>LLM engineering</span><span><i class="b"></i>AI evals</span><span><i class="ms"></i>shipped artefact</span></div>
+  </div>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>Phase</th><th class="num">Weeks</th><th>What you do</th><th>Ship</th></tr></thead>
+    <tbody>
+      <tr><td class="mod">0 · Orient &amp; set up</td><td class="num">1–2</td><td class="wide">The catch-up list below; migrate a repo to uv and ruff; note pandas 3.0 copy-on-write; create a <b>free Databricks account now</b> (Volve is only distributed through Databricks Marketplace and takes an hour to appear); GPU rental (Modal or RunPod); self-hosted Langfuse; start the free evals email course.</td><td>Notes; environment</td></tr>
+      <tr><td class="mod">1 · Transformers from scratch</td><td class="num">3–8</td><td class="wide">Karpathy makemore 3, "Let's build GPT", "GPT Tokenizer" → CS336 lectures 1–4 for RoPE, RMSNorm, SwiGLU → <i>either</i> Raschka <i>Build a LLM (From Scratch)</i> ch 2–5 <i>or</i> CS336 Assignment 1 → scaling laws (CS336 L9 + A3) → nanochat speedrun ($15–50 GPU).</td><td>Your own GPT-2-class model with an explained loss curve</td></tr>
+      <tr><td class="mod">2 · v0 app + evals foundation</td><td class="num">9–14</td><td class="wide">Build naive RAG over ~20 Sodir end-of-well reports on pgvector. Then evals B0–B3 on its traces: read 100, build the failure taxonomy, golden set (auto-derived from FactPages tables plus hand-written), calibrated judge with a Rogan–Gladen corrected pass rate and CI. Read Miller's error-bars paper.</td><td>Failure taxonomy; golden set v1; judge calibration report</td></tr>
+      <tr><td class="mod">3 · RAG depth + RAG evals</td><td class="num">15–18</td><td class="wide">A6 in full: contextual retrieval, hybrid BM25 + dense, reranking, query rewriting. B4: recall@k, nDCG, calibrated faithfulness judge, segment breakdown. First CI gate.</td><td>4-config retrieval table; green CI</td></tr>
+      <tr><td class="mod">4 · Agents + agent evals</td><td class="num">19–25</td><td class="wide">A5 and A7. Add a DuckDB text-to-SQL tool over Sodir's structured tables and merge with the retriever into one agent with an approval gate. MCP server at the 2026-07-28 spec. B5: trajectory scorer, tool-call correctness, execution-match eval, pass^k at k=5.</td><td>Single agent, 5+ tools; agent eval report</td></tr>
+      <tr><td class="mod">5 · Production, safety, stats</td><td class="num">26–30</td><td class="wide">A8 tracing and cost. B6 model-swap requalification. B7 red-team, including indirect injection via a retrieved PDF. B8 statistics consolidation. B9: own harness ported to Inspect AI.</td><td>Traces with cost per span; red-team report; swap memo; Inspect port</td></tr>
+      <tr><td class="mod">6 · Post-training &amp; inference</td><td class="num">31–36</td><td class="wide">A2 (CS336 L13–16 + Assignment 5, or nanochat's RL stage), A3 (Unsloth QLoRA), A4 (the vLLM course). Project arm: Volve daily drilling reports → NPT ledger with a fine-tuned 7–8B model vs a fine-tuned encoder vs a frontier API, on one golden set, with a cost-vs-quality Pareto plot.</td><td>Fine-tune won/lost report with the classic-ML control arm</td></tr>
+      <tr><td class="mod">7 · Write-up &amp; publish</td><td class="num">37–40</td><td class="wide">2,500-word write-up led by the taxonomy, not the architecture; a README a stranger can reproduce; a public post on one failure mode with numbers.</td><td>The hiring artefact</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout">
+    <div class="eyebrow">Compressed 6-month lane · about 220 hours</div>
+    <p style="margin:0">Phase 0; the A1 lean lane (45 hours: Karpathy GPT and tokenizer videos → Raschka ch 2–5 → nanochat speedrun); phases 2–5 as written with the red-team trimmed to 10 cases; skip phase 6 except the vLLM course and one QLoRA run; then the write-up. You lose the ability to reason about pretraining and post-training decisions, which is precisely what separates your MSc from the bootcamp crowd. Take this lane only under real time pressure.</p>
+  </div>
+
+  <h2>Before you start: the 2022 → 2026 catch-up</h2>
+  <div class="prose"><p>About 25 hours across weeks 1 and 2. In order.</p></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>#</th><th>Read or watch</th><th class="num">Hrs</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td><a href="https://x.com/karpathy/status/1887211193099825254">Karpathy, "Deep Dive into LLMs like ChatGPT"</a> (Feb 2025, 3.5h)</td><td class="num">5</td><td>The whole training stack in one sitting. Watch first.</td></tr>
+      <tr><td class="num">2</td><td><a href="https://simonwillison.net/2025/Dec/31/the-year-in-llms/">Simon Willison, "2025: The year in LLMs"</a></td><td class="num">3</td><td>Highest-density account of what shipped and why it mattered.</td></tr>
+      <tr><td class="num">3</td><td><a href="https://www.latent.space/p/ai-engineer">swyx, "The Rise of the AI Engineer"</a> (Jun 2023)</td><td class="num">1</td><td>The role you will be interviewed for, and why it is not ML research.</td></tr>
+      <tr><td class="num">4</td><td><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic, "Building Effective Agents"</a> (Dec 2024)</td><td class="num">1.5</td><td>Workflows vs agents, six patterns, "don't use a framework."</td></tr>
+      <tr><td class="num">5</td><td><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic, "Effective context engineering for AI agents"</a> (Sep 2025)</td><td class="num">1</td><td>Context rot: why 1M-token windows made curation more important, not less.</td></tr>
+      <tr><td class="num">6</td><td><a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a> (Jan 2025)</td><td class="num">3</td><td>Reasoning from RL on verifiable rewards; GRPO; distillation into small models.</td></tr>
+      <tr><td class="num">7</td><td><a href="https://arxiv.org/html/2401.00448v3">Sardana &amp; Frankle, "Beyond Chinchilla-Optimal"</a></td><td class="num">1.5</td><td>Why every shipped model is over-trained relative to the 2022 law you learned.</td></tr>
+      <tr><td class="num">8</td><td><a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">MCP intro + the 2026-07-28 spec changelog</a></td><td class="num">3</td><td>The integration standard, and a stateless rewrite that made every earlier tutorial partially wrong.</td></tr>
+      <tr><td class="num">9</td><td><a href="https://hamel.dev/blog/posts/evals-faq/">Husain &amp; Shankar, "AI Evals FAQ"</a> (updated 2026-09-17)</td><td class="num">6</td><td>The single highest-value item for your background. Read twice.</td></tr>
+      <tr><td class="num">10</td><td><a href="https://www.anthropic.com/research/AI-assistance-coding-skills">Anthropic, "How AI assistance impacts the formation of coding skills"</a> (Jan 2026)</td><td class="num">1</td><td>Governs how to do this whole plan: AI explains and reviews, you type.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose"><p><b>What has not changed</b>, and is scarcer now because the field filled with software engineers: statistics and inference, experiment design, gradient boosting for tabular data, feature engineering, SQL, leakage, causal inference. Lean on all of it.</p></div>
+
+  <div class="track a">
+    <h2 style="border-top:0;padding-top:0;margin-top:72px">Track A · LLM engineering</h2>
+    <div class="eyebrow">Eight modules · 320–405 hours · what you must cover</div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Module</th><th>Must cover</th><th>Free-first resources</th><th class="num">Hrs</th><th>Done when you can…</th></tr></thead>
+      <tbody>
+        <tr><td class="mod">A1 · Transformers from scratch<small>start here</small></td><td class="wide">Causal self-attention; BPE; training dynamics (init, BatchNorm, dead neurons); RoPE, RMSNorm, SwiGLU, pre-norm deltas from GPT-2; scaling laws; GPT-2-class reproduction.</td><td class="wide">Karpathy makemore 3, "Let's build GPT", "GPT Tokenizer"; CS336 L1–4; Raschka ch 2–5 <i>or</i> CS336 A1 (not both); CS336 L9 + A3; nanochat.</td><td class="num">70–90<br><span class="small">lean 45</span></td><td class="wide">Write multi-head causal attention from memory with a correct mask; name three model failures caused by tokenization; explain why RoPE extrapolates; argue a parameter/token split for a $50k budget; show your trained model and explain its loss curve.</td></tr>
+        <tr><td class="mod">A2 · Modern architecture &amp; post-training</td><td class="wide">MoE routing and load balancing; GQA/MQA; long context (YaRN, ring attention); pretraining data curation; SFT; DPO vs GRPO vs PPO; reasoning models and test-time compute; distillation.</td><td class="wide">CS336 L3–4, L13–16 + A5; HF LLM Course ch 10–12; HF smol-course; nanochat GRPO stage; Raschka <i>Build a Reasoning Model</i> (2026, optional).</td><td class="num">45–60</td><td class="wide">Draw the GPT-2 → 2026 open-model diff and justify each change; say when DPO vs GRPO vs SFT and what data each needs; run nanochat's RL stage and describe what changed.</td></tr>
+        <tr><td class="mod">A3 · Fine-tuning in practice</td><td class="wide">Prompt vs RAG vs fine-tune decision; LoRA/QLoRA; rank, alpha, target modules; data curation; dataset poisoning modes; adapter serving.</td><td class="wide">Huyen <i>AI Engineering</i> ch 5–7; Unsloth fine-tuning and LoRA hyperparameter guides; TRL docs; smol-course units 1–3.</td><td class="num">35–45</td><td class="wide">Write a decision memo with cost and latency numbers; QLoRA a 7–8B model on your own data and show before/after on a held-out set you built <i>first</i>.</td></tr>
+        <tr><td class="mod">A4 · Inference &amp; serving</td><td class="wide">Prefill vs decode; KV cache sizing; continuous batching; quantization (FP8, AWQ, GGUF) with measured accuracy delta; vLLM; prompt caching; routing to small models; cost modelling.</td><td class="wide">DeepLearning.AI <i>Fast &amp; Efficient LLM Inference with vLLM</i> (Jun 2026, all of it); vLLM docs; CS336 L10; CS25 "Serving Transformers" (May 2026); Anthropic prompt-caching docs.</td><td class="num">30–40</td><td class="wide">Compute KV-cache size on paper; quantize a model and say whether you'd ship it; chart throughput vs p99 vs concurrency; write a $/1k-request model naming the three biggest levers.</td></tr>
+        <tr><td class="mod">A5 · Prompting &amp; context engineering</td><td class="wide">Token budgeting; structured outputs (function calling vs constrained decoding); tool-description design; memory and compaction for long sessions.</td><td class="wide">Anthropic: context engineering, writing tools for agents, harnesses for long-running agents, the "think" tool; Instructor; Outlines; Anthropic prompt-engineering docs.</td><td class="num">25–30</td><td class="wide">Account for every token in a production prompt; 100% schema validity under adversarial input; explain what you changed in a tool description after watching it fail.</td></tr>
+        <tr><td class="mod">A6 · RAG</td><td class="wide">Chunking (recursive, semantic, late, contextual); embedding choice by task; hybrid BM25 + dense with RRF; pgvector HNSW and filtering pitfalls; reranking (20 → 5); query rewriting; the eight named RAG failure modes.</td><td class="wide">Jason Liu, "Systematically Improving RAG Applications" (free); Anthropic "Contextual Retrieval"; MTEB leaderboard; pgvector docs.</td><td class="num">35–45</td><td class="wide">Report recall@k before touching generation; show a 4-config table (naive / +hybrid / +contextual / +reranker) with cost and latency; diagnose retrieval vs generation failure in five minutes.</td></tr>
+        <tr><td class="mod">A7 · Agents</td><td class="wide">When an agent is the wrong answer; single vs multi-agent (parallelise reads, serialise writes); tool design; MCP at the 2026-07-28 spec; approval gates and least privilege; Claude Agent SDK.</td><td class="wide">Anthropic "Building Effective Agents"; OpenAI "Practical Guide to Building Agents"; Anthropic multi-agent research system; Cognition "Don't Build Multi-Agents" + Walden Yan's April 2026 update; HF Agents Course; MCP changelog; Claude Agent SDK.</td><td class="num">50–65</td><td class="wide">Classify a process as no-LLM / workflow / single agent / multi-agent and defend it; ship a 5+ tool agent with retries, a turn budget and a write-approval gate; write an MCP server against the current spec.</td></tr>
+        <tr><td class="mod">A8 · Production</td><td class="wide">OpenTelemetry GenAI conventions; Langfuse or Phoenix tracing; OWASP LLM Top 10 <b>2026</b> (prompt injection #1, excessive agency now #3); containment over prevention; guardrail types; cost levers in order.</td><td class="wide">OTel GenAI blog; Langfuse docs; OWASP GenAI 2026; Simon Willison's prompt-injection archive; Huyen ch 9–10.</td><td class="num">30–40</td><td class="wide">Trace one request across retrieval, reranking, three tool calls and generation with cost per span; find a working injection on your own agent, then re-architect so it cannot cause harm; cut unit cost 50% with no measured regression.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="decline">
+      <div class="eyebrow">Stale or non-existent · do not plan around</div>
+      <ul>
+        <li><b>LLM101n</b> does not exist (repo archived August 2024). <b>nanoGPT</b> is superseded by nanochat; still worth reading as the cleanest 300-line training loop.</li>
+        <li><b>fast.ai Part 2</b> (2022, ends at Stable Diffusion) and the <b>Full Stack LLM Bootcamp</b> (spring 2023) are stale for LLM engineering. Skim the latter's LLMOps lecture for history only.</li>
+        <li><b>Any MCP tutorial written before August 2026</b>, including much of the HF MCP course, teaches the old stateful session model. Read the changelog first.</li>
+        <li><b>CS224N</b> public videos are the 2024 edition; its last third is better covered by CS336. Use the Winter 2026 slides as a reading list only.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="track b">
+    <h2 style="border-top:0;padding-top:0;margin-top:72px">Track B · AI evals</h2>
+    <div class="eyebrow">Ten modules · about 132 hours · roughly 40% qualitative process, 35% engineering, 25% statistics</div>
+    <div class="prose"><p>The bottleneck in evals is qualitative, not statistical: reading traces, open and axial coding, and a failure taxonomy <i>before</i> any metric. Your statistics arrive in B3 and B8, where they matter most.</p></div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Module</th><th>Must cover</th><th>Free-first resources</th><th class="num">Hrs</th><th>Done when you can…</th></tr></thead>
+      <tbody>
+        <tr><td class="mod">B0 · Unlearning</td><td class="wide">Map ML-evaluation vocabulary onto LLM evals and mark what fails to transfer: BLEU/ROUGE mostly dead; "pick a metric, optimise it" is the habit to unlearn; precision/recall now describe the <i>judge</i>, not the output.</td><td class="wide">Free 17-part email course (ai.hamel.dev/eval-course, start day one); Hamel, "Your AI Product Needs Evals" (L1 assertions / L2 human and model / L3 A/B).</td><td class="num">5</td><td class="wide">Explain in two sentences why a 0.87 ROUGE-L tells a product team nothing, and name the three things you'd do instead.</td></tr>
+        <tr><td class="mod">B1 · Error analysis first<small>the most important module</small></td><td class="wide">Why generic metrics create false confidence; open coding of 100+ raw traces; axial coding into 5–9 failure modes with counts; binary pass/fail + written critique over Likert; sampling for a ~50:50 split; criteria drift.</td><td class="wide">Evals FAQ; Field Guide; <code>error-discovery</code> skill in ai-evals-course/evals-skills; Shankar et al., "Who Validates the Validators?"; Eugene Yan, "An LLM-as-Judge Won't Save the Product."</td><td class="num">16</td><td class="wide">Hand over a one-page failure taxonomy from ≥100 traces you read yourself, top three modes covering ≥60% of failures, plus one mode no off-the-shelf metric would have found.</td></tr>
+        <tr><td class="mod">B2 · Golden dataset</td><td class="wide">Coverage-driven sampling; dimension-based synthetic generation grounded in real constraints; the Principal Domain Expert pattern; a custom annotation UI; Cohen's κ or Krippendorff's α when multi-annotator (κ &lt; 0.4 means the rubric is broken); a held-out judge test slice you never look at.</td><td class="wide">Evals FAQ sampling and annotation sections; <code>generate-synthetic-data</code> and <code>build-review-interface</code> skills; Jason Liu on synthetic RAG evals; Anthropic 8-step roadmap.</td><td class="num">14</td><td class="wide">Ship a versioned golden set (≥100) with sampling rationale, real/synthetic split, annotation guideline, an agreement figure if applicable, and an untouched held-out slice.</td></tr>
+        <tr><td class="mod">B3 · Judge design &amp; calibration<small>your edge</small></td><td class="wide">Code vs model vs human routing; Critique Shadowing; position, verbosity and self-preference bias with mitigations; <b>TPR and TNR on a held-out human set, never accuracy</b>; Rogan–Gladen correction θ̂ = (p_obs + TNR − 1)/(TPR + TNR − 1) with bootstrap over both calibration and test sets.</td><td class="wide">Hamel, "Creating a LLM-as-a-Judge" (updated Sep 2026); Zheng et al. MT-Bench §3; <code>validate-evaluator</code> skill + <code>judgy</code>; HF Evaluation Guidebook (the Space; the GitHub repo is unmaintained).</td><td class="num">20</td><td class="wide">Ship a judge with documented prompt, held-out TPR/TNR, position- and verbosity-bias checks, and a corrected system pass rate with a 95% CI, and explain to a PM why it differs from the raw number.</td></tr>
+        <tr><td class="mod">B4 · RAG evaluation</td><td class="wide">Recall@k, MRR, nDCG measured separately from faithfulness and answer relevance; Ragas as a baseline, then replace its generic judges with yours; component vs end-to-end; the RAG flywheel and query segmentation; leading vs lagging metrics.</td><td class="wide">Jason Liu essays and free talk; Ragas docs; ARES; <code>evaluate-rag</code> skill.</td><td class="num">16</td><td class="wide">A RAG eval report with recall@k and nDCG on a labelled retrieval set, a calibrated faithfulness judge with TPR/TNR, an end-to-end number, and a segment breakdown naming the query type that drags the average down.</td></tr>
+        <tr><td class="mod">B5 · Agent evaluation</td><td class="wide">Trajectory vs final answer; tool-call correctness (selection, arguments, order); grade terminal state, not prose; <b>pass@k vs pass^k</b> (a 90% pass@1 agent at 60% pass^5 is not shippable); simulated users; graders that resist agent exploits; transcript review as non-optional; scaffolding as a confound.</td><td class="wide">Anthropic "Demystifying evals for AI agents" (Jan 2026); DeepLearning.AI <i>Evaluating AI Agents</i> (free, 2.5h); τ-bench and τ²-bench; Ragas agent metrics; "Log analysis is necessary for credible evaluation of AI agents" (2026).</td><td class="num">18</td><td class="wide">Evaluate a 3+ tool agent with a trajectory scorer, tool-call metric, terminal-state check, pass^k at k=5 with a CI, and a written review of the 10 worst runs naming each failure mechanism.</td></tr>
+        <tr><td class="mod">B6 · Offline, online, CI, A/B</td><td class="wide">The four-way distinction (offline evals / online evals / guardrails / A/B tests) and its two traps; evals as PR gates; the same scorer offline and online; production sampling → review → dataset promotion; <b>model-swap requalification</b> (re-measure judge TPR/TNR on the new model's outputs); pre-registered guardrail metrics.</td><td class="wide">Evals FAQ production section; Langfuse evaluation overview and automated-evals post; Braintrust docs for the CI pattern.</td><td class="num">16</td><td class="wide">A green CI run that gates a PR; a diff report between two model versions with per-failure-mode deltas; a one-page model-swap runbook.</td></tr>
+        <tr><td class="mod">B7 · Safety &amp; benchmark literacy</td><td class="wide">Red-teaming basics; direct and <i>indirect</i> injection via retrieved documents; over- and under-refusal; PII extraction; OWASP GenAI Top 10 2026 and the Agentic Top 10; the five questions for any leaderboard number (contamination, who ran it, what scaffold, saturation, distribution match).</td><td class="wide">OWASP GenAI 2026; NIST CAISI AgentDojo-Inspect; OpenAI, "Why we no longer evaluate SWE-bench Verified" (Feb 2026); "The Leaderboard Illusion."</td><td class="num">14</td><td class="wide">A red-team report with ≥20 adversarial cases across four categories with severity, and a paragraph explaining to a non-technical stakeholder why a vendor's benchmark number should not change a procurement decision.</td></tr>
+        <tr><td class="mod">B8 · Statistics for evals<small>your edge</small></td><td class="wide">Wilson or Agresti–Coull intervals (not Wald); paired comparison on shared question sets (McNemar for binary); clustered bootstrap (k trials of one task are one cluster); power analysis for eval size; multiple comparisons; CUPED for online tests.</td><td class="wide">Evan Miller (Anthropic), "Adding Error Bars to Evals"; <code>judgy</code>; τ-bench pass^k.</td><td class="num">12</td><td class="wide">From a raw judge pass rate on 500 traces and a 100-example calibration set, return a corrected estimate with a bootstrap 95% CI, and answer "how many more examples to halve that interval?" without looking anything up.</td></tr>
+        <tr><td class="mod">B9 · Tooling</td><td class="wide">Build a ~200-line pytest-style harness first (JSONL dataset → async runner with caching and cost accounting → scorers → versioned results → diff report with CIs); port to Inspect AI (UK AISI, the strongest CV signal); instrument Langfuse or Phoenix; own the golden set, judge prompts and taxonomy, buy tracing and diffing.</td><td class="wide">Hamel, "Your AI Product Needs Evals" and "Selecting the Right AI Evals Tool"; Inspect AI docs + Hamel's primer; Langfuse docs; Arize free eval-fundamentals course.</td><td class="num">12</td><td class="wide">The same suite running three ways (own harness, Inspect AI, a platform) with a paragraph on what each layer earned.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cols">
+      <div class="callout" style="margin-top:20px">
+        <div class="eyebrow">Free shortlist · about 54 hours, $0 · recovers ~75% of the paid course</div>
+        <ol class="protocol">
+          <li>The 17-email course and its two e-books.</li>
+          <li>The AI Evals FAQ, read twice.</li>
+          <li>Hamel's blog trilogy: Evals, Field Guide, LLM-as-Judge.</li>
+          <li>Anthropic, "Demystifying evals for AI agents."</li>
+          <li><code>evals-skills</code> and <code>judgy</code>, hands-on.</li>
+          <li>Miller, "Adding Error Bars to Evals."</li>
+          <li>DeepLearning.AI, <i>Evaluating AI Agents</i>.</li>
+          <li>Inspect AI port of your capstone.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="callout" style="margin-top:20px">
+          <div class="eyebrow">Paid upgrades, if employer-funded</div>
+          <p style="margin:0">Husain &amp; Shankar, <i>AI Evals for Engineers &amp; PMs</i> on Maven: $4,200, cohort 10 Oct to 21 Nov 2026, stated as the last of the year, 4.7/5 from 901 reviews, endorsed by Simon Willison, Harrison Chase and Eugene Yan. Their O'Reilly book <i>Evals for AI Engineers</i> ships 31 October 2026 with early chapters live now.</p>
+        </div>
+        <div class="decline">
+          <div class="eyebrow">Stale · do not build on</div>
+          <ul>
+            <li><b>OpenAI Evals platform</b>: read-only from 31 Oct 2026, shut down 30 Nov 2026. Read its concepts, use nothing else.</li>
+            <li><b>HELM</b> in maintenance mode since June 2026; the <b>HF evaluation-guidebook GitHub repo</b> unmaintained since December 2025 (use the Space).</li>
+            <li><b>SWE-bench Verified</b> as a metric to quote: OpenAI's audit found 59% of its failures were flawed tests.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>The project spine: oil and gas, open data</h2>
+  <div class="prose">
+    <p><b>Top pick: end-of-well report Q&amp;A with enforced page citations, and a grounding-failure eval harness.</b> The Norwegian Offshore Directorate (Sodir) serves thousands of end-of-well report PDFs with no login under the Norwegian open-government licence. Verified on 18 September 2026 by fetching well 6506/3-1's report: 4 MB, about 1,500 pages of daily activity reports, wellsite geology, contractor summaries and bit records. This beats Volve as a text corpus.</p>
+    <p>The trick that makes the golden set cheap: facts that appear in both the PDF narrative and Sodir's structured wellbore tables (total depth, spud and completion dates, operator, formation at TD, discovery flag) give you automatically verifiable ground truth with zero hand-labelling. Then hand-write 50–80 harder questions with page-level answer spans, and add an explicit abstention set of questions the report does not answer.</p>
+    <p><b>Then merge in the second project:</b> an agentic text-to-SQL tool over Sodir's structured tables in DuckDB (about 9,800 wellbores, 143 fields, monthly production) with an execution-match eval and a silently-wrong-answer rate. One assistant with a retrieval tool and a SQL tool is, on open data, a small-scale replica of what ADNOC paid $340M for, with the evaluation evidence the press releases never show. The closest prior art is TADI (arXiv 2605.00060, April 2026), an agent over Volve with 12 tools and a 130-question stress taxonomy. Read it, cite it, then beat its eval.</p>
+    <p><b>Third, once you reach fine-tuning:</b> Volve's 1,759 daily drilling reports → a non-productive-time ledger, with a classic-ML control arm (TF-IDF + gradient boosting, and a fine-tuned encoder) on the same golden set. If the encoder wins the classification sub-task, which it plausibly will, say so and scope the LLM to free-form root cause and zero-shot coverage of a new operator's format.</p>
+  </div>
+  <div class="quote">"We primarily use 'traditional' machine learning on our operational data. Our employees can use AI tools like copilots, chatbots and agentic AI to solve tasks."<span>Equinor, 7 January 2026, announcing $130M of AI value in 2025</span></div>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>Dataset</th><th>What</th><th>Access</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td class="mod"><a href="https://factpages.sodir.no/en/wellbore/tableview/exploration/all">Sodir wellbore documents</a></td><td>End-of-well report PDFs, thousands of wells</td><td><span class="chip up">open, no login</span></td><td>Project 1 corpus</td></tr>
+      <tr><td class="mod"><a href="https://factpages.sodir.no/en">Sodir FactPages tables</a></td><td>Wellbores, fields, licences, discoveries, monthly production (CSV, API)</td><td><span class="chip up">open</span></td><td>Free ground truth for project 1; SQL layer for project 2</td></tr>
+      <tr><td class="mod"><a href="https://www.equinor.com/energy/volve-data-sharing">Equinor Volve</a></td><td>1,759 daily drilling reports (XML), WITSML, ~15,600 production records, logs, seismic</td><td><span class="chip reg">free registration</span> Databricks Marketplace; Free Edition works; ~1h to appear</td><td>Project 3</td></tr>
+      <tr><td class="mod"><a href="https://zenodo.org/records/4351156">FORCE 2020 well logs</a></td><td>118 wells with expert lithology labels, 170 MB, CC BY 4.0</td><td><span class="chip up">open</span></td><td>Classic-ML control arm</td></tr>
+      <tr><td class="mod"><a href="https://www.data.bsee.gov/">BSEE data center</a></td><td>2,018 incident investigations, panel report PDFs, production by platform</td><td><span class="chip up">open</span></td><td>Optional HSE project</td></tr>
+      <tr><td class="mod"><a href="https://www.phmsa.dot.gov/data-and-statistics/pipeline/pipeline-incident-flagged-files">PHMSA incident files</a></td><td>20 years of narratives with PHMSA's own harmonised cause codes</td><td><span class="chip up">open</span> blocks bots, fine in a browser</td><td>A pre-built labelled taxonomy for HSE extraction</td></tr>
+      <tr><td class="mod"><a href="https://www.havtil.no/en/supervision/investigation-reports/">Havtil reports + regulations</a></td><td>Norwegian incident investigations and the full HSE framework in English</td><td><span class="chip up">open</span></td><td>HSE or regulatory Q&amp;A</td></tr>
+      <tr><td class="mod"><a href="https://www.ecfr.gov/current/title-30/chapter-II/subchapter-B/part-250">eCFR 30 CFR Part 250</a></td><td>US offshore regulations, bulk XML, daily</td><td><span class="chip up">public domain</span></td><td>Regulatory Q&amp;A. API and NORSOK standards are paywalled; say so in the README.</td></tr>
+      <tr><td class="mod"><a href="https://www.eia.gov/opendata/bulkfiles.php">EIA bulk files</a></td><td>Petroleum (54 MB), gas, drilling productivity</td><td><span class="chip up">open, no key</span></td><td>Second schema for the SQL agent</td></tr>
+      <tr><td class="mod"><a href="https://www.ga.gov.au/nopims">NOPIMS (Australia)</a></td><td>Open-file well completion reports</td><td><span class="chip up">open</span> JS-heavy portal</td><td>Second-jurisdiction generalisation test</td></tr>
+      <tr><td class="mod">PetroWiki</td><td>SPE encyclopedia</td><td><span class="chip dn">not open-licensed</span></td><td>Link to it. Never ingest it into a public repo.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="cols">
+    <div>
+      <h3>Where the honest answer is "don't use an LLM"</h3>
+      <ul>
+        <li><b>Lithology from well logs.</b> Gradient boosting or a 1D CNN. Use FORCE 2020 as the control arm that proves you know the difference.</li>
+        <li><b>Decline-curve forecasting.</b> Arps, ARIMA, physics-informed models.</li>
+        <li><b>Sensor anomaly detection.</b> Classical time series. The LLM writes the explanation, never the detection.</li>
+        <li><b>Seismic picking.</b> Vision models.</li>
+        <li><b>Anything safety-critical with no human in the loop.</b> Only about one in five organisations has mature governance for autonomous agents (Deloitte). Design for review and say so.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Employer signal, verbatim</h3>
+      <div class="quote">"Collaborate with domain teams to define benchmark datasets, evaluation metrics, and acceptance criteria; establish continuous evaluation frameworks."<span>SLB, Artificial Intelligence Engineer, Houston, live 18 Sep 2026</span></div>
+      <div class="quote">"Design and deploy LLM-based solutions (RAG, prompt pipelines, vector search)" with "end-to-end ML pipelines with CI/CD."<span>Halliburton Landmark AI/ML roles, 2026</span></div>
+      <p class="small">Deployed systems to name in interviews: SLB Lumi and Tela, ADNOC ENERGYai (built on OSDU), Baker Hughes Leucipa "Lucy," bp with Palantir AIP, TotalEnergies with Mistral, Cognite Atlas AI. Knowing OSDU entity names is a resume signal on its own.</p>
+    </div>
+  </div>
+
+  <h2>Capstone checklist</h2>
+  <div class="prose"><p>What the public repo must contain to make a 2026 hiring manager think "this person can prove whether our system works."</p></div>
+  <div class="cols">
+    <ol class="protocol">
+      <li><b>Golden dataset.</b> 150–300 labelled examples, provenance documented, real/synthetic split, a held-out judge test slice, versioned with a data card.</li>
+      <li><b>Failure taxonomy</b> from ≥100 hand-read traces, raw open codes shown, 5–9 categories with counts.</li>
+      <li><b>Evaluators.</b> ≥3 code-based scorers; ≥1 LLM judge with prompt history; a judge calibration report: TPR/TNR with CIs, confusion matrix, position- and verbosity-bias checks, Rogan–Gladen corrected pass rate with bootstrap CI.</li>
+      <li><b>Harness.</b> One command; deterministic case IDs; records model, prompt version and commit SHA; caches calls; cost and latency per case; diff report with per-failure-mode deltas; a green CI run plus a deliberately broken PR showing the gate fire; ported to Inspect AI.</li>
+    </ol>
+    <ol class="protocol" style="counter-reset:p 4">
+      <li><b>RAG and agent specifics.</b> Recall@k and nDCG on a labelled retrieval set; calibrated faithfulness judge; trajectory scorer; tool-call correctness; terminal-state check; pass^k at k=5 with CI; abstention rate on unanswerable questions.</li>
+      <li><b>Safety slice.</b> ≥20 adversarial cases mapped to OWASP GenAI 2026 categories with severity.</li>
+      <li><b>Model-swap requalification.</b> Paired comparison with CI (McNemar), judge re-calibrated on the new model's outputs, ship / don't-ship memo with guardrail thresholds.</li>
+      <li><b>Write-up</b>, 2,000–3,000 words: why it's hard to evaluate → what 100+ traces revealed → evaluator design → calibration → statistics and where they break → model-swap result → limitations → total cost of eval runs.</li>
+    </ol>
+  </div>
+  <div class="decline">
+    <div class="eyebrow">Anti-patterns that sink it</div>
+    <ul>
+      <li>A Ragas or DeepEval wrapper with default metrics and no calibration.</li>
+      <li>A raw LLM-judge pass rate reported as the system's pass rate.</li>
+      <li>A Likert-scale judge with no human-label comparison.</li>
+      <li>Benchmark scores (MMLU, SWE-bench) presented as evidence your system works.</li>
+      <li>An eval set written from imagination with no real traces behind it. Point estimates with no intervals.</li>
+      <li>A README that describes the app for three paragraphs before mentioning evaluation.</li>
+    </ul>
+  </div>
+
+  <h2>Learning protocol</h2>
+  <div class="prose">
+    <p>Anthropic's January 2026 trial: AI-assisted learners scored 50% versus 67% on concepts they had just used, with debugging hit hardest. Learners who used AI for conceptual questions did fine. So during phases 1–4: attempt first; ask for explanations, not code; never paste the error; close the tab and re-derive; self-test without the tool. Flip to full delegation only in phases 5–7 when shipping.</p>
+  </div>
+
+  <h2>Method and caveats</h2>
+  <div class="prose"><p>Four Opus research agents ran in parallel on 18 September 2026 (LLM curriculum, evals curriculum, oil and gas datasets and employers, the 2022 → 2026 gap), each making 44–90 searches and fetches. The full cited reports sit next to this page in <span class="chip">research/sources/05–08</span>. Verified by direct fetch: Sodir PDFs and tables, Zenodo FORCE 2020, Equinor's Databricks user guide, BSEE, Texas RRC, EIA, Anthropic and OpenAI model pages, PyPI stats, the MCP changelog. Blocked to bots, re-check in a browser: PHMSA, OSDU GitLab, CO2DataShare. Unverified: any Chevron or ExxonMobil deal with OpenAI; specific 2026 benchmark scores; the exact enactment status of the EU AI Act omnibus deferral.</p></div>
+  <ul class="sources">
+    <li><a href="https://karpathy.ai/zero-to-hero.html">Karpathy, Neural Networks: Zero to Hero</a></li>
+    <li><a href="https://github.com/karpathy/nanochat">karpathy/nanochat</a></li>
+    <li><a href="https://cs336.stanford.edu/">Stanford CS336, Language Modeling from Scratch (Spring 2026)</a></li>
+    <li><a href="https://github.com/rasbt/LLMs-from-scratch">Raschka, Build a Large Language Model (From Scratch), repo</a></li>
+    <li><a href="https://www.anthropic.com/engineering">Anthropic Engineering blog</a></li>
+    <li><a href="https://huggingface.co/learn/agents-course/unit0/introduction">Hugging Face Agents Course</a></li>
+    <li><a href="https://www.deeplearning.ai/courses/fast-and-efficient-llm-inference-with-vllm">DeepLearning.AI, Fast &amp; Efficient LLM Inference with vLLM</a></li>
+    <li><a href="https://unsloth.ai/docs/get-started/fine-tuning-llms-guide">Unsloth fine-tuning guide</a></li>
+    <li><a href="https://jxnl.co/writing/2025/01/24/systematically-improving-rag-applications/">Jason Liu, Systematically Improving RAG Applications</a></li>
+    <li><a href="https://ai.hamel.dev/eval-course">Husain &amp; Shankar, free evals email course</a></li>
+    <li><a href="https://hamel.dev/blog/posts/llm-judge/">Hamel Husain, Creating a LLM-as-a-Judge</a></li>
+    <li><a href="https://github.com/ai-evals-course/evals-skills">ai-evals-course/evals-skills</a> · <a href="https://github.com/ai-evals-course/judgy">judgy</a></li>
+    <li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic, Demystifying evals for AI agents</a></li>
+    <li><a href="https://arxiv.org/abs/2411.00640">Miller, Adding Error Bars to Evals</a></li>
+    <li><a href="https://arxiv.org/abs/2406.12045">τ-bench</a> · <a href="https://arxiv.org/abs/2306.05685">Judging LLM-as-a-Judge</a></li>
+    <li><a href="https://inspect.aisi.org.uk/">Inspect AI (UK AISI)</a></li>
+    <li><a href="https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/">OWASP GenAI LLM Top 10, 2026</a></li>
+    <li><a href="https://maven.com/parlance-labs/evals">AI Evals for Engineers &amp; PMs (Maven)</a></li>
+    <li><a href="https://arxiv.org/abs/2605.00060">TADI: agentic LLM over the Volve dataset</a></li>
+    <li><a href="https://careers.slb.com/jobdescription.aspx?id=EF16148-en_US+1">SLB, Artificial Intelligence Engineer posting</a></li>
+    <li><a href="https://www.equinor.com/news/20260107-artificial-intelligence-saved-equinor-usd-130-million">Equinor, AI saved USD 130 million (Jan 2026)</a></li>
+    <li><a href="https://www.anthropic.com/research/AI-assistance-coding-skills">Anthropic, AI assistance and coding-skill formation (RCT)</a></li>
+  </ul>
+</div>

@@ -1,0 +1,217 @@
+/* The Sunday debrief: four blocks and the sticky sidebar. */
+
+/* ------------------------------------------------------------- debrief */
+.debrief-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: var(--s5);
+  align-items: start;
+}
+
+.debrief-main,
+.debrief-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+
+.debrief-side {
+  position: sticky;
+  top: 34px;
+}
+
+.block {
+  border-radius: var(--r-card);
+  background: var(--surf);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.block-head {
+  padding: var(--s5) var(--s6);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--s5);
+}
+
+.block-head h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.block-head p {
+  margin: var(--s1) 0 0;
+  font-size: 12.5px;
+  color: var(--ink3);
+}
+
+.block-body {
+  padding: var(--s5) var(--s6);
+}
+
+.sweep-row {
+  padding: 13px var(--s6);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: var(--s4);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sweep-row:last-child {
+  border-bottom: none;
+}
+
+.sweep-prompt {
+  flex: 1 1 320px;
+  min-width: 0;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.calib-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  margin-bottom: var(--s4);
+}
+
+.calib-bucket {
+  width: 62px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.calib-track {
+  flex: 1;
+  height: var(--s6);
+  border-radius: 7px;
+  background: var(--surf2);
+  position: relative;
+  overflow: hidden;
+}
+
+.calib-said {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--vio-line);
+}
+
+.calib-was {
+  position: absolute;
+  left: 0;
+  top: var(--s2);
+  bottom: var(--s2);
+  background: var(--vio);
+  border-radius: 0 var(--s1) var(--s1) 0;
+}
+
+.calib-readout {
+  /* `said 87.5% · was 0%` is the longest this ever gets; wrapping it put the
+     second half outside the card, so the column is sized for the whole line. */
+  flex: 0 0 auto;
+  width: 168px;
+  text-align: right;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink2);
+}
+
+.errcard {
+  padding: var(--s5) var(--s6);
+  border-bottom: 1px solid var(--line);
+}
+
+.errcard:last-child {
+  border-bottom: none;
+}
+
+.errcard p {
+  margin: 0 0 var(--s3);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.errcard-meta {
+  display: flex;
+  gap: var(--s3);
+  align-items: center;
+  margin-bottom: var(--s2);
+}
+
+.errcard-form {
+  display: flex;
+  gap: var(--s3);
+  align-items: center;
+}
+
+.errcard-form input {
+  flex: 1;
+  border-radius: var(--r-btn);
+  border: 1px solid var(--line);
+  background: var(--surf2);
+  padding: 9px var(--s4);
+  font-size: 12.5px;
+  color: var(--ink);
+}
+
+.hoursbars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s2);
+  height: 90px;
+}
+
+.hoursbars > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.hoursbars span {
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+.hoursbar-fill {
+  width: 100%;
+  border-radius: 7px 7px 3px 3px;
+  background: var(--vio-line);
+}
+
+.hoursbar-fill[data-last="true"] {
+  background: var(--vio);
+}
+
+.mini-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s3);
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--ink2);
+  margin-bottom: var(--s2);
+}
+
+.scratch {
+  border-radius: var(--r-inner);
+  border: 1px dashed var(--line);
+  background: var(--surf2);
+  padding: var(--s4) var(--s5);
+  font-size: 13px;
+  color: var(--ink);
+  width: 100%;
+  font-family: var(--font-ui);
+  resize: vertical;
+}
