@@ -4,7 +4,7 @@ Plan · 2026-09-20 · Fable plans, Opus executes. Three packages; A and B run in
 
 ## Goal
 
-The repo `Ihjas-tk/personal-lms` becomes public. Anyone can clone it, write (or pick) a
+The repo `Ihjas-tk/study-harness` becomes public. Anyone can clone it, write (or pick) a
 curriculum for *their* subject, and run the app. The LLM + evals track stays as the flagship
 example, not the product. The README, metadata and repo layout are tuned so the people who
 would want this can find it.
@@ -67,7 +67,7 @@ tagline; 15–20 GitHub topics ranked; the search phrases people actually use (l
 self-hosted, spaced repetition, active recall, study tracker, PKM, markdown, Obsidian…) and where
 each goes (description, topics, README H1/intro, `About`); README section order and length that
 top self-hosted/learning repos use; trust signals (license, CI badge, screenshots vs GIF, demo,
-roadmap, release tags); social-preview image spec; an honest name assessment for `personal-lms`
+roadmap, release tags); social-preview image spec; an honest name assessment for `study-harness`
 with 5 alternatives; a launch checklist (Show HN wording, r/selfhosted, awesome-selfhosted and
 awesome-* PR criteria, Product Hunt, timing) with the rules each venue enforces.
 

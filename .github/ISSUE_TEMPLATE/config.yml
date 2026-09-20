@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Writing your own curriculum
-    url: https://github.com/Ihjas-tk/personal-lms/blob/main/docs/curriculum-schema.md
+    url: https://github.com/Ihjas-tk/study-harness/blob/main/docs/curriculum-schema.md
     about: Every field of track.yaml, with defaults and a worked example. Try `learn check <file>` first — it names the failing field.
   - name: Questions and ideas
-    url: https://github.com/Ihjas-tk/personal-lms/discussions
+    url: https://github.com/Ihjas-tk/study-harness/discussions
     about: Not sure it is a bug? Ask here.

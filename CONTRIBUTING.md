@@ -1,7 +1,8 @@
 # Contributing
 
-Thanks for looking. **Open an issue before a big PR** — the design constraints below rule out
-a lot of otherwise reasonable ideas, and it is better to find that out before you write it.
+Thanks for looking. **Open an issue before a big PR.** The design constraints below rule out
+a lot of otherwise reasonable ideas, and it is better to find that out before you write the
+code.
 
 ## Set up
 
@@ -22,20 +23,21 @@ cd learn/web && npx playwright test   # browser flows, on port 8799 against a te
 ```
 
 Playwright never uses port 8765 and never touches your own `vault/`. If you change the
-curriculum models, run `cd learn && uv run learn schema` — a test fails when `schema.json` drifts.
+curriculum models, run `cd learn && uv run learn schema`, because a test fails when
+`schema.json` drifts.
 
 ## Design constraints PRs must respect
 
-These are the point of the project, not preferences:
+These are the point of the project rather than preferences:
 
 - **Files are the truth.** Everything the app records is Markdown or YAML in the vault. The
   SQLite index under `.cache/` is derived and must stay deletable.
-- **Typed-answer checks, with the reference un-renderable until the answer is frozen** —
-  enforced in the store, not by hiding a `<div>`.
+- **Typed-answer checks, with the reference un-renderable until the answer is frozen.** This
+  is enforced in the store rather than by hiding a `<div>`.
 - **Confidence is captured before the answer** and cannot be skipped.
 - **The re-test ladder stays.** `lasting` requires two clean passes at least seven days apart.
 - **No streaks, no points, no badges, no single percent-complete bar, no "mark as complete."**
-- **AI never generates content.** Two optional actions exist — copy-edit a note as a reviewed
+- **AI never generates content.** Two optional actions exist: copy-edit a note as a reviewed
   diff, and a second opinion on an already-frozen answer. Neither writes without review.
 - **The vault stays git-ignored forever.** Never commit anything under `learn/vault/`.
 

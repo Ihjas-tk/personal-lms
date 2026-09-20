@@ -29,5 +29,6 @@ Thumbs.db
 
 # --- capture output from the README asset scripts ---
 learn/web/e2e/.demo-results/
+learn/web/e2e/.readme-results/
 learn/web/e2e/.ux-results/
 vault/

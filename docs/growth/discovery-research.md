@@ -24,7 +24,7 @@ Topic sizes measured today (repos carrying the topic = competition):
 | `study-tracker` | 140 | kaogong-study-tracker 244 | Literal category; leader has 244 stars. **Winnable outright.** |
 | `learning-tracker` | 36 | a 3-star repo | Essentially unclaimed. **Claim it.** |
 | `retrieval-practice` | 31 | — | Unclaimed, scientifically correct. **Claim it.** |
-| `learning-management-system` | 609 | frappe/lms 3.2k | The repo is named `personal-lms` but is not this category. §5. |
+| `learning-management-system` | 609 | frappe/lms 3.2k | The repo is named `study-harness` but is not this category. §5. |
 
 The structural insight: head terms (`self-hosted`, `local-first`, `markdown`) are where the *audience* is; tail terms (`study-tracker`, `learning-tracker`, `active-recall`, `retrieval-practice`) are where `learn` can be **the best result in the world on launch day**, because incumbents there have 3–244 stars. Buy the tail, browse the head.
 
@@ -96,7 +96,7 @@ Rules: **no more than 20**, **50 characters or less**, **lowercase letters, numb
 | 14 | `study-planner` | 298 | 5.1k | Adjacent intent; incumbents are plan lists, not apps. |
 | 15 | `personal-knowledge-management` | 1,055 | — | Reserve. Adjacent, slightly misdescribes the app. |
 | 16 | `note-taking` | 3,892 | AppFlowy 76.9k | Reserve. True but not the point. |
-| 17 | `learning-management-system` | 609 | frappe/lms 3.2k | Reserve. Only if you keep `personal-lms` (§5). |
+| 17 | `learning-management-system` | 609 | frappe/lms 3.2k | Reserve. Only if you keep `study-harness` (§5). |
 | 18 | `knowledge-management` | 4,714 | Trilium 37.9k | Reserve. |
 | 19 | `education` | 32,440 | freeCodeCamp 456k | Reserve. Huge and vague. |
 | 20 | `flashcards` | 2,583 | Anki-Android 11.8k | **Reserve with a caveat** — brings people who want a card app. Add only once the comparison table is live to catch them. |
@@ -208,7 +208,7 @@ Your data lives in `vault/` — plain Markdown and YAML, committed to git. No ac
 
 ## 5. Name assessment
 
-**`personal-lms` is free but weak.** 220 repos match `personal-lms in:name`; every one has 0–1 stars, so there is no collision worth worrying about, and `personal-lms` is free on PyPI. The problems are semantic:
+**`study-harness` is free but weak.** 220 repos match `study-harness in:name`; every one has 0–1 stars, so there is no collision worth worrying about, and `study-harness` is free on PyPI. The problems are semantic:
 
 - **"LMS" sets the wrong expectation** — Moodle, Canvas, frappe/lms: multi-user, enrolment, SCORM, grading *other people*. Reviewers benchmark against that and find it lacking, while the real differentiators (calibration, hidden references, the re-test ladder) are invisible in the category.
 - **"personal-" reads as "someone's hobby repo"** — exactly the impression a launch must avoid.
@@ -225,7 +225,7 @@ Renaming is cheapest right now: GitHub sets up a permanent redirect, and there a
 | `learnbench` | free | Compact, eval-harness metaphor intact, obviously a tool. Slightly opaque to non-ML readers. |
 | `checkvault` | free | The app's own two nouns — Checks and the vault. Distinctive and memorable, but tells a stranger nothing. |
 
-**Recommendation:** rename to **`study-harness`**, with `learn` staying the command and the product name in the H1. If the owner keeps `personal-lms` — defensible, since the name matters far less than the `About` field, which is the flexible half of the search index — the non-negotiable mitigation is: **never let "LMS" be the only category word anywhere.** `About` leads with "study tracker", the H1 contains "study tracker", and `learning-management-system` stays a reserve topic (#17).
+**Recommendation:** rename to **`study-harness`**, with `learn` staying the command and the product name in the H1. If the owner keeps `study-harness` — defensible, since the name matters far less than the `About` field, which is the flexible half of the search index — the non-negotiable mitigation is: **never let "LMS" be the only category word anywhere.** `About` leads with "study tracker", the H1 contains "study tracker", and `learning-management-system` stays a reserve topic (#17).
 
 ---
 

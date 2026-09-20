@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/Ihjas-tk/personal-lms/blob/main/learn/curriculum/schema.json",
+  "$id": "https://github.com/Ihjas-tk/study-harness/blob/main/learn/curriculum/schema.json",
   "title": "learn curriculum (track.yaml)",
   "description": "A track: areas, phases, modules, topics, resources, checks and capstone artefacts. Written by hand in YAML; validated with `learn check <track.yaml>`. See docs/curriculum-schema.md for the prose version.",
   "properties": {

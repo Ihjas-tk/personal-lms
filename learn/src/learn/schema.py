@@ -16,7 +16,7 @@ from .config import PROJECT_ROOT
 from .curriculum import Track
 
 SCHEMA_PATH = PROJECT_ROOT / "curriculum" / "schema.json"
-SCHEMA_ID = "https://github.com/Ihjas-tk/personal-lms/blob/main/learn/curriculum/schema.json"
+SCHEMA_ID = "https://github.com/Ihjas-tk/study-harness/blob/main/learn/curriculum/schema.json"
 TITLE = "learn curriculum (track.yaml)"
 DESCRIPTION = (
     "A track: areas, phases, modules, topics, resources, checks and capstone artefacts. "

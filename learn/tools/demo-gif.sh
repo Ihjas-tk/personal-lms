@@ -19,12 +19,14 @@ tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 
 # 12 fps and 900 px are the README budget; `head` drops the blank frames before the
-# first paint. 128 colours with a Bayer dither compresses flat UI far better than
-# Floyd–Steinberg's noise does — the difference is ~0.5 MB on this recording.
+# first paint. A Bayer dither compresses flat UI far better than Floyd-Steinberg's
+# noise does. 96 colours rather than 128 keeps the file under the README's 3 MB
+# budget now that the loop types a longer answer; the UI has few enough flat tones
+# that the difference is not visible.
 filters="fps=12,scale=900:-1:flags=lanczos"
 head="0.6"
 ffmpeg -v error -y -ss "$head" -i "$src" \
-  -vf "$filters,palettegen=max_colors=128:stats_mode=diff" "$tmp/pal.png"
+  -vf "$filters,palettegen=max_colors=96:stats_mode=diff" "$tmp/pal.png"
 ffmpeg -v error -y -ss "$head" -i "$src" -i "$tmp/pal.png" \
   -lavfi "$filters [x]; [x][1:v] paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle" \
   -loop 0 "$out"

@@ -40,5 +40,5 @@ Nothing yet.
 - `Dockerfile` and `docker-compose.yml`, with one bind mount for the vault.
 - MIT licence, CI, contributing guide, code of conduct and issue templates.
 
-[Unreleased]: https://github.com/Ihjas-tk/personal-lms/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/Ihjas-tk/personal-lms/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Ihjas-tk/study-harness/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Ihjas-tk/study-harness/releases/tag/v0.1.0
