@@ -36,9 +36,22 @@
   min-height: 1.2em;
 }
 
+.focus-sources-wrap {
+  min-width: 0;
+  max-width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+}
+
 .focus-sources {
   flex-wrap: wrap;
-  max-width: 40%;
+}
+
+.focus-source-focus {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--ink3);
 }
 
 .focus-right {

@@ -37,6 +37,8 @@ def test_module_payload_carries_the_workspace_fields(either_client: TestClient) 
         "state_set_by_you",
         "state_set_at",
         "sources",
+        "required_total",
+        "required_done",
         "note",
         "checks",
         "proof_text",
@@ -106,6 +108,34 @@ def test_topic_sources_read_as_a_position(client_v2: TestClient) -> None:
     ).json()["topics"][0]["sources"][1]
     assert paper["meta"] == "paper · 3 of 15 pages"
     assert client_v2.get("/api/modules/a1").json()["topics"][0]["state"] == "in_progress"
+
+
+def test_source_rows_carry_required_lane_group_and_focus(client_v2: TestClient) -> None:
+    """The either/or fields reach the client, and the group counts once for the topic."""
+    body = client_v2.get("/api/modules/a1").json()
+    attention, residual = body["topics"][0], body["topics"][1]
+    primary, alternative = attention["sources"]
+    assert (primary["required"], primary["alternative_of"], primary["group"]) == (
+        True,
+        None,
+        "a1-karpathy-gpt",
+    )
+    assert primary["lane"] == "video lane" and primary["focus"] is None
+    assert (alternative["required"], alternative["alternative_of"]) == (True, "a1-karpathy-gpt")
+    assert alternative["group"] == "a1-karpathy-gpt" and alternative["lane"] == "paper lane"
+
+    # Two sources, one either/or group: one required thing, not two.
+    assert (attention["required_total"], attention["required_done"]) == (1, 0)
+    extra = residual["sources"][0]
+    assert extra["required"] is False
+    assert extra["focus"] == "the training loop only, not the sampler"
+    assert (residual["required_total"], residual["required_done"]) == (0, 0)
+
+    # Finishing the alternative closes the group.
+    done = client_v2.patch(
+        "/api/modules/a1/resources/a1-attention-paper", json={"done": True}
+    ).json()["topics"][0]
+    assert (done["required_total"], done["required_done"]) == (1, 1)
 
 
 def test_resource_position_is_refused_when_negative(client_v2: TestClient) -> None:

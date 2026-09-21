@@ -17,25 +17,73 @@ def fluent(check_id: str, on: date, session: str = "s1") -> Attempt:
     return Attempt(check_id=check_id, session_id=session, on=on, score="fluent", confidence_pre=70)
 
 
+def source(
+    rid: str,
+    group: str | None = None,
+    required: bool = True,
+    finished: bool = False,
+    touched: bool = False,
+) -> derive.ResourceProgress:
+    return derive.ResourceProgress(
+        id=rid, group=group or rid, required=required, finished=finished, touched=touched
+    )
+
+
+QUEUED = source("r1")
+READ = source("r1", touched=True)
+DONE = source("r1", finished=True, touched=True)
+
+
 @pytest.mark.parametrize(
     ("checks", "resources", "note", "expected"),
     [
         ([], [], False, "not_started"),
-        (["not_started"], ["queued"], False, "not_started"),
-        ([], ["queued"], True, "in_progress"),  # a note alone counts as started
-        (["not_started"], ["read"], False, "in_progress"),
-        (["attempted"], ["queued"], False, "in_progress"),
-        (["proficient", "durable"], ["queued"], False, "proved"),
-        (["proficient", "familiar"], ["taught"], True, "in_progress"),
-        ([], ["reconstructed", "taught"], False, "proved"),  # no check: the sources prove it
-        ([], ["taught", "read"], False, "in_progress"),
+        (["not_started"], [QUEUED], False, "not_started"),
+        ([], [QUEUED], True, "in_progress"),  # a note alone counts as started
+        (["not_started"], [READ], False, "in_progress"),
+        (["attempted"], [QUEUED], False, "in_progress"),
+        (["proficient", "durable"], [QUEUED], False, "proved"),
+        (["proficient", "familiar"], [DONE], True, "in_progress"),
+        # No check: the required sources prove it, and one unfinished one is enough to stop it.
+        ([], [DONE, source("r2", finished=True, touched=True)], False, "proved"),
+        ([], [DONE, source("r2", touched=True)], False, "in_progress"),
     ],
 )
 def test_topic_state_table(
-    checks: list[str], resources: list[str], note: bool, expected: str
+    checks: list[str], resources: list[derive.ResourceProgress], note: bool, expected: str
 ) -> None:
     """The §3 rule, corner by corner: checks decide it, sources stand in when there are none."""
     assert derive.topic_state(checks, resources, note) == expected
+
+
+def test_topic_state_counts_an_either_or_group_once() -> None:
+    """A required primary that is not done, but an alternative that is: the group is closed."""
+    primary = source("cs336", touched=True)
+    alt = source("raschka", group="cs336", finished=True, touched=True)
+    assert derive.topic_state([], [primary], False) == "in_progress"
+    assert derive.topic_state([], [primary, alt], False) == "proved"
+    assert derive.required_counts([primary, alt]) == (1, 1)
+
+
+def test_optional_sources_never_block_but_do_start_a_topic() -> None:
+    extra = source("blog", required=False)
+    done = source("cs336", finished=True, touched=True)
+    assert derive.topic_state([], [done, extra], False) == "proved"
+    assert derive.topic_state([], [done, source("blog", required=False, touched=True)], False) == (
+        "proved"
+    )
+    # On their own, optional sources prove nothing — but touching one is a start.
+    assert derive.topic_state([], [extra], False) == "not_started"
+    assert derive.topic_state([], [source("blog", required=False, touched=True)], False) == (
+        "in_progress"
+    )
+    assert derive.required_counts([done, extra]) == (1, 1)
+
+
+def test_topic_state_accepts_plain_dicts_and_tuples() -> None:
+    rows = [{"id": "r1", "group": "r1", "required": True, "finished": True, "touched": True}]
+    assert derive.topic_state([], rows, False) == "proved"
+    assert derive.topic_state([], [("r1", "r1", True, True, True)], False) == "proved"
 
 
 def test_ridge_counts_use_the_redesign_words() -> None:

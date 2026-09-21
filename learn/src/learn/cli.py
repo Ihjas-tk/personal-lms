@@ -229,12 +229,21 @@ def _summary(track: Track) -> str:
     def n(count: int, word: str) -> str:
         return f"{count} {word}{'' if count == 1 else 's'}"
 
+    resources = [r for m in track.modules for r in m.resources]
+    optional = sum(1 for r in resources if not r.required)
+    either_or = sum(
+        1
+        for r in resources
+        if r.alternative_of is None and len(track.alternative_group(r.id)) > 1
+    )
     parts = [
         n(len(track.areas), "area"),
         n(len(track.phases), "phase"),
         n(len(track.modules), "module"),
         n(len(track.checks), "check"),
         n(len(track.capstone), "artefact"),
+        f"{optional} optional",
+        n(either_or, "either/or group"),
         f"{track.total_weeks} weeks from {track.start_date.isoformat()}",
     ]
     return ", ".join(parts)

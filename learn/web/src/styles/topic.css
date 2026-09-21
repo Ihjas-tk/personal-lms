@@ -134,6 +134,78 @@
   color: var(--ink);
 }
 
+/* `optional` after the title. Required is the default and carries no tag: tagging
+   every row would be noise, and the eye only needs the exception. */
+.source-tag {
+  margin-left: 7px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surf2);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+
+/* Whose lane this member of a choice belongs to. Display only — never switched on. */
+.source-lane {
+  margin-left: 7px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--vio-line);
+  background: var(--vio-soft);
+  font-size: 10.5px;
+  color: var(--vio);
+  white-space: nowrap;
+}
+
+/* "lectures 3 and 4 only: RoPE, RMSNorm, SwiGLU" — why this source is here. */
+.source-focus {
+  margin-top: 3px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink3);
+}
+
+/* --------------------------------------------- either/or groups ("pick one") */
+
+.source-group {
+  margin: var(--s2) var(--s5) var(--s3);
+  border-left: 2px solid var(--vio-line);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  background: var(--surf2);
+}
+
+.source-group-label {
+  padding: var(--s2) var(--s4) 0;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+/* Any one member done closes the group, so the label goes with it. */
+.source-group-label[data-done="true"] {
+  color: var(--good);
+}
+
+.source-group .source {
+  padding: var(--s2) var(--s4) var(--s2) var(--s5);
+}
+
+.topic-required {
+  margin-left: 8px;
+  padding-left: 8px;
+  border-left: 1px solid var(--line);
+  color: var(--ink3);
+}
+
+.topic-required[data-done="true"] {
+  color: var(--good);
+}
+
 .source-meta {
   margin-top: var(--s1);
   display: flex;

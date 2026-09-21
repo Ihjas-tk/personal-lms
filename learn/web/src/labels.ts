@@ -147,6 +147,12 @@ export const THINGS_TO_COVER = (n: number) =>
 export const RE_TESTS_OVERDUE = (n: number) =>
   `${n} re-test${n === 1 ? "" : "s"} overdue`;
 export const SOURCE_HEAD = "Source";
+/** Required is the default, so only the extras are tagged — tagging every row is noise. */
+export const RESOURCE_OPTIONAL = "optional";
+/** The label over an either/or group: finish any one member and the group is closed. */
+export const RESOURCE_PICK_ONE = "pick one";
+/** "1 of 2 required" — either/or groups count once; optional extras do not count. */
+export const TOPIC_REQUIRED = (done: number, total: number) => `${done} of ${total} required`;
 export const NOTE_HEAD = "Your note";
 export const PROOF_HEAD = "Proof — the check that closes this topic";
 export const NOTE_EMPTY =

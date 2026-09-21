@@ -206,12 +206,16 @@ export default function FocusMode({
           </div>
         </div>
 
-        <div className="seg focus-sources" role="group" aria-label="Source">
-          {topic.sources.map((s, i) => (
-            <button key={s.id} type="button" aria-pressed={i === pick} onClick={() => setPick(i)}>
-              {s.title.length > 34 ? `${s.title.slice(0, 33)}…` : s.title}
-            </button>
-          ))}
+        <div className="focus-sources-wrap">
+          <div className="seg focus-sources" role="group" aria-label="Source">
+            {topic.sources.map((s, i) => (
+              <button key={s.id} type="button" aria-pressed={i === pick} onClick={() => setPick(i)}>
+                {s.title.length > 34 ? `${s.title.slice(0, 33)}…` : s.title}
+              </button>
+            ))}
+          </div>
+          {/* Why this source is on this topic, when it serves several. */}
+          {source?.focus ? <div className="focus-source-focus">{source.focus}</div> : null}
         </div>
 
         <div className="focus-right">

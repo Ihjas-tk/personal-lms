@@ -136,6 +136,73 @@ def test_duplicate_topic_ids_are_refused() -> None:
         Track.model_validate(raw)
 
 
+def _resource(raw: dict, resource_id: str) -> dict:
+    for module in raw["modules"]:
+        for resource in module["resources"]:
+            if resource["id"] == resource_id:
+                return resource
+    raise AssertionError(f"fixture has no resource {resource_id}")
+
+
+def test_required_optional_and_lanes_load() -> None:
+    """The four new fields default quietly and carry through when they are written."""
+    track = load_track(FIXTURES / "track_v2.yaml")
+    a1 = track.module("a1")
+    primary = a1.resource("a1-karpathy-gpt")
+    assert (primary.required, primary.alternative_of, primary.lane) == (True, None, "video lane")
+    alt = a1.resource("a1-attention-paper")
+    assert (alt.alternative_of, alt.lane) == ("a1-karpathy-gpt", "paper lane")
+    extra = a1.resource("a1-nanogpt")
+    assert extra.required is False
+    assert extra.focus == "the training loop only, not the sampler"
+    plain = track.module("b0").resource("b0-error-analysis")
+    assert (plain.required, plain.alternative_of) == (True, None)
+    assert (plain.lane, plain.focus) == (None, None)
+
+
+def test_alternative_groups_are_indexed_primary_first() -> None:
+    track = load_track(FIXTURES / "track_v2.yaml")
+    assert track.alternative_group("a1-karpathy-gpt") == ["a1-karpathy-gpt", "a1-attention-paper"]
+    assert track.alternative_group("a1-attention-paper") == [
+        "a1-karpathy-gpt",
+        "a1-attention-paper",
+    ]
+    assert track.primary_of("a1-attention-paper") == "a1-karpathy-gpt"
+    # A resource that stands alone is its own group, and an unknown id is not a crash.
+    assert track.alternative_group("a1-nanogpt") == ["a1-nanogpt"]
+    assert track.alternative_group("nope") == ["nope"]
+    assert track.primary_of("a1-nanogpt") == "a1-nanogpt"
+
+
+def test_an_unknown_alternative_of_is_refused() -> None:
+    raw = _v2()
+    _resource(raw, "a1-attention-paper")["alternative_of"] = "nowhere"
+    with pytest.raises(ValidationError, match="unknown alternative_of nowhere"):
+        Track.model_validate(raw)
+
+
+def test_a_resource_may_not_be_an_alternative_of_itself() -> None:
+    raw = _v2()
+    _resource(raw, "a1-attention-paper")["alternative_of"] = "a1-attention-paper"
+    with pytest.raises(ValidationError, match="alternative_of points at itself"):
+        Track.model_validate(raw)
+
+
+def test_a_chain_of_alternatives_is_refused() -> None:
+    raw = _v2()
+    _resource(raw, "a1-nanogpt")["alternative_of"] = "a1-attention-paper"
+    _resource(raw, "a1-nanogpt")["required"] = True
+    with pytest.raises(ValidationError, match="is itself an alternative"):
+        Track.model_validate(raw)
+
+
+def test_a_group_may_not_disagree_on_required() -> None:
+    raw = _v2()
+    _resource(raw, "a1-attention-paper")["required"] = False
+    with pytest.raises(ValidationError, match="required must match a1-karpathy-gpt"):
+        Track.model_validate(raw)
+
+
 def test_unassigned_rows_join_an_authored_other_topic() -> None:
     """Half-authored v2: what the author did not file goes to `other`, not into the void."""
     raw = _v2()

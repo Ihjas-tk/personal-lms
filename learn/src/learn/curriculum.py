@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
 from .config import get_config
 
@@ -51,11 +51,26 @@ class Resource(BaseModel):
     est_minutes: int = 0
     length: int | None = None
     unit: ResourceUnit = "min"
+    #: False = an optional extra. An optional resource never blocks a topic.
+    required: bool = True
+    #: Id of the resource this one substitutes for. The primary plus everything
+    #: pointing at it form a group, satisfied when any one member is finished.
+    alternative_of: str | None = None
+    #: Free label shown as a chip beside the title ("Raschka lane"). Display only.
+    lane: str | None = None
+    #: One line under the title when a reused resource serves a narrower purpose
+    #: here ("lectures 3 and 4 only: RoPE, RMSNorm, SwiGLU").
+    focus: str | None = None
 
     @property
     def span(self) -> int:
         """How long the resource is, in `unit`; `est_minutes` when `length` is absent."""
         return int(self.length if self.length is not None else self.est_minutes)
+
+    @property
+    def group(self) -> str:
+        """The id this resource is counted under: its primary, or itself."""
+        return self.alternative_of or self.id
 
 
 class Check(BaseModel):
@@ -232,6 +247,11 @@ class Track(BaseModel):
     and a module's `track` is a free label the app only ever prints.
     """
 
+    #: resource id → the id of its alternative group's primary. Built by the validator.
+    _primary: dict[str, str] = PrivateAttr(default_factory=dict)
+    #: primary id → the primary first, then its alternatives in file order.
+    _groups: dict[str, list[str]] = PrivateAttr(default_factory=dict)
+
     version: int = 1
     start_date: date
     weekly_budget_hours: float = 12
@@ -261,7 +281,55 @@ class Track(BaseModel):
                 if mid not in module_ids:
                     raise ValueError(f"phase {phase.id}: unknown module {mid}")
         self._fit_areas()
+        self._fit_alternatives()
         return self
+
+    def _fit_alternatives(self) -> None:
+        """Check every `alternative_of` and index the groups it forms.
+
+        A group is one primary plus everything pointing at it. Nothing may point at
+        itself, at an id the track does not have, or at another alternative — one hop
+        only, so a group always has an obvious primary — and every member must agree
+        on `required`, since half an optional group would be neither.
+        """
+        known = {r.id: r for m in self.modules for r in m.resources}
+        for module in self.modules:
+            for resource in module.resources:
+                target = resource.alternative_of
+                if target is None:
+                    continue
+                if target == resource.id:
+                    raise ValueError(f"resource {resource.id}: alternative_of points at itself")
+                primary = known.get(target)
+                if primary is None:
+                    raise ValueError(f"resource {resource.id}: unknown alternative_of {target}")
+                if primary.alternative_of is not None:
+                    raise ValueError(
+                        f"resource {resource.id}: alternative_of {target} is itself an "
+                        f"alternative; point both at {primary.alternative_of}"
+                    )
+                if primary.required != resource.required:
+                    raise ValueError(
+                        f"resource {resource.id}: required must match {target}, "
+                        "the primary of its alternative group"
+                    )
+        self._primary = {}
+        self._groups = {}
+        for module in self.modules:
+            for resource in module.resources:
+                primary_id = resource.group
+                self._primary[resource.id] = primary_id
+                members = self._groups.setdefault(primary_id, [primary_id])
+                if resource.id != primary_id and resource.id not in members:
+                    members.append(resource.id)
+
+    def primary_of(self, resource_id: str) -> str:
+        """The id this resource is counted under — its group's primary, or itself."""
+        return self._primary.get(resource_id, resource_id)
+
+    def alternative_group(self, resource_id: str) -> list[str]:
+        """The primary first, then its alternatives. A lone resource returns `[id]`."""
+        return list(self._groups.get(self.primary_of(resource_id), [resource_id]))
 
     def _fit_areas(self) -> None:
         """Bind modules to areas; a v1 file with no `areas` gets one area per phase."""

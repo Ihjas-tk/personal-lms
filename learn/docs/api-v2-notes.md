@@ -168,3 +168,28 @@ curriculum written for any subject renders without a code change.
     `target: "<module_id>/<topic_id>"`, and every row now also carries
     `estimated_cost_usd`, priced from `ai.PRICES`. `GET /review/weekly` gains
     `ai_spend: {days, calls, usd}` over the last seven days.
+
+39. **Resources gain `required`, `alternative_of`, `lane` and `focus`** (curriculum v2,
+    all optional, all defaulted, so every existing track still loads). `required: false`
+    is an optional extra; `alternative_of` names the primary this resource substitutes
+    for, and the primary plus everything pointing at it is a group satisfied by any one
+    member; `lane` and `focus` are display only. `Track` validates the pointers —
+    unknown id, self-reference, a chain (an alternative of an alternative), and a group
+    whose members disagree about `required` — and exposes `Track.alternative_group(id)`
+    (primary first) and `Track.primary_of(id)`. `learn check`'s summary line now reads
+    `… N optional, M either/or groups, W weeks from …`.
+
+    `derive.topic_state(check_states, resources, note_exists)` takes rows rather than
+    bare resource states: `derive.ResourceProgress(id, group, required, finished,
+    touched)`, or any dict/tuple of those fields. Checks still decide a topic that has
+    them; with none, **every required group must have a finished member** — an either/or
+    group counts once, optional extras never block but still mark a topic started.
+    `derive.required_counts(rows)` returns `(done, total)` over required groups.
+
+    Payload, additive: each source row in `GET /modules/{id}` gains `required`,
+    `alternative_of`, `group` (the primary's id, its own when it stands alone), `lane`
+    and `focus`; each topic gains `required_total` and `required_done`. The workspace
+    tags only optional rows (`optional`), draws an alternative group as one bracketed
+    `pick one` block with a lane chip per member (the label turns done when any member
+    is), prints the `focus` line under the title and in focus mode's source header, and
+    puts `N of M required` beside the source count.

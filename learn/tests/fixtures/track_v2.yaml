@@ -130,6 +130,7 @@ modules:
         est_minutes: 480
         length: 116
         unit: min
+        lane: video lane
       - id: a1-attention-paper
         title: "Attention Is All You Need"
         kind: paper
@@ -137,11 +138,15 @@ modules:
         est_minutes: 180
         length: 15
         unit: pages
+        alternative_of: a1-karpathy-gpt
+        lane: paper lane
       - id: a1-nanogpt
         title: "nanoGPT repository"
         kind: repo
         url: https://example.invalid/nanogpt
         est_minutes: 240
+        required: false
+        focus: "the training loop only, not the sampler"
     checks:
       - id: a1-mha-from-memory
         module: a1

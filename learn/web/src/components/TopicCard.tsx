@@ -12,7 +12,10 @@ import {
   NOTE_HEAD,
   NOTE_START,
   PROOF_HEAD,
+  RESOURCE_OPTIONAL,
+  RESOURCE_PICK_ONE,
   SOURCE_HEAD,
+  TOPIC_REQUIRED,
 } from "../labels";
 import { agoLong } from "../time";
 import { patchResource } from "../api";
@@ -24,6 +27,34 @@ export interface FocusRequest {
   topicId: string;
   sourceId?: string | null;
   insert?: string | null;
+}
+
+interface SourceGroup {
+  id: string;
+  members: SourceRow[];
+  /** An either/or group is satisfied the moment any one of its members is done. */
+  done: boolean;
+}
+
+/**
+ * Alternatives collapse into one bracketed group, keeping the track's order: the
+ * primary first, then whatever points at it. Everything else is a group of one.
+ */
+export function sourceGroups(sources: SourceRow[]): SourceGroup[] {
+  const out: SourceGroup[] = [];
+  const seen = new Map<string, SourceGroup>();
+  for (const s of sources) {
+    const key = s.group || s.id;
+    let group = seen.get(key);
+    if (!group) {
+      group = { id: key, members: [], done: false };
+      seen.set(key, group);
+      out.push(group);
+    }
+    group.members.push(s);
+    group.done = group.done || s.counts;
+  }
+  return out;
 }
 
 /**
@@ -59,6 +90,56 @@ export default function TopicCard({
         .catch(() => {});
   };
 
+  /** One reading: its rail, its title with whatever tags it carries, and its verb. */
+  const sourceRow = (s: SourceRow) => (
+    <div className="source" key={s.id}>
+      <span
+        className="source-rail"
+        data-fill={s.pct >= 1 ? "done" : s.pct > 0 ? "part" : "none"}
+      />
+      <div className="source-main">
+        <div className="source-title">
+          {s.title}
+          {s.required === false ? (
+            <span className="source-tag">{RESOURCE_OPTIONAL}</span>
+          ) : null}
+          {s.lane ? (
+            <span className="source-lane" data-lane={s.lane}>
+              {s.lane}
+            </span>
+          ) : null}
+        </div>
+        {s.focus ? <div className="source-focus">{s.focus}</div> : null}
+        <div className="source-meta">
+          <span className="mono">{s.meta}</span>
+          <ResourceStateMenu
+            moduleId={m.id}
+            resourceId={s.id}
+            state={s.state}
+            done={s.done}
+            onChanged={onChanged}
+          />
+        </div>
+        <div className="source-track">
+          <div
+            className="source-fill"
+            data-full={s.pct >= 1}
+            style={{ width: `${Math.round(s.pct * 100)}%` }}
+          />
+        </div>
+      </div>
+      <button
+        type="button"
+        className="btn"
+        onClick={() =>
+          s.action === "Open" ? openSource(s) : onFocus({ topicId: topic.id, sourceId: s.id })
+        }
+      >
+        {s.action}
+      </button>
+    </div>
+  );
+
   return (
     <article className="topic" data-open={open} data-state={topic.state}>
       <div className="topic-head">
@@ -80,47 +161,28 @@ export default function TopicCard({
                 <h3>{SOURCE_HEAD}</h3>
                 <span className="mono">
                   {topic.sources.length} source{topic.sources.length === 1 ? "" : "s"}
+                  {topic.required_total > 0 ? (
+                    <span
+                      className="topic-required"
+                      data-done={topic.required_done >= topic.required_total}
+                    >
+                      {TOPIC_REQUIRED(topic.required_done, topic.required_total)}
+                    </span>
+                  ) : null}
                 </span>
               </div>
-              {topic.sources.map((s) => (
-                <div className="source" key={s.id}>
-                  <span
-                    className="source-rail"
-                    data-fill={s.pct >= 1 ? "done" : s.pct > 0 ? "part" : "none"}
-                  />
-                  <div className="source-main">
-                    <div className="source-title">{s.title}</div>
-                    <div className="source-meta">
-                      <span className="mono">{s.meta}</span>
-                      <ResourceStateMenu
-                        moduleId={m.id}
-                        resourceId={s.id}
-                        state={s.state}
-                        done={s.done}
-                        onChanged={onChanged}
-                      />
+              {sourceGroups(topic.sources).map((g) =>
+                g.members.length > 1 ? (
+                  <div className="source-group" key={g.id}>
+                    <div className="source-group-label" data-done={g.done}>
+                      {RESOURCE_PICK_ONE}
                     </div>
-                    <div className="source-track">
-                      <div
-                        className="source-fill"
-                        data-full={s.pct >= 1}
-                        style={{ width: `${Math.round(s.pct * 100)}%` }}
-                      />
-                    </div>
+                    {g.members.map(sourceRow)}
                   </div>
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={() =>
-                      s.action === "Open"
-                        ? openSource(s)
-                        : onFocus({ topicId: topic.id, sourceId: s.id })
-                    }
-                  >
-                    {s.action}
-                  </button>
-                </div>
-              ))}
+                ) : (
+                  sourceRow(g.members[0])
+                ),
+              )}
               {topic.sources.length === 0 ? (
                 <p className="topic-none">No source is attached to this topic.</p>
               ) : null}

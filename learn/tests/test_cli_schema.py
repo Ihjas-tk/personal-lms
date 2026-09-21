@@ -60,6 +60,16 @@ def test_shipped_tracks_validate(name: str, capsys) -> None:
     assert "OK —" in capsys.readouterr().out
 
 
+def test_check_summary_counts_optional_and_either_or_resources(capsys) -> None:
+    """The summary line says how much of the track is owed and how much is a choice."""
+    fixture = Path(__file__).parent / "fixtures" / "track_v2.yaml"
+    assert cli(["check", str(fixture)]) == 0
+    out = capsys.readouterr().out
+    assert "1 optional, 1 either/or group" in out
+    assert cli(["check", str(TRACKS / "linear-algebra" / "track.yaml")]) == 0
+    assert "0 optional, 0 either/or groups" in capsys.readouterr().out
+
+
 def test_check_reports_the_failing_field_not_a_traceback(tmp_path: Path, capsys) -> None:
     bad = tmp_path / "track.yaml"
     bad.write_text("version: 2\nphases: [{id: p1, title: One}]\n", encoding="utf-8")

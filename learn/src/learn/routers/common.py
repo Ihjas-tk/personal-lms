@@ -202,6 +202,12 @@ def source_row(resource: Resource, saved: dict[str, Any]) -> dict[str, Any]:
         "counts": done,
         "done": marked,
         "done_at": row.get("done_at"),
+        # Chains are refused by the schema, so the primary is one hop away at most.
+        "required": resource.required,
+        "alternative_of": resource.alternative_of,
+        "group": resource.group,
+        "lane": resource.lane,
+        "focus": resource.focus,
     }
 
 
@@ -263,9 +269,19 @@ def topic_rows(
         note = note_summary(notes.get(topic.id), module.id, topic.id)
         states = [c["state"] for c in checks]
         solid = derive.count_at_least(states, "proficient")
-        # A source the learner marked done is finished whatever rung it sits on.
-        finished = ["taught" if s["done"] else s["state"] for s in sources]
-        derived = derive.topic_state(states, finished, note["exists"])
+        # `counts` already folds in the learner's own "done", at whatever rung.
+        progress = [
+            derive.ResourceProgress(
+                id=s["id"],
+                group=s["group"],
+                required=bool(s["required"]),
+                finished=bool(s["counts"]),
+                touched=bool(s["counts"]) or s["state"] in derive.TOUCHED_RESOURCE_STATES,
+            )
+            for s in sources
+        ]
+        derived = derive.topic_state(states, progress, note["exists"])
+        required_done, required_total = derive.required_counts(progress)
         # The learner's own call wins over the derived state; the derived one stays visible.
         mine = chosen.get(topic.id) or {}
         state = mine.get("state") or derived
@@ -281,6 +297,8 @@ def topic_rows(
                 "state_set_by_you": bool(mine),
                 "state_set_at": mine.get("set_at"),
                 "sources": sources,
+                "required_total": required_total,
+                "required_done": required_done,
                 "note": note,
                 "checks": checks,
                 "proof_text": derive.proof_text(solid, len(states), "solid"),

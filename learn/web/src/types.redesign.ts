@@ -150,6 +150,16 @@ export interface SourceRow extends ResourceRow {
   meta: string;
   action: "Resume" | "Open" | "Start" | "Notes";
   counts: boolean;
+  /** false = an optional extra: tagged `optional`, never blocks the topic. */
+  required: boolean;
+  /** The primary this one substitutes for, or null when it stands on its own. */
+  alternative_of: string | null;
+  /** The id this source is counted under: its group's primary, or its own id. */
+  group: string;
+  /** A free label ("Raschka lane") shown as a chip on each member of a choice. */
+  lane: string | null;
+  /** One line under the title when a reused source is narrower here. */
+  focus: string | null;
   /** The learner's own call that this source is finished, at whatever rung. */
   done: boolean;
   done_at?: string | null;
@@ -187,6 +197,9 @@ export interface Topic {
   state_set_by_you: boolean;
   state_set_at: string | null;
   sources: SourceRow[];
+  /** Required groups on this topic — an either/or group counts once, optional never. */
+  required_total: number;
+  required_done: number;
   note: TopicNote;
   checks: TopicCheck[];
   proof_text: string;

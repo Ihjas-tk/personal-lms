@@ -7,6 +7,7 @@ the arithmetic and the wording built on top of them.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import date, timedelta
 from typing import Literal
 
@@ -177,18 +178,78 @@ def newly_proved(attempts: dict[str, list[Attempt]], limit: int = 5) -> list[dic
 # ---------------------------------------------------------------- topics
 
 
+@dataclass(frozen=True)
+class ResourceProgress:
+    """One source of a topic, as the topic rule sees it.
+
+    `group` is the alternative group's primary id (its own id when it stands alone),
+    `required` false for an optional extra, `finished` whether it is done and
+    `touched` whether it has been opened at all.
+    """
+
+    id: str
+    group: str
+    required: bool = True
+    finished: bool = False
+    touched: bool = False
+
+
+ResourceLike = ResourceProgress | dict[str, object] | tuple
+
+
+def _progress(row: ResourceLike) -> ResourceProgress:
+    """Accept a `ResourceProgress`, a mapping or a positional tuple of the same fields."""
+    if isinstance(row, ResourceProgress):
+        return row
+    if isinstance(row, dict):
+        rid = str(row.get("id", ""))
+        return ResourceProgress(
+            id=rid,
+            group=str(row.get("group") or rid),
+            required=bool(row.get("required", True)),
+            finished=bool(row.get("finished", False)),
+            touched=bool(row.get("touched", False)),
+        )
+    return ResourceProgress(*row)
+
+
+def _required_groups(resources: list[ResourceLike]) -> dict[str, bool]:
+    """Required alternative groups → whether any member of the group is finished."""
+    groups: dict[str, bool] = {}
+    for row in (_progress(r) for r in resources):
+        if not row.required:
+            continue  # an optional extra never blocks a topic
+        groups[row.group] = groups.get(row.group, False) or row.finished
+    return groups
+
+
+def required_counts(resources: list[ResourceLike]) -> tuple[int, int]:
+    """`(done, total)` over required groups — an either/or group counts once."""
+    groups = _required_groups(resources)
+    return sum(1 for done in groups.values() if done), len(groups)
+
+
 def topic_state(
-    check_states: list[CheckState], resource_states: list[str], note_exists: bool
+    check_states: list[CheckState], resources: list[ResourceLike], note_exists: bool
 ) -> TopicState:
-    """Proved, in progress or not started, per plan §3."""
+    """Proved, in progress or not started, per plan §3.
+
+    Checks decide it when the topic has any. With none, the sources stand in: every
+    required group must have a finished member — an either/or group is satisfied by
+    whichever one you did. Optional extras are ignored for proof but still count as
+    having started.
+    """
+    rows = [_progress(r) for r in resources]
     if check_states:
         if all(s in PROVED_STATES for s in check_states):
             return "proved"
-    elif resource_states and all(s in DONE_RESOURCE_STATES for s in resource_states):
-        return "proved"
+    else:
+        groups = _required_groups(rows)
+        if groups and all(groups.values()):
+            return "proved"
     started = (
         any(s != "not_started" for s in check_states)
-        or any(s in TOUCHED_RESOURCE_STATES for s in resource_states)
+        or any(r.touched or r.finished for r in rows)
         or note_exists
     )
     return "in_progress" if started else "not_started"

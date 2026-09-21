@@ -318,13 +318,13 @@ modules:
         title: Causal self-attention
         summary: One head, the mask before the softmax, and the shapes through a multi-head merge.
         kind: idea
-        resources: [a1-karpathy-build-gpt, a1-cs336-lectures-1-4, a1-raschka-book-ch2-5]
+        resources: [a1-karpathy-build-gpt, a1-cs336-assignment-1, a1-raschka-book-ch2-5]
         checks: [a1-mha-from-memory, a1-attention-flops]
       - id: bpe
         title: BPE tokenization
         summary: A merge table learned from a corpus, and the model failures that trace back to it.
         kind: idea
-        resources: [a1-karpathy-tokenizer]
+        resources: [a1-karpathy-tokenizer, a1-cs336-lectures-1-2]
         checks: [a1-bpe-implement, a1-tokenization-failures]
       - id: training-dynamics
         title: 'Training dynamics: init scaling, BatchNorm, dead neurons'
@@ -336,7 +336,7 @@ modules:
         title: RoPE, RMSNorm, SwiGLU and pre-norm as deltas from GPT-2
         summary: Each delta from GPT-2, why the RoPE product depends only on the offset, and where it breaks.
         kind: idea
-        resources: [a1-raschka-repo]
+        resources: [a1-raschka-repo, a1-cs336-lectures-3-4]
         checks: [a1-rope-vs-learned, a1-rope-extrapolation]
       - id: scaling-laws
         title: Scaling laws and compute-optimal allocation
@@ -348,7 +348,7 @@ modules:
         title: A GPT-2-class reproduction with an explained loss curve
         summary: Your own run end to end, and the drop, the plateau and the schedule read off the curve.
         kind: idea
-        resources: [a1-cs336-assignment-1, a1-nanochat, a1-karpathy-reproduce-gpt2]
+        resources: [a1-nanochat, a1-karpathy-reproduce-gpt2]
         checks: [a1-gpt2-trained, a1-loss-curve]
       - id: pick-one-lane
         title: 'Pick one lane: Raschka ch 2-5 or CS336 Assignment 1, not both'
@@ -376,13 +376,22 @@ modules:
         est_minutes: 420
         length: 134
         unit: min
-      - id: a1-cs336-lectures-1-4
-        title: "Stanford CS336 lectures 1-4: tokenization, PyTorch and resource accounting, architectures, attention variants"
+      - id: a1-cs336-lectures-1-2
+        title: "Stanford CS336 lectures 1-2: overview and tokenization, PyTorch and resource accounting"
         kind: course
         url: https://www.youtube.com/playlist?list=PLoROMvodv4rMqXOcazWaTUHhq-yembLCV
-        est_minutes: 720
-        length: 720
+        est_minutes: 360
+        length: 360
         unit: min
+        focus: "Lecture 1 for BPE at scale; lecture 2 for the PyTorch primitives and resource accounting"
+      - id: a1-cs336-lectures-3-4
+        title: "Stanford CS336 lectures 3-4: architectures and attention variants"
+        kind: course
+        url: https://www.youtube.com/playlist?list=PLoROMvodv4rMqXOcazWaTUHhq-yembLCV
+        est_minutes: 360
+        length: 360
+        unit: min
+        focus: "Lectures 3 and 4: RoPE, RMSNorm, SwiGLU and pre-norm"
       - id: a1-cs336-assignment-1
         title: "CS336 Assignment 1 (Basics): transformer, BPE, AdamW, training loop from primitives"
         kind: course
@@ -390,6 +399,7 @@ modules:
         est_minutes: 1800
         length: 1800
         unit: min
+        lane: CS336
       - id: a1-raschka-book-ch2-5
         title: "Raschka, Build a Large Language Model (From Scratch), chapters 2-5"
         kind: book
@@ -397,6 +407,8 @@ modules:
         est_minutes: 1800
         length: 200
         unit: pages
+        alternative_of: a1-cs336-assignment-1
+        lane: Raschka
       - id: a1-raschka-repo
         title: "rasbt/LLMs-from-scratch (the living companion repo)"
         kind: repo
@@ -421,6 +433,8 @@ modules:
         est_minutes: 240
         length: 241
         unit: min
+        required: false
+        focus: "The narrated companion to the nanochat run; watch at 1.5x, not as a substitute for running it"
     checks:
       - id: a1-mha-from-memory
         module: a1
@@ -1065,6 +1079,7 @@ modules:
         title: Hybrid BM25 + dense with reciprocal rank fusion
         summary: Two rankings fused by rank rather than score, because the scores are not comparable.
         kind: idea
+        resources: [a6-pgvector-hybrid]
         checks: [a6-hybrid-rrf]
       - id: pgvector-hnsw
         title: pgvector HNSW and the filtering-with-vector-search pitfalls
@@ -1075,6 +1090,7 @@ modules:
         title: 'Reranking: retrieve 20, rerank to 5, send 3-5'
         summary: A cross-encoder over a wide candidate set, priced in latency against the recall it buys.
         kind: idea
+        resources: [a6-contextual-retrieval-reranking]
         checks: [a6-four-config-table]
       - id: query-rewriting
         title: Query rewriting and routing (HyDE, multi-query, classification)
@@ -1095,6 +1111,7 @@ modules:
         title: Measure retrieval before you touch generation
         summary: A synthetic eval set from your own corpus, and recall@k before any generation code exists.
         kind: idea
+        resources: [a6-jxnl-recall-first]
         checks: [a6-recall-before-generation]
       - id: long-context-or-rag
         title: When long context beats RAG, and when it does not
@@ -1106,17 +1123,32 @@ modules:
         title: "Jason Liu, Systematically Improving RAG Applications"
         kind: doc
         url: https://jxnl.co/writing/2025/01/24/systematically-improving-rag-applications/
-        est_minutes: 240
+        est_minutes: 180
+        focus: "The failure catalogue and the retrieval-versus-generation split"
+      - id: a6-jxnl-recall-first
+        title: "Jason Liu, Systematically Improving RAG Applications (synthetic evals section)"
+        kind: doc
+        url: https://jxnl.co/writing/2025/01/24/systematically-improving-rag-applications/
+        est_minutes: 60
+        focus: "Synthetic questions from your own corpus, and recall@k measured before any generation code"
       - id: a6-jxnl-systematically-2024
         title: "Jason Liu, Systematically Improving Your RAG"
         kind: doc
         url: https://jxnl.co/writing/2024/05/22/systematically-improving-your-rag/
         est_minutes: 120
+        focus: "The query-rewriting and routing sections: HyDE, multi-query expansion, query classification"
       - id: a6-anthropic-contextual-retrieval
         title: "Anthropic, Introducing Contextual Retrieval"
         kind: doc
         url: https://www.anthropic.com/news/contextual-retrieval
-        est_minutes: 120
+        est_minutes: 90
+        focus: "Contextual chunk prefixing: the prompt, what it costs, and what it does to top-20 failures"
+      - id: a6-contextual-retrieval-reranking
+        title: "Anthropic, Introducing Contextual Retrieval (the reranking result)"
+        kind: doc
+        url: https://www.anthropic.com/news/contextual-retrieval
+        est_minutes: 30
+        focus: "The reranking section: retrieve 20, rerank to 5, and the ~67% failure reduction when combined"
       - id: a6-mteb-leaderboard
         title: "MTEB leaderboard (pick embeddings by task and language)"
         kind: doc
@@ -1126,7 +1158,14 @@ modules:
         title: "pgvector: HNSW vs IVFFlat, filtering pitfalls, halfvec"
         kind: repo
         url: https://github.com/pgvector/pgvector
-        est_minutes: 420
+        est_minutes: 300
+        focus: "HNSW against IVFFlat, index parameters, and what a WHERE clause does to recall"
+      - id: a6-pgvector-hybrid
+        title: "pgvector: hybrid search with Postgres full-text search"
+        kind: repo
+        url: https://github.com/pgvector/pgvector#hybrid-search
+        est_minutes: 120
+        focus: "BM25 full-text search running beside pgvector in one Postgres, fused by rank"
     checks:
       - id: a6-recall-before-generation
         module: a6
@@ -1356,6 +1395,7 @@ modules:
         title: The L1 assertions / L2 human and model / L3 A/B level model
         summary: Three levels, and the different question each one is allowed to answer.
         kind: idea
+        resources: [b0-hamel-l1-l2-l3]
         checks: [b0-l1-l2-l3]
     resources:
       - id: b0-eval-email-course
@@ -1369,7 +1409,14 @@ modules:
         title: "Hamel Husain, Your AI Product Needs Evals"
         kind: doc
         url: https://hamel.dev/blog/posts/evals/
-        est_minutes: 90
+        est_minutes: 45
+        focus: "What your ML-evaluation vocabulary does and does not buy you here"
+      - id: b0-hamel-l1-l2-l3
+        title: "Hamel Husain, Your AI Product Needs Evals (the L1 / L2 / L3 levels)"
+        kind: doc
+        url: https://hamel.dev/blog/posts/evals/
+        est_minutes: 45
+        focus: "L1 assertions, L2 human and model evaluation, L3 A/B tests, and the question each answers"
       - id: b0-anthropic-success-criteria
         title: "Anthropic, Define your success criteria"
         kind: doc
@@ -1491,7 +1538,7 @@ modules:
         title: Why generic metrics create false confidence
         summary: A number that moves without telling you what broke is worse than no number.
         kind: idea
-        resources: [b1-eugene-yan-eval-process]
+        resources: [b1-eugene-yan-eval-process, b1-evals-faq-generic-metrics]
         checks: [b1-mode-no-metric-finds]
       - id: open-coding
         title: Open coding of 100+ raw traces with no predefined schema
@@ -1527,7 +1574,14 @@ modules:
         title: "Hamel Husain & Shreya Shankar, The AI Evals FAQ"
         kind: doc
         url: https://hamel.dev/blog/posts/evals-faq/
-        est_minutes: 600
+        est_minutes: 450
+        focus: "The Error Analysis sections: open and axial coding, and how many traces to read"
+      - id: b1-evals-faq-generic-metrics
+        title: "The AI Evals FAQ, Evaluation Design section"
+        kind: doc
+        url: https://hamel.dev/blog/posts/evals-faq/
+        est_minutes: 150
+        focus: "Generic-metric pitfalls and the limits of similarity metrics"
       - id: b1-field-guide
         title: "Hamel Husain, A Field Guide to Rapidly Improving AI Products"
         kind: doc
@@ -1724,17 +1778,18 @@ modules:
         title: The Principal Domain Expert pattern
         summary: One person owns the criterion, writes the guideline, and settles the edge cases.
         kind: idea
-        resources: [b2-anthropic-roadmap]
+        resources: [b2-anthropic-roadmap, b2-llm-judge-steps-1-4]
         checks: [b2-annotation-guideline]
       - id: annotation-ui
         title: A custom annotation UI, and why generic tools cost 10x
         summary: A keyboard-speed review screen is the difference between 30 labels an hour and 300.
         kind: idea
-        resources: [b2-aligneval, b2-llm-judge-steps-1-4]
+        resources: [b2-build-review-interface-skill, b2-aligneval]
       - id: agreement
         title: "Cohen's kappa: below 0.4 the rubric is broken, not the annotators"
         summary: Agreement is a rubric test; a low kappa sends you back to the criterion.
         kind: idea
+        resources: [b2-evals-faq-annotation]
         checks: [b2-agreement-figure]
       - id: held-out-slice
         title: A held-out judge test slice you never look at while iterating
@@ -1748,15 +1803,29 @@ modules:
         checks: [b2-golden-set-versioned]
     resources:
       - id: b2-evals-faq-sampling
-        title: "Evals FAQ, sections on sampling, coverage and human annotation"
+        title: "Evals FAQ, sections on sampling and coverage"
         kind: doc
         url: https://hamel.dev/blog/posts/evals-faq/
-        est_minutes: 240
+        est_minutes: 180
+        focus: "Diverse query evaluation, efficient trace sampling, and stale-dataset management"
+      - id: b2-evals-faq-annotation
+        title: "Evals FAQ, Human Annotation section"
+        kind: doc
+        url: https://hamel.dev/blog/posts/evals-faq/
+        est_minutes: 60
+        focus: "How many annotators, non-experts and outsourcing, and what to do when agreement is low"
       - id: b2-generate-synthetic-data-skill
-        title: "evals-skills: generate-synthetic-data and build-review-interface"
+        title: "evals-skills: generate-synthetic-data"
         kind: repo
         url: https://github.com/ai-evals-course/evals-skills
-        est_minutes: 180
+        est_minutes: 120
+        focus: "The generate-synthetic-data skill: dimension tuples grounded in real constraints"
+      - id: b2-build-review-interface-skill
+        title: "evals-skills: build-review-interface"
+        kind: repo
+        url: https://github.com/ai-evals-course/evals-skills
+        est_minutes: 60
+        focus: "The build-review-interface skill: a keyboard-speed review app of your own"
       - id: b2-jxnl-synthetic-rag
         title: "Jason Liu, Systematically Improving Your RAG (synthetic eval data)"
         kind: doc
@@ -1772,11 +1841,14 @@ modules:
         kind: doc
         url: https://eugeneyan.com/writing/aligneval/
         est_minutes: 90
+        required: false
+        focus: "A worked build-your-own-tool reference, if you want one before writing your own screen"
       - id: b2-llm-judge-steps-1-4
         title: "Hamel Husain, Creating a LLM-as-a-Judge, steps 1-4 (labelling workflow)"
         kind: doc
         url: https://hamel.dev/blog/posts/llm-judge/
         est_minutes: 120
+        focus: "Steps 1-4 only: the Principal Domain Expert and the labelling workflow around them"
     checks:
       - id: b2-golden-set-versioned
         module: b2
@@ -2072,6 +2144,7 @@ modules:
         kind: doc
         url: https://huggingface.co/spaces/OpenEvals/evaluation-guidebook
         est_minutes: 360
+        focus: "model-as-a-judge/evaluating-your-evaluator; the Space, not the unmaintained GitHub repo"
       - id: b3-anthropic-demystifying
         title: "Anthropic, Demystifying evals for AI agents (the three grader types)"
         kind: doc
@@ -2406,13 +2479,21 @@ modules:
         title: Leading vs lagging metrics
         summary: Retrieval recall moves today; satisfaction moves next month, if you were right.
         kind: idea
+        resources: [b4-jxnl-leading-lagging]
         checks: [b4-leading-vs-lagging]
     resources:
       - id: b4-jxnl-rag-essay
         title: "Jason Liu, Systematically Improving RAG Applications"
         kind: doc
         url: https://jxnl.co/writing/2025/01/24/systematically-improving-rag-applications/
-        est_minutes: 240
+        est_minutes: 180
+        focus: "The flywheel and query segmentation: find the segment dragging the average down"
+      - id: b4-jxnl-leading-lagging
+        title: "Jason Liu, Systematically Improving RAG Applications (leading vs lagging metrics)"
+        kind: doc
+        url: https://jxnl.co/writing/2025/01/24/systematically-improving-rag-applications/
+        est_minutes: 60
+        focus: "Leading versus lagging metrics, and which one you are allowed to steer by"
       - id: b4-jxnl-talk
         title: "Jason Liu, Parlance Labs RAG talk (free recording)"
         kind: video
@@ -2430,11 +2511,15 @@ modules:
         est_minutes: 90
         length: 6
         unit: pages
+        required: false
+        focus: "Where the metrics came from; the docs are the part you need to use them"
       - id: b4-ares-paper
         title: "Saad-Falcon et al., ARES: An Automated Evaluation Framework for RAG"
         kind: paper
         url: https://arxiv.org/abs/2311.09476
         est_minutes: 90
+        required: false
+        focus: "Optional depth: the PPI-style confidence intervals from a small human-labelled set"
       - id: b4-evaluate-rag-skill
         title: "evals-skills: evaluate-rag"
         kind: repo
@@ -2707,6 +2792,8 @@ modules:
         kind: doc
         url: https://www.braintrust.dev/docs
         est_minutes: 120
+        required: false
+        focus: "Read for the experiment pattern (dataset + task function + scorers), not to adopt the platform"
       - id: b6-sampling-production-traces
         title: "Hamel Husain, How to Sample Production Traces for Review"
         kind: doc
@@ -2915,6 +3002,7 @@ modules:
         title: Approval gates and least privilege on irreversible actions
         summary: Reads flow, writes stop at a gate, and every tool holds the smallest permission that works.
         kind: idea
+        resources: [a7-openai-guardrails]
         checks: [a7-least-privilege]
       - id: agent-sdk
         title: 'Claude Agent SDK: skills, tool search, subagents, permission modes'
@@ -2936,7 +3024,14 @@ modules:
         title: "OpenAI, A Practical Guide to Building Agents"
         kind: doc
         url: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf
-        est_minutes: 180
+        est_minutes: 120
+        focus: "The tool taxonomy and the single-agent-versus-manager sections"
+      - id: a7-openai-guardrails
+        title: "OpenAI, A Practical Guide to Building Agents (guardrails chapter)"
+        kind: doc
+        url: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf
+        est_minutes: 60
+        focus: "The seven guardrail types, and human approval on high-risk and irreversible actions"
       - id: a7-anthropic-multi-agent
         title: "Anthropic, How we built our multi-agent research system"
         kind: doc
@@ -3240,6 +3335,7 @@ modules:
         title: Graders that resist agent exploits; isolated environments
         summary: If the reward can be reached without doing the task, the agent will find that path.
         kind: idea
+        resources: [b5-anthropic-grader-exploits]
         checks: [b5-grader-exploits]
       - id: transcript-review
         title: Transcript review as non-optional; eval saturation
@@ -3261,7 +3357,14 @@ modules:
         title: "Anthropic, Demystifying evals for AI agents"
         kind: doc
         url: https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents
-        est_minutes: 120
+        est_minutes: 90
+        focus: "Grading the terminal state rather than the agent's own account of its work"
+      - id: b5-anthropic-grader-exploits
+        title: "Anthropic, Demystifying evals for AI agents (roadmap step 6)"
+        kind: doc
+        url: https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents
+        est_minutes: 30
+        focus: "Step 6: graders that resist agent exploits, run in isolated clean environments"
       - id: b5-dlai-evaluating-agents
         title: "DeepLearning.AI, Evaluating AI Agents (lessons 7-12)"
         kind: course
@@ -3294,6 +3397,7 @@ modules:
         kind: doc
         url: https://www.langchain.com/resources/agent-evals
         est_minutes: 60
+        focus: "Read for one idea: the run / trace / thread decomposition, not to adopt LangSmith"
     checks:
       - id: b5-trajectory-scorer
         module: b5
@@ -3542,12 +3646,12 @@ modules:
         title: OpenTelemetry GenAI semantic conventions
         summary: Still partly experimental, but building on OTel is how you avoid vendor lock-in.
         kind: idea
-        resources: [a8-otel-genai, a8-phoenix-docs]
+        resources: [a8-otel-genai]
       - id: tracing-cost-span
         title: Langfuse or Phoenix tracing with cost per span
         summary: One request across retrieval, reranking, tools and generation, with latency and cost per span.
         kind: idea
-        resources: [a8-langfuse-observability]
+        resources: [a8-langfuse-observability, a8-phoenix-docs]
         checks: [a8-trace-spans]
       - id: owasp-2026
         title: 'OWASP GenAI LLM Top 10 2026: injection LLM01, excessive agency LLM03'
@@ -3588,11 +3692,14 @@ modules:
         kind: doc
         url: https://langfuse.com/docs/observability/overview
         est_minutes: 300
+        lane: Langfuse
       - id: a8-phoenix-docs
         title: "Arize Phoenix docs (OTel-native tracing)"
         kind: doc
         url: https://docs.arize.com/phoenix
         est_minutes: 180
+        alternative_of: a8-langfuse-observability
+        lane: Phoenix
       - id: a8-owasp-genai-2026
         title: "OWASP Top 10 for LLM Applications, 2026 edition"
         kind: doc
@@ -3620,6 +3727,8 @@ modules:
         kind: doc
         url: https://www.guardrailsai.com/docs
         est_minutes: 120
+        required: false
+        focus: "A second implementation to skim; the types matter, the vendor does not"
     checks:
       - id: a8-trace-spans
         module: a8
@@ -3876,6 +3985,7 @@ modules:
         title: Direct and indirect injection via retrieved documents and tools
         summary: The payload arrives inside content you fetched, which is why the prompt cannot filter it.
         kind: idea
+        resources: [b7-owasp-llm01-injection]
         checks: [b7-indirect-injection]
       - id: refusal-axes
         title: Over-refusal and under-refusal as two separate axes
@@ -3908,7 +4018,14 @@ modules:
         title: "OWASP GenAI, Top 10 for LLM Applications 2026"
         kind: doc
         url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
-        est_minutes: 240
+        est_minutes: 180
+        focus: "Skim the whole list, then deep-read LLM02 and LLM03 and the Agentic Top 10"
+      - id: b7-owasp-llm01-injection
+        title: "OWASP GenAI 2026, LLM01: Prompt Injection"
+        kind: doc
+        url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+        est_minutes: 60
+        focus: "LLM01 in full: direct and indirect injection, including payloads inside retrieved documents"
       - id: b7-owasp-initiative
         title: "OWASP GenAI initiative page (Agentic Top 10, Agent Control Standard, Red Teaming Guide)"
         kind: doc
@@ -4158,6 +4275,8 @@ modules:
         kind: repo
         url: https://github.com/The-Swarm-Corporation/StatisticalModelEvaluator
         est_minutes: 60
+        required: false
+        focus: "An unofficial runnable version of Miller's maths; read it, do not depend on it"
     checks:
       - id: b8-corrected-estimate-ci
         module: b8
@@ -4368,16 +4487,21 @@ modules:
         kind: repo
         url: https://ukgovernmentbeis.github.io/inspect_evals/
         est_minutes: 120
+        required: false
+        focus: "A reference shelf to read one or two of when your own port gets stuck"
       - id: b9-langfuse-docs
         title: "Langfuse docs (tracing, datasets, experiments)"
         kind: doc
         url: https://langfuse.com/docs
         est_minutes: 180
+        lane: Langfuse
       - id: b9-phoenix-repo
         title: "Arize Phoenix (agent trace views)"
         kind: repo
         url: https://github.com/Arize-ai/phoenix
         est_minutes: 120
+        alternative_of: b9-langfuse-docs
+        lane: Phoenix
       - id: b9-arize-course
         title: "Arize University, LLM Evaluation Fundamentals (free, 1 hour)"
         kind: course
@@ -4620,23 +4744,23 @@ modules:
         title: 'Long context: RoPE scaling, YaRN, ring and flash attention'
         summary: How a 4k model reaches 128k, what training is still required, and what degrades anyway.
         kind: idea
-        resources: [a2-cs25-ssm]
+        resources: [a2-cs336-attention-variants, a2-cs25-ssm]
         checks: [a2-long-context-yarn]
       - id: data-curation
         title: Pretraining data curation, filtering and dedup
         summary: Most of the quality is decided here, before a single gradient step is taken.
         kind: idea
-        resources: [a2-cs336-posttraining]
+        resources: [a2-cs336-data-curation]
       - id: sft
         title: SFT
         summary: 'Supervised imitation of curated demonstrations: format and behaviour, not knowledge.'
         kind: idea
-        resources: [a2-smol-course, a2-dlai-post-training]
+        resources: [a2-hf-llm-course-ch10-11, a2-smol-course]
       - id: dpo-grpo-ppo
         title: DPO vs GRPO vs PPO, and what data each requires
         summary: Preference pairs, a verifiable checker, or a reward model, and the cost of rollouts.
         kind: idea
-        resources: [a2-trl-docs, a2-nanochat-grpo]
+        resources: [a2-cs336-alignment, a2-trl-docs, a2-nanochat-grpo, a2-dlai-post-training]
         checks: [a2-dpo-grpo-sft, a2-nanochat-rl]
       - id: reasoning-models
         title: Reasoning models and test-time compute
@@ -4648,29 +4772,56 @@ modules:
         title: Distillation
         summary: A small model trained on a large one's traces, and what it keeps of the behaviour.
         kind: idea
-        resources: [a2-hf-llm-course-10-12]
+        resources: [a2-hf-llm-course-ch12]
     resources:
       - id: a2-cs336-architectures
-        title: "CS336 lecture 3 (architectures) and lecture 4 (attention variants)"
+        title: "CS336 lecture 3 (architectures)"
+        kind: course
+        url: https://cs336.stanford.edu/
+        est_minutes: 150
+        length: 150
+        unit: min
+        focus: "Lecture 3: MoE routing, load balancing and the rest of the architecture menu"
+      - id: a2-cs336-attention-variants
+        title: "CS336 lecture 4 (attention variants)"
+        kind: course
+        url: https://cs336.stanford.edu/
+        est_minutes: 150
+        length: 150
+        unit: min
+        focus: "Lecture 4: attention variants and what each one costs at long context"
+      - id: a2-cs336-data-curation
+        title: "CS336 lectures 13-14 (pretraining data, filtering, dedup)"
         kind: course
         url: https://cs336.stanford.edu/
         est_minutes: 300
         length: 300
         unit: min
-      - id: a2-cs336-posttraining
-        title: "CS336 lectures 13-16 (data curation, dedup, SFT, RLHF) and Assignment 5 (Alignment)"
+        focus: "Watch lectures 13-14; skip Assignment 4 (Common Crawl) unless you want a pretraining-infra role"
+      - id: a2-cs336-alignment
+        title: "CS336 lectures 15-16 and Assignment 5 (Alignment)"
         kind: course
         url: https://cs336.stanford.edu/
-        est_minutes: 900
-        length: 900
+        est_minutes: 600
+        length: 600
         unit: min
-      - id: a2-hf-llm-course-10-12
-        title: "Hugging Face LLM Course, chapters 10-12 (fine-tuning, dataset curation, reasoning models)"
+        focus: "Lectures 15-16 plus Assignment 5: SFT, RLHF and the DPO / GRPO family"
+      - id: a2-hf-llm-course-ch10-11
+        title: "Hugging Face LLM Course, chapters 10-11 (fine-tuning and dataset curation)"
         kind: course
         url: https://huggingface.co/learn/llm-course
-        est_minutes: 720
-        length: 720
+        est_minutes: 480
+        length: 480
         unit: min
+        focus: "Chapters 10-11 only; chapters 1-9 are ground you already have"
+      - id: a2-hf-llm-course-ch12
+        title: "Hugging Face LLM Course, chapter 12 (reasoning models and distillation)"
+        kind: course
+        url: https://huggingface.co/learn/llm-course
+        est_minutes: 240
+        length: 240
+        unit: min
+        focus: "Chapter 12: distilling a large model's traces into a small one"
       - id: a2-smol-course
         title: "Hugging Face smol-course (SFT, DPO, evaluation, aligned to TRL 1.5)"
         kind: course
@@ -4678,6 +4829,8 @@ modules:
         est_minutes: 720
         length: 720
         unit: min
+        required: false
+        focus: "Optional hands-on alignment lab; unit 1 is the SFT one. The graded pass happens in A3"
       - id: a2-nanochat-grpo
         title: "nanochat's GRPO / RL stage"
         kind: repo
@@ -4690,11 +4843,15 @@ modules:
         est_minutes: 1200
         length: 250
         unit: pages
+        required: false
+        focus: "Optional depth, and the best thing in this segment; it can run beside later modules"
       - id: a2-cs25-ssm
         title: "CS25 V6, On the Tradeoffs of State Space Models and Transformers"
         kind: video
         url: https://www.youtube.com/watch?v=OyimE74UMF8
         est_minutes: 120
+        required: false
+        focus: "Seminar-level awareness of the attention alternatives, not a working skill"
       - id: a2-dlai-post-training
         title: "DeepLearning.AI, Post-training of LLMs (SFT, DPO, online RL)"
         kind: course
@@ -4702,6 +4859,8 @@ modules:
         est_minutes: 240
         length: 240
         unit: min
+        required: false
+        focus: "Optional, targeted: a guided pass over the same SFT / DPO / online-RL ground"
       - id: a2-trl-docs
         title: "TRL docs: SFTTrainer, DPOTrainer, GRPOTrainer, reward modelling"
         kind: doc
@@ -5000,6 +5159,8 @@ modules:
         kind: doc
         url: https://docs.axolotl.ai/
         est_minutes: 180
+        required: false
+        focus: "Only if you outgrow one GPU; TRL plus Unsloth is the path the module assumes"
       - id: a3-smol-course-units-1-3
         title: "Hugging Face smol-course, units 1-3 as the graded lab"
         kind: course
@@ -5280,7 +5441,7 @@ modules:
         title: Continuous batching and PagedAttention
         summary: Sequences join and leave the batch mid-flight, with the cache paged instead of pre-reserved.
         kind: idea
-        resources: [a4-cs25-serving]
+        resources: [a4-vllm-paged-attention, a4-cs25-serving]
       - id: quantization
         title: Quantization (FP8 / AWQ / GGUF) with a measured accuracy delta
         summary: Smaller and faster is only true once you have measured what it cost in quality.
@@ -5303,6 +5464,7 @@ modules:
         title: Routing to small models
         summary: Send the easy requests down, and prove the quality did not move when you did.
         kind: idea
+        resources: [a4-huyen-routing]
         checks: [a4-routing-policy]
       - id: cost-model
         title: Cost modelling in $/1k requests
@@ -5319,10 +5481,17 @@ modules:
         length: 300
         unit: min
       - id: a4-vllm-docs
-        title: "vLLM docs: PagedAttention, continuous batching, prefix caching, speculative decoding"
+        title: "vLLM docs: prefix caching, speculative decoding, structured output"
         kind: doc
         url: https://docs.vllm.ai/
-        est_minutes: 540
+        est_minutes: 420
+        focus: "Serving, prefix caching, speculative decoding and the guided-decoding backends"
+      - id: a4-vllm-paged-attention
+        title: "vLLM docs: PagedAttention and continuous batching"
+        kind: doc
+        url: https://docs.vllm.ai/en/latest/design/kernel/paged_attention.html
+        est_minutes: 120
+        focus: "How the batch changes mid-flight and why the cache is paged instead of pre-reserved"
       - id: a4-cs336-inference
         title: "CS336 lecture 10 (inference): arithmetic intensity and why decode is bandwidth-bound"
         kind: course
@@ -5335,6 +5504,8 @@ modules:
         kind: video
         url: https://www.youtube.com/watch?v=ZUdIsRZhWXI
         est_minutes: 90
+        required: false
+        focus: "A seminar war-story pass over the same ground the vLLM docs cover"
       - id: a4-llm-compressor
         title: "LLM Compressor (AWQ / GPTQ / FP8 for server-side quantization)"
         kind: repo
@@ -5345,18 +5516,29 @@ modules:
         kind: repo
         url: https://github.com/ggml-org/llama.cpp
         est_minutes: 180
+        required: false
+        focus: "The local and CPU path; the server-side quantization you will ship is LLM Compressor"
       - id: a4-anthropic-prompt-caching
         title: "Anthropic prompt caching docs"
         kind: doc
         url: https://docs.claude.com/en/docs/build-with-claude/prompt-caching
         est_minutes: 150
       - id: a4-huyen-ch9
-        title: "Chip Huyen, AI Engineering chapter 9 (inference optimisation, model routing)"
+        title: "Chip Huyen, AI Engineering chapter 9 (inference optimisation and cost)"
         kind: book
         url: https://www.oreilly.com/library/view/ai-engineering/9781098166298/
-        est_minutes: 210
-        length: 60
+        est_minutes: 150
+        length: 45
         unit: pages
+        focus: "The cost sections: what a request actually costs and which levers move it"
+      - id: a4-huyen-routing
+        title: "Chip Huyen, AI Engineering chapter 9 (the model-router pattern)"
+        kind: book
+        url: https://www.oreilly.com/library/view/ai-engineering/9781098166298/
+        est_minutes: 60
+        length: 15
+        unit: pages
+        focus: "The model-router pattern: small model first, escalate, and prove quality held"
     checks:
       - id: a4-prefill-decode
         module: a4
@@ -5664,6 +5846,8 @@ modules:
         kind: doc
         url: https://hamel.dev/notes/llm/evals/
         est_minutes: 60
+        required: false
+        focus: "An index to dip back into while auditing the repo, not a read in its own right"
       - id: cw-anthropic-demystifying
         title: "Anthropic, Demystifying evals for AI agents (the Swiss cheese model and complementary methods)"
         kind: doc

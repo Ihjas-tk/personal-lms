@@ -164,12 +164,56 @@ One line of the module syllabus.
 | `est_minutes` | int | no | `0` |
 | `length` | int | no | `null` — how long, in `unit` |
 | `unit` | `min` \| `pages` \| `items` | no | `min` |
+| `required` | bool | no | `true` — `false` is an optional extra |
+| `alternative_of` | resource id | no | `null` — this one substitutes for that one |
+| `lane` | string | no | `null` — a chip beside the title |
+| `focus` | string | no | `null` — one line under the title |
 
 **Resource kinds:** `paper`, `video`, `course`, `repo`, `doc`, `book`.
 
 `length` + `unit` is the modern pair: a book is `length: 90, unit: pages`, a problem
 set is `unit: items`, a video is `unit: min`. `est_minutes` is the fallback used when
 `length` is absent, and it is what the session planner adds up.
+
+#### Required, optional and either/or
+
+A resource is **required** unless you say otherwise. `required: false` marks an extra:
+it is listed, it is openable, it is tagged `optional` in the workspace, and it never
+blocks a topic. Touching one still counts as having started the topic.
+
+`alternative_of` names another resource in the track — any module — that this one
+stands in for. The named resource is the **primary**; it plus everything pointing at it
+is a **group**, and the group is satisfied as soon as any one member is finished. That
+is how "Raschka chapters 2–5 **or** the CS336 lectures, not both" lives in the data
+instead of in a chore. A group counts once toward the topic's required total, so a
+topic with a two-way choice and nothing else reads "0 of 1 required", not "0 of 2".
+
+`lane` is a free label (`Raschka lane`, `CS336 lane`) printed as a chip on each member,
+so a choice says whose lane you are picking. `focus` is one line under the title, for a
+resource that appears on several topics with a narrower purpose on this one
+("lectures 3 and 4 only: RoPE, RMSNorm, SwiGLU"). Both are display only.
+
+`learn check` refuses, in this order: an `alternative_of` that names a resource the
+track does not have (`resource <id>: unknown alternative_of <target>`); one that names
+itself (`resource <id>: alternative_of points at itself`); one that names another
+alternative, since a group has exactly one obvious primary (`resource <id>:
+alternative_of <target> is itself an alternative; point both at <primary>`); and a
+group whose members disagree about `required`, which would make it half-owed
+(`resource <id>: required must match <target>, the primary of its alternative group`).
+
+```yaml
+topics:
+  - id: attention
+    title: Causal self-attention
+    resources: [cs336-lec-1-4, raschka-ch-2-5, blog-annotated, cs336-lec-1-4-rope]
+resources:
+  - {id: cs336-lec-1-4, title: CS336 lectures 1–4, kind: video, lane: CS336 lane}
+  - {id: raschka-ch-2-5, title: "Raschka, ch 2–5", kind: book, lane: Raschka lane,
+     alternative_of: cs336-lec-1-4}          # do either one, not both
+  - {id: blog-annotated, title: The Annotated Transformer, kind: doc, required: false}
+  - {id: cs336-lec-1-4-rope, title: CS336 lectures 1–4, kind: video,
+     focus: "lectures 3 and 4 only: RoPE, RMSNorm, SwiGLU"}   # reused, narrower here
+```
 
 ### Check
 
@@ -239,7 +283,9 @@ Beyond the field types:
 * a check's `module` matches the module it is written in;
 * a topic's `resources` and `checks` name ids in the same module, and no id is
   claimed by two topics;
-* an `idea` topic has at least one resource or one check.
+* an `idea` topic has at least one resource or one check;
+* every `alternative_of` names a real resource, is not the resource itself, is not
+  another alternative, and agrees with its primary about `required`.
 
 Failures print as `path.to.field: message`, one per line, and exit 1. A valid file
 prints one summary line and exits 0.

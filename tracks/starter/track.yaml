@@ -73,7 +73,7 @@ modules:
         title: What the first idea actually says   # REQUIRED
         summary: The one-sentence version, in your own words.  # optional, default ""
         kind: idea                # optional, default "idea"
-        resources: [r-primer]     # optional, default []. Resource ids in THIS module.
+        resources: [r-primer, r-lecture, r-blog]  # optional, default []. Ids in THIS module.
         checks: [c-explain]       # optional, default []. Check ids in THIS module.
       - id: set-up
         title: Install the tool and run it once
@@ -84,6 +84,8 @@ modules:
 
     # --- resources: what you read, watch or work through ----------------
     # kind is one of: paper video course repo doc book
+    # A resource is required unless you say otherwise, and each one stands on its
+    # own unless it names another as its `alternative_of` — see the two below.
     resources:
       - id: r-primer
         title: A short primer on the first idea    # REQUIRED
@@ -92,6 +94,32 @@ modules:
         est_minutes: 45           # optional, default 0. Used when `length` is absent.
         length: 45                # optional, default null. How long, in `unit`.
         unit: min                 # optional, default "min". One of: min pages items
+        required: true            # optional, default true. false = an optional extra.
+        lane: reading lane        # optional, default null. A chip beside the title.
+
+      - id: r-lecture
+        title: The same idea, lectured
+        kind: video
+        url: https://example.org/lecture
+        length: 50
+        unit: min
+        lane: watching lane
+        alternative_of: r-primer  # optional, default null. Do this one OR r-primer;
+        # ^ the pair is one "pick one" group, closed by whichever you finish. The
+        #   members must agree about `required`, and may not chain (an alternative
+        #   of an alternative is refused).
+        focus: the first half only, up to the worked example
+        # ^ optional, default null. One line under the title, for a source reused on
+        #   several topics with a narrower purpose on this one.
+
+      - id: r-blog
+        title: One person's take on where the idea came from
+        kind: doc
+        url: https://example.org/history
+        length: 10
+        unit: min
+        required: false           # an optional extra: never blocks the topic, and
+        # ^ tagged `optional` in the workspace. Opening it still counts as a start.
 
     # --- checks: the only thing that moves the ridge ---------------------
     # type is one of:
